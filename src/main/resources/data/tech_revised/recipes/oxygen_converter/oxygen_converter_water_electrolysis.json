@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:oxygen_converter",
+  "input_fluid": {
+    "fluid": "minecraft:water",
+    "amount": 1000
+  },
+  "output_fluid1": {
+    "fluid": "tech_revised:oxygen",
+    "amount": 500
+  },
+  "output_fluid2": {
+    "fluid": "tech_revised:hydrogen",
+    "amount": 1000
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 60
+}

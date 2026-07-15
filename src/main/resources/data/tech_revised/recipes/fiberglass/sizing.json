@@ -1,0 +1,13 @@
+﻿{
+  "type": "tech_revised:sizing",
+  "ingredients": [
+    { "item": "tech_revised:glass_filament" }
+  ],
+  "input_fluid": {
+    "fluid": "minecraft:water",
+    "amount": 50
+  },
+  "result": { "item": "tech_revised:sized_glass_filament" },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

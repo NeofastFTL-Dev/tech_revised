@@ -1,0 +1,9 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:cad_layout" }
+  ],
+  "result": { "item": "tech_revised:verified_gerber_file" },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:developed_inner_layer_board" },
+    { "item": "tech_revised:cupric_chloride_solution_bucket" }
+  ],
+  "result": { "item": "tech_revised:etched_inner_layer_board" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

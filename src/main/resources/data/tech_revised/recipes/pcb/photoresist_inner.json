@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:copper_clad_laminate" },
+    { "item": "tech_revised:photo_resist_polymer" }
+  ],
+  "result": { "item": "tech_revised:inner_layer_patterned_board" },
+  "process_ticks": 100,
+  "energy_per_tick": 40
+}

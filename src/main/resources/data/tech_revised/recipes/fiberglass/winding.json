@@ -1,0 +1,9 @@
+﻿{
+  "type": "tech_revised:winding",
+  "ingredients": [
+    { "item": "tech_revised:sized_glass_filament" }
+  ],
+  "result": { "item": "tech_revised:glass_spool" },
+  "process_ticks": 100,
+  "energy_per_tick": 40
+}

@@ -21,8 +21,7 @@ import javax.annotation.Nonnull;
 public class ElectricArcFurnaceFluidInputBusBlockEntity extends BlockEntity {
     private static final int CAPACITY = 16000;
 
-    private final FluidTank waterTank = new FluidTank(CAPACITY,
-            fluid -> fluid.getFluid() == Fluids.WATER || fluid.getFluid() == ModFluids.OXYGEN.get()) {
+    private final FluidTank fluidTank = new FluidTank(CAPACITY, fluid -> true) {
         @Override
         protected void onContentsChanged() {
             setChanged();
@@ -47,7 +46,7 @@ public class ElectricArcFurnaceFluidInputBusBlockEntity extends BlockEntity {
     @Override
     public void onLoad() {
         super.onLoad();
-        lazyFluidHandler = LazyOptional.of(() -> waterTank);
+        lazyFluidHandler = LazyOptional.of(() -> fluidTank);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class ElectricArcFurnaceFluidInputBusBlockEntity extends BlockEntity {
 
     @Override
     protected void saveAdditional(CompoundTag tag) {
-        tag.put("tank", waterTank.writeToNBT(new CompoundTag()));
+        tag.put("tank", fluidTank.writeToNBT(new CompoundTag()));
         super.saveAdditional(tag);
     }
 
@@ -66,19 +65,27 @@ public class ElectricArcFurnaceFluidInputBusBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("tank")) {
-            waterTank.readFromNBT(tag.getCompound("tank"));
+            fluidTank.readFromNBT(tag.getCompound("tank"));
         }
     }
 
     public FluidStack drain(int amount, IFluidHandler.FluidAction action) {
-        return waterTank.drain(amount, action);
+        return fluidTank.drain(amount, action);
+    }
+
+    public FluidStack drain(FluidStack stack, IFluidHandler.FluidAction action) {
+        return fluidTank.drain(stack, action);
+    }
+
+    public FluidStack getStoredFluid() {
+        return fluidTank.getFluid().copy();
     }
 
     public int getWaterAmount() {
-        return waterTank.getFluidAmount();
+        return fluidTank.getFluidAmount();
     }
 
     public int getCapacity() {
-        return waterTank.getCapacity();
+        return fluidTank.getCapacity();
     }
 }

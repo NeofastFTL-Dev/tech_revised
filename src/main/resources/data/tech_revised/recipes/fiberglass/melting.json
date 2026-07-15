@@ -1,0 +1,12 @@
+﻿{
+  "type": "tech_revised:melting",
+  "ingredients": [
+    { "item": "tech_revised:raw_glass_batch" }
+  ],
+  "output_fluid": {
+    "fluid": "tech_revised:liquid_glass",
+    "amount": 1000
+  },
+  "process_ticks": 400,
+  "energy_per_tick": 100
+}

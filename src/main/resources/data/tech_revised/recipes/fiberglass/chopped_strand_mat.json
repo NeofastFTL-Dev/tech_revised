@@ -1,0 +1,16 @@
+﻿{
+  "type": "tech_revised:bundling",
+  "ingredients": [
+    { "item": "tech_revised:chopped_glass_strand" },
+    { "item": "tech_revised:chopped_glass_strand" },
+    { "item": "tech_revised:chopped_glass_strand" },
+    { "item": "tech_revised:chopped_glass_strand" },
+    { "item": "tech_revised:chopped_glass_strand" },
+    { "item": "tech_revised:chopped_glass_strand" },
+    { "item": "tech_revised:chopped_glass_strand" },
+    { "item": "tech_revised:chopped_glass_strand" }
+  ],
+  "result": { "item": "tech_revised:chopped_strand_mat" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

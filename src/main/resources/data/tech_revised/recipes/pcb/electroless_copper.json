@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:drilled_pcb" },
+    { "item": "minecraft:copper_ingot" }
+  ],
+  "result": { "item": "tech_revised:electroless_copper_coated_pcb" },
+  "process_ticks": 300,
+  "energy_per_tick": 40
+}

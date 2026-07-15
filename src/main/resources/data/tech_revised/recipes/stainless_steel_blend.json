@@ -1,0 +1,10 @@
+﻿{
+  "type": "industrialsteel:alloying",
+  "ingredients": [
+    { "item": "minecraft:iron_ingot" },
+    { "item": "tech_revised:chromium_dust" },
+    { "item": "tech_revised:nickel_dust" },
+    { "item": "tech_revised:carbon_chunk" }
+  ],
+  "result": { "item": "tech_revised:stainless_steel_blend" }
+}

@@ -1,0 +1,13 @@
+﻿{
+  "replace": false,
+  "values": [
+    "tech_revised:chromium_dust",
+    "tech_revised:nickel_dust",
+    "tech_revised:carbon_chunk",
+    "tech_revised:limestone_dust",
+    "tech_revised:dolomite_dust",
+    "tech_revised:soda_ash",
+    "tech_revised:clay_dust",
+    "tech_revised:silica_sand"
+  ]
+}

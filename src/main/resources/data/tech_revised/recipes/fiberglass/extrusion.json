@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:extrusion",
+  "input_fluid": {
+    "fluid": "tech_revised:liquid_glass",
+    "amount": 100
+  },
+  "result": { "item": "tech_revised:glass_filament" },
+  "process_ticks": 100,
+  "energy_per_tick": 40
+}

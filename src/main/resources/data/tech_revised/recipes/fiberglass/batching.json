@@ -1,0 +1,13 @@
+﻿{
+  "type": "tech_revised:batching",
+  "ingredients": [
+    { "item": "tech_revised:silica_sand" },
+    { "item": "tech_revised:limestone_dust" },
+    { "item": "tech_revised:dolomite_dust" },
+    { "item": "tech_revised:soda_ash" },
+    { "item": "tech_revised:clay_dust" }
+  ],
+  "result": { "item": "tech_revised:raw_glass_batch" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

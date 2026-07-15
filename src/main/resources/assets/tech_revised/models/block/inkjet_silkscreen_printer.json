@@ -1,0 +1,6 @@
+﻿{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "tech_revised:block/inkjet_silkscreen_printer"
+  }
+}

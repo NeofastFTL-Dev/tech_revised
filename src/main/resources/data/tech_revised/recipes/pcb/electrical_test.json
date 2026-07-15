@@ -1,0 +1,9 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:finished_pcb_panel" }
+  ],
+  "result": { "item": "tech_revised:tested_pcb_panel" },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

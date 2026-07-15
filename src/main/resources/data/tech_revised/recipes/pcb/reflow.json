@@ -1,0 +1,9 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:placed_pcba" }
+  ],
+  "result": { "item": "tech_revised:reflowed_pcba" },
+  "process_ticks": 300,
+  "energy_per_tick": 150
+}

@@ -1,0 +1,9 @@
+﻿{
+  "type": "tech_revised:drying",
+  "ingredients": [
+    { "item": "tech_revised:glass_spool" }
+  ],
+  "result": { "item": "tech_revised:dried_glass_spool" },
+  "process_ticks": 200,
+  "energy_per_tick": 20
+}

@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:baked_fr4_laminate" },
+    { "item": "tech_revised:copper_foil" }
+  ],
+  "result": { "item": "tech_revised:copper_clad_laminate" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

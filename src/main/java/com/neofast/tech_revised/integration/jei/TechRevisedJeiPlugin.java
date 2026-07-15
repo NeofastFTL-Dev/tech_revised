@@ -8,6 +8,16 @@ import com.neofast.tech_revised.recipe.CokeOvenRecipe;
 import com.neofast.tech_revised.recipe.CrusherRecipe;
 import com.neofast.tech_revised.recipe.DrillingPlatformRecipe;
 import com.neofast.tech_revised.recipe.ElectricArcFurnaceRecipe;
+import com.neofast.tech_revised.recipe.OxygenConverterRecipe;
+import com.neofast.tech_revised.recipe.AlloyingRecipe;
+import com.neofast.tech_revised.recipe.BatchingRecipe;
+import com.neofast.tech_revised.recipe.MeltingRecipe;
+import com.neofast.tech_revised.recipe.FluidToItemRecipe;
+import com.neofast.tech_revised.recipe.ItemFluidToItemRecipe;
+import com.neofast.tech_revised.recipe.GenericIndustrialRecipe;
+import com.neofast.tech_revised.recipe.PcbRecipe;
+import com.neofast.tech_revised.recipe.LaminationRecipe;
+import com.neofast.tech_revised.recipe.ModRecipes;
 import com.neofast.tech_revised.screen.CrusherMenu;
 import com.neofast.tech_revised.screen.CrusherScreen;
 import com.neofast.tech_revised.screen.ElectricArcFurnaceControllerScreen;
@@ -56,7 +66,25 @@ public class TechRevisedJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new CokeOvenJeiCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new DrillingPlatformJeiCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new CrusherJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new OxygenConverterJeiCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new MultiblockLayoutJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new AlloyingJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new BatchingJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new MeltingJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new ExtrusionJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new SizingJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new GenericIndustrialJeiCategory(registration.getJeiHelpers().getGuiHelper(), 
+                new ResourceLocation(TechRevised.MOD_ID, "drying"), new ItemStack(ModBlocks.INDUSTRIAL_DRYING_OVEN.get()), "jei.tech_revised.category.drying"));
+        registration.addRecipeCategories(new GenericIndustrialJeiCategory(registration.getJeiHelpers().getGuiHelper(), 
+                new ResourceLocation(TechRevised.MOD_ID, "winding"), new ItemStack(ModBlocks.HIGH_SPEED_GATHERING_WINDER.get()), "jei.tech_revised.category.winding"));
+        registration.addRecipeCategories(new GenericIndustrialJeiCategory(registration.getJeiHelpers().getGuiHelper(), 
+                new ResourceLocation(TechRevised.MOD_ID, "bundling"), new ItemStack(ModBlocks.ROVING_CREEL_CONVERTER.get()), "jei.tech_revised.category.bundling"));
+        registration.addRecipeCategories(new GenericIndustrialJeiCategory(registration.getJeiHelpers().getGuiHelper(), 
+                new ResourceLocation(TechRevised.MOD_ID, "weaving"), new ItemStack(ModBlocks.INDUSTRIAL_TEXTILE_WEAVING_LOOM.get()), "jei.tech_revised.category.weaving"));
+        registration.addRecipeCategories(new GenericIndustrialJeiCategory(registration.getJeiHelpers().getGuiHelper(), 
+                new ResourceLocation(TechRevised.MOD_ID, "chopping"), new ItemStack(ModBlocks.STRAND_CHOPPING_MACHINERY.get()), "jei.tech_revised.category.chopping"));
+        registration.addRecipeCategories(new PcbJeiCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new LaminationJeiCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -154,6 +182,42 @@ public class TechRevisedJeiPlugin implements IModPlugin {
         }
 
         registration.addRecipes(CrusherJeiCategory.RECIPE_TYPE, crusherRecipes);
+
+        List<OxygenConverterJeiRecipe> oxygenConverterRecipes = new ArrayList<>();
+        if (level != null) {
+            for (OxygenConverterRecipe oxygenRecipe : level.getRecipeManager().getAllRecipesFor(OxygenConverterRecipe.Type.INSTANCE)) {
+                oxygenConverterRecipes.add(new OxygenConverterJeiRecipe(
+                        oxygenRecipe.getInputFluid(),
+                        oxygenRecipe.getOutputFluid1(),
+                        oxygenRecipe.getOutputFluid2(),
+                        oxygenRecipe.getProcessTicks(),
+                        oxygenRecipe.getEnergyPerTick()
+                ));
+            }
+        }
+        registration.addRecipes(OxygenConverterJeiCategory.RECIPE_TYPE, oxygenConverterRecipes);
+
+        if (level != null) {
+            registration.addRecipes(AlloyingJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(AlloyingRecipe.Type.INSTANCE));
+            registration.addRecipes(BatchingJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(BatchingRecipe.Type.INSTANCE));
+            registration.addRecipes(MeltingJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(MeltingRecipe.Type.INSTANCE));
+            registration.addRecipes(ExtrusionJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(FluidToItemRecipe.Type.INSTANCE));
+            registration.addRecipes(SizingJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ItemFluidToItemRecipe.Type.INSTANCE));
+            
+            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "drying"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.DRYING_SERIALIZER.get().getType()));
+            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "winding"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.WINDING_SERIALIZER.get().getType()));
+            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "bundling"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.BUNDLING_SERIALIZER.get().getType()));
+            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "weaving"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.WEAVING_SERIALIZER.get().getType()));
+            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "chopping"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.CHOPPING_SERIALIZER.get().getType()));
+            
+            registration.addRecipes(PcbJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ModRecipes.PCB_SERIALIZER.get().getType()));
+            registration.addRecipes(LaminationJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ModRecipes.LAMINATION_SERIALIZER.get().getType()));
+        }
     }
 
     private static List<MultiblockLayoutJeiRecipe> createMultiblockLayoutRecipes() {
@@ -263,6 +327,8 @@ public class TechRevisedJeiPlugin implements IModPlugin {
                 DrillingPlatformJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRUSHER.get()),
                 CrusherJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.OXYGEN_CONVERTER_CONTROLLER.get()),
+                OxygenConverterJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_CONTROLLER.get()),
                 MultiblockLayoutJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.DRILLING_PLATFORM_CONTROLLER.get()),
@@ -273,6 +339,48 @@ public class TechRevisedJeiPlugin implements IModPlugin {
                 MultiblockLayoutJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.OXYGEN_CONVERTER_CONTROLLER.get()),
                 MultiblockLayoutJeiCategory.RECIPE_TYPE);
+
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.BLAST_FURNACE_CORE.get()), AlloyingJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.INDUSTRIAL_BATCHING_MIXER.get()), BatchingJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.REFRACTORY_MELTING_FURNACE.get()), MeltingJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PLATINUM_ALLOY_BUSHING_PLATE.get()), ExtrusionJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHEMICAL_SIZING_APPLICATOR.get()), SizingJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.INDUSTRIAL_DRYING_OVEN.get()), 
+                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "drying"), GenericIndustrialRecipe.class));
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HIGH_SPEED_GATHERING_WINDER.get()), 
+                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "winding"), GenericIndustrialRecipe.class));
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROVING_CREEL_CONVERTER.get()), 
+                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "bundling"), GenericIndustrialRecipe.class));
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.INDUSTRIAL_TEXTILE_WEAVING_LOOM.get()), 
+                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "weaving"), GenericIndustrialRecipe.class));
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.STRAND_CHOPPING_MACHINERY.get()), 
+                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "chopping"), GenericIndustrialRecipe.class));
+        
+        // PCB Catalysts
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.DESIGN_ENGINEERING_STATION.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.INDUSTRIAL_SHEAR.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.DECONTAMINATION_OVEN.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.HYDRAULIC_CLADDING_PRESS.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PHOTO_RESIST_APPLICATOR.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.UV_LDI_IMAGER.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHEMICAL_DEVELOPING_WASH.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ACIDIC_ETCHING_SPRAYER.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ALKALINE_STRIPPING_STATION.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.VACUUM_LAMINATION_PRESS.get()), LaminationJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.XRAY_ALIGNMENT_DRILL.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ELECTROLESS_PLATING_BATH.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.COPPER_ELECTROPLATING_TANK.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.TIN_PLATING_TANK.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SOLDERMASK_FLOODER.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.UV_PAD_EXPOSURE_STATION.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.INKJET_SILKSCREEN_PRINTER.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SURFACE_FINISH_STATION.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.FLYING_PROBE_TESTER.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CNC_ROUTER.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SOLDER_PASTE_PRINTER.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PICK_AND_PLACE_ROBOT.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MULTI_ZONE_REFLOW_OVEN.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.AOI_VERIFICATION_STATION.get()), PcbJeiCategory.RECIPE_TYPE);
     }
 
     @Override

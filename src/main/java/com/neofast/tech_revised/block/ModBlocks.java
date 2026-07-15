@@ -98,6 +98,83 @@ public class ModBlocks {
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_HEATER = registerBlock("electric_arc_furnace_heater",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 12)));
 
+    public static final RegistryObject<Block> BLAST_FURNACE_CORE = registerBlock("blast_furnace_core",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> INDUSTRIAL_BATCHING_MIXER = registerBlock("industrial_batching_mixer",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> REFRACTORY_MELTING_FURNACE = registerBlock("refractory_melting_furnace",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 13)));
+
+    public static final RegistryObject<Block> CHEMICAL_SIZING_APPLICATOR = registerBlock("chemical_sizing_applicator",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> HIGH_SPEED_GATHERING_WINDER = registerBlock("high_speed_gathering_winder",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> INDUSTRIAL_DRYING_OVEN = registerBlock("industrial_drying_oven",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 10)));
+
+    public static final RegistryObject<Block> ROVING_CREEL_CONVERTER = registerBlock("roving_creel_converter",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> INDUSTRIAL_TEXTILE_WEAVING_LOOM = registerBlock("industrial_textile_weaving_loom",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> STRAND_CHOPPING_MACHINERY = registerBlock("strand_chopping_machinery",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
+    // PCB Machines
+    public static final RegistryObject<Block> DESIGN_ENGINEERING_STATION = registerBlock("design_engineering_station",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> INDUSTRIAL_SHEAR = registerBlock("industrial_shear",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> DECONTAMINATION_OVEN = registerBlock("decontamination_oven",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> HYDRAULIC_CLADDING_PRESS = registerBlock("hydraulic_cladding_press",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> PHOTO_RESIST_APPLICATOR = registerBlock("photo_resist_applicator",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> UV_LDI_IMAGER = registerBlock("uv_ldi_imager",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> CHEMICAL_DEVELOPING_WASH = registerBlock("chemical_developing_wash",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> ACIDIC_ETCHING_SPRAYER = registerBlock("acidic_etching_sprayer",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> ALKALINE_STRIPPING_STATION = registerBlock("alkaline_stripping_station",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> VACUUM_LAMINATION_PRESS = registerBlock("vacuum_lamination_press",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> XRAY_ALIGNMENT_DRILL = registerBlock("xray_alignment_drill",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> ELECTROLESS_PLATING_BATH = registerBlock("electroless_plating_bath",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> COPPER_ELECTROPLATING_TANK = registerBlock("copper_electroplating_tank",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> TIN_PLATING_TANK = registerBlock("tin_plating_tank",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> SOLDERMASK_FLOODER = registerBlock("soldermask_flooder",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> UV_PAD_EXPOSURE_STATION = registerBlock("uv_pad_exposure_station",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> INKJET_SILKSCREEN_PRINTER = registerBlock("inkjet_silkscreen_printer",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> SURFACE_FINISH_STATION = registerBlock("surface_finish_station",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> FLYING_PROBE_TESTER = registerBlock("flying_probe_tester",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> CNC_ROUTER = registerBlock("cnc_router",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> SOLDER_PASTE_PRINTER = registerBlock("solder_paste_printer",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> PICK_AND_PLACE_ROBOT = registerBlock("pick_and_place_robot",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> MULTI_ZONE_REFLOW_OVEN = registerBlock("multi_zone_reflow_oven",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> AOI_VERIFICATION_STATION = registerBlock("aoi_verification_station",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_FRAME = registerBlock("electric_arc_furnace_frame",
             () -> new ElectricArcFurnaceFrameBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
 
@@ -141,6 +218,18 @@ public class ModBlocks {
 
     public static final RegistryObject<LiquidBlock> HYDROGEN_BLOCK = registerBlockWithoutItem("hydrogen_block",
             () -> new LiquidBlock(ModFluids.HYDROGEN, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+
+    public static final RegistryObject<LiquidBlock> LIQUID_GLASS_BLOCK = registerBlockWithoutItem("liquid_glass_block",
+            () -> new LiquidBlock(ModFluids.LIQUID_GLASS, BlockBehaviour.Properties.copy(Blocks.LAVA).noLootTable()));
+
+    public static final RegistryObject<LiquidBlock> SODIUM_CARBONATE_SOLUTION_BLOCK = registerBlockWithoutItem("sodium_carbonate_solution_block",
+            () -> new LiquidBlock(ModFluids.SODIUM_CARBONATE_SOLUTION, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+
+    public static final RegistryObject<LiquidBlock> CUPRIC_CHLORIDE_SOLUTION_BLOCK = registerBlockWithoutItem("cupric_chloride_solution_block",
+            () -> new LiquidBlock(ModFluids.CUPRIC_CHLORIDE_SOLUTION, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+
+    public static final RegistryObject<LiquidBlock> SODIUM_HYDROXIDE_SOLUTION_BLOCK = registerBlockWithoutItem("sodium_hydroxide_solution_block",
+            () -> new LiquidBlock(ModFluids.SODIUM_HYDROXIDE_SOLUTION, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

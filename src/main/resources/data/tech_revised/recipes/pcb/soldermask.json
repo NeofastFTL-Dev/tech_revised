@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:tin_stripped_pcb" },
+    { "item": "tech_revised:soldermask_resin" }
+  ],
+  "result": { "item": "tech_revised:masked_pcb" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

@@ -1,0 +1,9 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:sheared_fr4_laminate" }
+  ],
+  "result": { "item": "tech_revised:baked_fr4_laminate" },
+  "process_ticks": 300,
+  "energy_per_tick": 20
+}

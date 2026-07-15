@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:stencil_printed_pcb" },
+    { "item": "minecraft:redstone" }
+  ],
+  "result": { "item": "tech_revised:placed_pcba" },
+  "process_ticks": 400,
+  "energy_per_tick": 120
+}

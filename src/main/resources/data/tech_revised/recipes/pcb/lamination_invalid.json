@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:lamination",
+  "layers": [
+    { "item": "tech_revised:copper_clad_laminate" },
+    { "item": "tech_revised:stripped_inner_layer_board" }
+  ],
+  "result": { "item": "tech_revised:laminated_pcb_core" },
+  "process_ticks": 400,
+  "energy_per_tick": 100
+}

@@ -36,6 +36,22 @@ public class ModFluids {
             new ResourceLocation("minecraft", "block/water_still");
     private static final ResourceLocation HYDROGEN_FLOWING_TEXTURE =
             new ResourceLocation("minecraft", "block/water_flow");
+    private static final ResourceLocation LIQUID_GLASS_STILL_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_still");
+    private static final ResourceLocation LIQUID_GLASS_FLOWING_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_flow");
+    private static final ResourceLocation SODIUM_CARBONATE_STILL_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_still");
+    private static final ResourceLocation SODIUM_CARBONATE_FLOWING_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_flow");
+    private static final ResourceLocation CUPRIC_CHLORIDE_STILL_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_still");
+    private static final ResourceLocation CUPRIC_CHLORIDE_FLOWING_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_flow");
+    private static final ResourceLocation SODIUM_HYDROXIDE_STILL_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_still");
+    private static final ResourceLocation SODIUM_HYDROXIDE_FLOWING_TEXTURE =
+            new ResourceLocation("minecraft", "block/water_flow");
 
     public static final RegistryObject<FluidType> HEAVY_CRUDE_OIL_TYPE = FLUID_TYPES.register("heavy_crude_oil_type",
             () -> new BaseFluidType(HEAVY_CRUDE_STILL_TEXTURE, HEAVY_CRUDE_FLOWING_TEXTURE, 0xFF2C1F17,
@@ -93,6 +109,59 @@ public class ModFluids {
     public static final RegistryObject<FlowingFluid> FLOWING_HYDROGEN = FLUIDS.register("flowing_hydrogen",
             () -> new ForgeFlowingFluid.Flowing(HydrogenPropertiesHolder.PROPERTIES));
 
+    public static final RegistryObject<FluidType> LIQUID_GLASS_TYPE = FLUID_TYPES.register("liquid_glass_type",
+            () -> new BaseFluidType(LIQUID_GLASS_STILL_TEXTURE, LIQUID_GLASS_FLOWING_TEXTURE, 0xFFFFE57F,
+                    FluidType.Properties.create()
+                            .density(2500)
+                            .viscosity(10000)
+                            .temperature(1800)
+                            .descriptionId("fluid.tech_revised.liquid_glass")));
+
+    public static final RegistryObject<FlowingFluid> LIQUID_GLASS = FLUIDS.register("liquid_glass",
+            () -> new ForgeFlowingFluid.Source(LiquidGlassPropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FlowingFluid> FLOWING_LIQUID_GLASS = FLUIDS.register("flowing_liquid_glass",
+            () -> new ForgeFlowingFluid.Flowing(LiquidGlassPropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FluidType> SODIUM_CARBONATE_SOLUTION_TYPE = FLUID_TYPES.register("sodium_carbonate_solution_type",
+            () -> new BaseFluidType(SODIUM_CARBONATE_STILL_TEXTURE, SODIUM_CARBONATE_FLOWING_TEXTURE, 0xFF7FBFFF,
+                    FluidType.Properties.create()
+                            .density(1100)
+                            .viscosity(1000)
+                            .descriptionId("fluid.tech_revised.sodium_carbonate_solution")));
+
+    public static final RegistryObject<FlowingFluid> SODIUM_CARBONATE_SOLUTION = FLUIDS.register("sodium_carbonate_solution",
+            () -> new ForgeFlowingFluid.Source(SodiumCarbonatePropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FlowingFluid> FLOWING_SODIUM_CARBONATE_SOLUTION = FLUIDS.register("flowing_sodium_carbonate_solution",
+            () -> new ForgeFlowingFluid.Flowing(SodiumCarbonatePropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FluidType> CUPRIC_CHLORIDE_SOLUTION_TYPE = FLUID_TYPES.register("cupric_chloride_solution_type",
+            () -> new BaseFluidType(CUPRIC_CHLORIDE_STILL_TEXTURE, CUPRIC_CHLORIDE_FLOWING_TEXTURE, 0xFF007F3F,
+                    FluidType.Properties.create()
+                            .density(1200)
+                            .viscosity(1200)
+                            .descriptionId("fluid.tech_revised.cupric_chloride_solution")));
+
+    public static final RegistryObject<FlowingFluid> CUPRIC_CHLORIDE_SOLUTION = FLUIDS.register("cupric_chloride_solution",
+            () -> new ForgeFlowingFluid.Source(CupricChloridePropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FlowingFluid> FLOWING_CUPRIC_CHLORIDE_SOLUTION = FLUIDS.register("flowing_cupric_chloride_solution",
+            () -> new ForgeFlowingFluid.Flowing(CupricChloridePropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FluidType> SODIUM_HYDROXIDE_SOLUTION_TYPE = FLUID_TYPES.register("sodium_hydroxide_solution_type",
+            () -> new BaseFluidType(SODIUM_HYDROXIDE_STILL_TEXTURE, SODIUM_HYDROXIDE_FLOWING_TEXTURE, 0xFFE0E0E0,
+                    FluidType.Properties.create()
+                            .density(1150)
+                            .viscosity(1100)
+                            .descriptionId("fluid.tech_revised.sodium_hydroxide_solution")));
+
+    public static final RegistryObject<FlowingFluid> SODIUM_HYDROXIDE_SOLUTION = FLUIDS.register("sodium_hydroxide_solution",
+            () -> new ForgeFlowingFluid.Source(SodiumHydroxidePropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FlowingFluid> FLOWING_SODIUM_HYDROXIDE_SOLUTION = FLUIDS.register("flowing_sodium_hydroxide_solution",
+            () -> new ForgeFlowingFluid.Flowing(SodiumHydroxidePropertiesHolder.PROPERTIES));
+
     private static final class HeavyCrudeOilPropertiesHolder {
         private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
                 HEAVY_CRUDE_OIL_TYPE, HEAVY_CRUDE_OIL, FLOWING_HEAVY_CRUDE_OIL)
@@ -130,6 +199,46 @@ public class ModFluids {
                 .block(ModBlocks.HYDROGEN_BLOCK)
                 .slopeFindDistance(2)
                 .levelDecreasePerBlock(2)
+                .tickRate(10);
+    }
+
+    private static final class LiquidGlassPropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                LIQUID_GLASS_TYPE, LIQUID_GLASS, FLOWING_LIQUID_GLASS)
+                .bucket(ModItems.LIQUID_GLASS_BUCKET)
+                .block(ModBlocks.LIQUID_GLASS_BLOCK)
+                .slopeFindDistance(2)
+                .levelDecreasePerBlock(2)
+                .tickRate(40);
+    }
+
+    private static final class SodiumCarbonatePropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                SODIUM_CARBONATE_SOLUTION_TYPE, SODIUM_CARBONATE_SOLUTION, FLOWING_SODIUM_CARBONATE_SOLUTION)
+                .bucket(ModItems.SODIUM_CARBONATE_SOLUTION_BUCKET)
+                .block(ModBlocks.SODIUM_CARBONATE_SOLUTION_BLOCK)
+                .slopeFindDistance(4)
+                .levelDecreasePerBlock(1)
+                .tickRate(10);
+    }
+
+    private static final class CupricChloridePropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                CUPRIC_CHLORIDE_SOLUTION_TYPE, CUPRIC_CHLORIDE_SOLUTION, FLOWING_CUPRIC_CHLORIDE_SOLUTION)
+                .bucket(ModItems.CUPRIC_CHLORIDE_SOLUTION_BUCKET)
+                .block(ModBlocks.CUPRIC_CHLORIDE_SOLUTION_BLOCK)
+                .slopeFindDistance(4)
+                .levelDecreasePerBlock(1)
+                .tickRate(10);
+    }
+
+    private static final class SodiumHydroxidePropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                SODIUM_HYDROXIDE_SOLUTION_TYPE, SODIUM_HYDROXIDE_SOLUTION, FLOWING_SODIUM_HYDROXIDE_SOLUTION)
+                .bucket(ModItems.SODIUM_HYDROXIDE_SOLUTION_BUCKET)
+                .block(ModBlocks.SODIUM_HYDROXIDE_SOLUTION_BLOCK)
+                .slopeFindDistance(4)
+                .levelDecreasePerBlock(1)
                 .tickRate(10);
     }
 

@@ -1,0 +1,12 @@
+﻿{
+  "type": "tech_revised:bundling",
+  "ingredients": [
+    { "item": "tech_revised:dried_glass_spool" },
+    { "item": "tech_revised:dried_glass_spool" },
+    { "item": "tech_revised:dried_glass_spool" },
+    { "item": "tech_revised:dried_glass_spool" }
+  ],
+  "result": { "item": "tech_revised:glass_roving" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

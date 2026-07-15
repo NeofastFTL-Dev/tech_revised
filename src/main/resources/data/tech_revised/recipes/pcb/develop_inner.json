@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:inner_layer_patterned_board" },
+    { "item": "tech_revised:sodium_carbonate_solution_bucket" }
+  ],
+  "result": { "item": "tech_revised:developed_inner_layer_board" },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

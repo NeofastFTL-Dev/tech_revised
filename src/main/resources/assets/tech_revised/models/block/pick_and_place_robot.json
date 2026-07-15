@@ -1,0 +1,6 @@
+﻿{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "tech_revised:block/pick_and_place_robot"
+  }
+}

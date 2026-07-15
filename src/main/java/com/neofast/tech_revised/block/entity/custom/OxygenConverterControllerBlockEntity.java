@@ -3,13 +3,13 @@ package com.neofast.tech_revised.block.entity.custom;
 import com.neofast.tech_revised.block.custom.OxygenConverterControllerBlock;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.fluid.ModFluids;
+import com.neofast.tech_revised.recipe.OxygenConverterRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -20,15 +20,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public class OxygenConverterControllerBlockEntity extends BlockEntity {
     private static final int DEFAULT_PROCESS_TICKS = 100;
     private static final int ENERGY_CAPACITY = 50000;
     private static final int ENERGY_TRANSFER_PER_TICK = 1000;
-    private static final int ENERGY_PER_TICK = 60;
-    private static final int WATER_PER_OPERATION = 1000;
-    private static final int OXYGEN_PER_OPERATION = 500;
-    private static final int HYDROGEN_PER_OPERATION = 1000;
+    private static final int DEFAULT_ENERGY_PER_TICK = 60;
 
     private int progress = 0;
 
@@ -123,42 +121,58 @@ public class OxygenConverterControllerBlockEntity extends BlockEntity {
 
         blockEntity.pullEnergyFromHatch(energyInputHatch);
 
-        if (blockEntity.energyStorage.getEnergyStored() < ENERGY_PER_TICK) {
+        Optional<OxygenConverterRecipe> recipe = getRecipe(level, inputBus.getStoredFluid());
+        if (recipe.isEmpty()) {
             blockEntity.resetProgress();
             return;
         }
 
-        FluidStack simulatedDrain = inputBus.drain(WATER_PER_OPERATION, IFluidHandler.FluidAction.SIMULATE);
-        if (simulatedDrain.getAmount() < WATER_PER_OPERATION || simulatedDrain.getFluid() != Fluids.WATER) {
+        OxygenConverterRecipe currentRecipe = recipe.get();
+        int energyPerTick = currentRecipe.getEnergyPerTick();
+
+        if (blockEntity.energyStorage.getEnergyStored() < energyPerTick) {
             blockEntity.resetProgress();
             return;
         }
 
-        FluidStack oxygenOutput = new FluidStack(ModFluids.OXYGEN.get(), OXYGEN_PER_OPERATION);
-        if (oxygenOutputBus.fill(oxygenOutput, IFluidHandler.FluidAction.SIMULATE) < OXYGEN_PER_OPERATION) {
+        FluidStack inputRequirement = currentRecipe.getInputFluid();
+        if (inputBus.drain(inputRequirement, IFluidHandler.FluidAction.SIMULATE).getAmount() < inputRequirement.getAmount()) {
             blockEntity.resetProgress();
             return;
         }
 
-        FluidStack hydrogenOutput = new FluidStack(ModFluids.HYDROGEN.get(), HYDROGEN_PER_OPERATION);
-        if (hydrogenOutputBus.fill(hydrogenOutput, IFluidHandler.FluidAction.SIMULATE) < HYDROGEN_PER_OPERATION) {
+        FluidStack output1 = currentRecipe.getOutputFluid1();
+        if (oxygenOutputBus.fill(output1, IFluidHandler.FluidAction.SIMULATE) < output1.getAmount()) {
             blockEntity.resetProgress();
             return;
         }
 
-        blockEntity.energyStorage.extractEnergy(ENERGY_PER_TICK, false);
+        FluidStack output2 = currentRecipe.getOutputFluid2();
+        if (hydrogenOutputBus.fill(output2, IFluidHandler.FluidAction.SIMULATE) < output2.getAmount()) {
+            blockEntity.resetProgress();
+            return;
+        }
+
+        blockEntity.energyStorage.extractEnergy(energyPerTick, false);
         blockEntity.progress++;
-        if (blockEntity.progress < DEFAULT_PROCESS_TICKS) {
+        if (blockEntity.progress < currentRecipe.getProcessTicks()) {
             blockEntity.setChanged();
             return;
         }
 
-        inputBus.drain(WATER_PER_OPERATION, IFluidHandler.FluidAction.EXECUTE);
-        oxygenOutputBus.fill(oxygenOutput, IFluidHandler.FluidAction.EXECUTE);
-        hydrogenOutputBus.fill(hydrogenOutput, IFluidHandler.FluidAction.EXECUTE);
+        inputBus.drain(inputRequirement, IFluidHandler.FluidAction.EXECUTE);
+        oxygenOutputBus.fill(output1, IFluidHandler.FluidAction.EXECUTE);
+        hydrogenOutputBus.fill(output2, IFluidHandler.FluidAction.EXECUTE);
 
         blockEntity.progress = 0;
         blockEntity.setChanged();
+    }
+
+    private static Optional<OxygenConverterRecipe> getRecipe(Level level, FluidStack input) {
+        if (input.isEmpty()) return Optional.empty();
+        return level.getRecipeManager().getAllRecipesFor(OxygenConverterRecipe.Type.INSTANCE).stream()
+                .filter(r -> r.getInputFluid().getFluid() == input.getFluid())
+                .findFirst();
     }
 
     private void pullEnergyFromHatch(ElectricArcFurnaceEnergyInputHatchBlockEntity energyInputHatch) {

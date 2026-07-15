@@ -1,0 +1,12 @@
+﻿{
+  "type": "tech_revised:chopping",
+  "ingredients": [
+    { "item": "tech_revised:glass_roving" }
+  ],
+  "result": { 
+    "item": "tech_revised:chopped_glass_strand",
+    "count": 4
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 40
+}

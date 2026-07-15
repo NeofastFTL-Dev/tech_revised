@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:weaving",
+  "ingredients": [
+    { "item": "tech_revised:glass_roving" },
+    { "item": "tech_revised:glass_roving" }
+  ],
+  "result": { "item": "tech_revised:fiberglass_fabric" },
+  "process_ticks": 400,
+  "energy_per_tick": 80
+}

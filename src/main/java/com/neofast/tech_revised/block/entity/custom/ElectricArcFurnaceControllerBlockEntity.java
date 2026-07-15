@@ -198,7 +198,9 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
             return;
         }
 
-        if (!blockEntity.hasRequiredCoolingWater(waterPerOperation) || !blockEntity.hasRequiredEnergy(energyPerTick)) {
+        if (!blockEntity.hasRequiredCoolingWater(waterPerOperation)
+                || !blockEntity.hasRequiredEnergy(energyPerTick)
+                || !blockEntity.hasSpaceForOutputWater(fluidOutputBus, waterPerOperation)) {
             blockEntity.resetProgress();
             return;
         }
@@ -285,6 +287,10 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
 
     private boolean hasRequiredEnergy(int energyPerTick) {
         return energyStorage.getEnergyStored() >= energyPerTick;
+    }
+
+    private boolean hasSpaceForOutputWater(ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus, int amount) {
+        return fluidOutputBus.fill(new FluidStack(Fluids.WATER, amount), IFluidHandler.FluidAction.SIMULATE) == amount;
     }
 
     private void resetProgress() {

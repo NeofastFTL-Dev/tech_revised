@@ -1,0 +1,10 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:inner_layer_patterned_board" },
+    { "item": "tech_revised:verified_gerber_file" }
+  ],
+  "result": { "item": "tech_revised:inner_layer_patterned_board" },
+  "process_ticks": 200,
+  "energy_per_tick": 100
+}

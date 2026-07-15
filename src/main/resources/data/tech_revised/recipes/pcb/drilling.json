@@ -1,0 +1,9 @@
+﻿{
+  "type": "tech_revised:pcb",
+  "ingredients": [
+    { "item": "tech_revised:laminated_pcb_core" }
+  ],
+  "result": { "item": "tech_revised:drilled_pcb" },
+  "process_ticks": 200,
+  "energy_per_tick": 100
+}
