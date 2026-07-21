@@ -1,23 +1,8 @@
 package com.neofast.tech_revised.block;
 
 import com.neofast.tech_revised.TechRevised;
-import com.neofast.tech_revised.block.custom.CokeOvenControllerBlock;
-import com.neofast.tech_revised.block.custom.CokeOvenFrameBlock;
-import com.neofast.tech_revised.block.custom.CrusherBlock;
-import com.neofast.tech_revised.block.custom.DrillingPlatformControllerBlock;
-import com.neofast.tech_revised.block.custom.DrillingPlatformFrameBlock;
-import com.neofast.tech_revised.block.custom.ArgonOxygenDecarburizationConverterControllerBlock;
-import com.neofast.tech_revised.block.custom.ArgonOxygenDecarburizationConverterFrameBlock;
-import com.neofast.tech_revised.block.custom.ElectricArcFurnaceControllerBlock;
-import com.neofast.tech_revised.block.custom.ElectricArcFurnaceEnergyInputHatchBlock;
-import com.neofast.tech_revised.block.custom.ElectricArcFurnaceFrameBlock;
-import com.neofast.tech_revised.block.custom.ElectricArcFurnaceFluidInputBusBlock;
-import com.neofast.tech_revised.block.custom.ElectricArcFurnaceFluidOutputBusBlock;
-import com.neofast.tech_revised.block.custom.ElectricArcFurnaceInputBusBlock;
-import com.neofast.tech_revised.block.custom.ElectricArcFurnaceOutputBusBlock;
-import com.neofast.tech_revised.block.custom.OxygenConverterControllerBlock;
-import com.neofast.tech_revised.block.custom.OxygenConverterFrameBlock;
-import com.neofast.tech_revised.block.custom.Windows7VmBlock;
+import com.neofast.tech_revised.block.custom.*;
+import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.fluid.ModFluids;
 import com.neofast.tech_revised.item.ModItems;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -99,31 +84,36 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 12)));
 
     public static final RegistryObject<Block> BLAST_FURNACE_CORE = registerBlock("blast_furnace_core",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new BlastFurnaceControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> INDUSTRIAL_BATCHING_MIXER = registerBlock("industrial_batching_mixer",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new BatchingMixerControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> REFRACTORY_MELTING_FURNACE = registerBlock("refractory_melting_furnace",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 13)));
+            () -> new MeltingFurnaceControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 13)));
 
     public static final RegistryObject<Block> CHEMICAL_SIZING_APPLICATOR = registerBlock("chemical_sizing_applicator",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> HIGH_SPEED_GATHERING_WINDER = registerBlock("high_speed_gathering_winder",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+                    ModBlockEntities.GATHERING_WINDER));
 
     public static final RegistryObject<Block> INDUSTRIAL_DRYING_OVEN = registerBlock("industrial_drying_oven",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 10)));
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 10),
+                    ModBlockEntities.DRYING_OVEN));
 
     public static final RegistryObject<Block> ROVING_CREEL_CONVERTER = registerBlock("roving_creel_converter",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+                    ModBlockEntities.CREEL_CONVERTER));
 
     public static final RegistryObject<Block> INDUSTRIAL_TEXTILE_WEAVING_LOOM = registerBlock("industrial_textile_weaving_loom",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+                    ModBlockEntities.TEXTILE_LOOM));
 
     public static final RegistryObject<Block> STRAND_CHOPPING_MACHINERY = registerBlock("strand_chopping_machinery",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+                    ModBlockEntities.STRAND_CHOPPER));
 
     // PCB Machines
     public static final RegistryObject<Block> DESIGN_ENGINEERING_STATION = registerBlock("design_engineering_station",

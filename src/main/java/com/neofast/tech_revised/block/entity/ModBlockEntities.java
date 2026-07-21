@@ -1,20 +1,8 @@
-
 package com.neofast.tech_revised.block.entity;
 
 import com.neofast.tech_revised.TechRevised;
 import com.neofast.tech_revised.block.ModBlocks;
-import com.neofast.tech_revised.block.entity.custom.ArgonOxygenDecarburizationConverterControllerBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.CokeOvenControllerBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.CrusherBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.DrillingPlatformControllerBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceControllerBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceEnergyInputHatchBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceFluidInputBusBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceFluidOutputBusBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceInputBusBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceOutputBusBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.OxygenConverterControllerBlockEntity;
-import com.neofast.tech_revised.block.entity.custom.Windows7VmBlockEntity;
+import com.neofast.tech_revised.block.entity.custom.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -84,6 +72,46 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("oxygen_converter_controller_entity", () ->
                     BlockEntityType.Builder.of(OxygenConverterControllerBlockEntity::new,
                             ModBlocks.OXYGEN_CONVERTER_CONTROLLER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<BlastFurnaceControllerBlockEntity>> BLAST_FURNACE_CONTROLLER =
+            BLOCK_ENTITIES.register("blast_furnace_controller_entity", () ->
+                    BlockEntityType.Builder.of(BlastFurnaceControllerBlockEntity::new,
+                            ModBlocks.BLAST_FURNACE_CORE.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<BatchingMixerControllerBlockEntity>> BATCHING_MIXER_CONTROLLER =
+            BLOCK_ENTITIES.register("batching_mixer_controller_entity", () ->
+                    BlockEntityType.Builder.of(BatchingMixerControllerBlockEntity::new,
+                            ModBlocks.INDUSTRIAL_BATCHING_MIXER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<MeltingFurnaceControllerBlockEntity>> MELTING_FURNACE_CONTROLLER =
+            BLOCK_ENTITIES.register("melting_furnace_controller_entity", () ->
+                    BlockEntityType.Builder.of(MeltingFurnaceControllerBlockEntity::new,
+                            ModBlocks.REFRACTORY_MELTING_FURNACE.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<DryingOvenBlockEntity>> DRYING_OVEN =
+            BLOCK_ENTITIES.register("drying_oven_entity", () ->
+                    BlockEntityType.Builder.of(DryingOvenBlockEntity::new,
+                            ModBlocks.INDUSTRIAL_DRYING_OVEN.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<GatheringWinderBlockEntity>> GATHERING_WINDER =
+            BLOCK_ENTITIES.register("gathering_winder_entity", () ->
+                    BlockEntityType.Builder.of(GatheringWinderBlockEntity::new,
+                            ModBlocks.HIGH_SPEED_GATHERING_WINDER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<CreelConverterBlockEntity>> CREEL_CONVERTER =
+            BLOCK_ENTITIES.register("creel_converter_entity", () ->
+                    BlockEntityType.Builder.of(CreelConverterBlockEntity::new,
+                            ModBlocks.ROVING_CREEL_CONVERTER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<TextileLoomBlockEntity>> TEXTILE_LOOM =
+            BLOCK_ENTITIES.register("textile_loom_entity", () ->
+                    BlockEntityType.Builder.of(TextileLoomBlockEntity::new,
+                            ModBlocks.INDUSTRIAL_TEXTILE_WEAVING_LOOM.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<StrandChopperBlockEntity>> STRAND_CHOPPER =
+            BLOCK_ENTITIES.register("strand_chopper_entity", () ->
+                    BlockEntityType.Builder.of(StrandChopperBlockEntity::new,
+                            ModBlocks.STRAND_CHOPPING_MACHINERY.get()).build(null));
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

@@ -3,6 +3,7 @@ package com.neofast.tech_revised.integration.jei;
 import com.neofast.tech_revised.TechRevised;
 import com.neofast.tech_revised.block.ModBlocks;
 import com.neofast.tech_revised.fluid.ModFluids;
+import com.neofast.tech_revised.item.ModItems;
 import com.neofast.tech_revised.recipe.ArgonOxygenDecarburizationConverterRecipe;
 import com.neofast.tech_revised.recipe.CokeOvenRecipe;
 import com.neofast.tech_revised.recipe.CrusherRecipe;
@@ -17,7 +18,7 @@ import com.neofast.tech_revised.recipe.ItemFluidToItemRecipe;
 import com.neofast.tech_revised.recipe.GenericIndustrialRecipe;
 import com.neofast.tech_revised.recipe.PcbRecipe;
 import com.neofast.tech_revised.recipe.LaminationRecipe;
-import com.neofast.tech_revised.recipe.ModRecipes;
+import com.neofast.tech_revised.recipe.*;
 import com.neofast.tech_revised.screen.CrusherMenu;
 import com.neofast.tech_revised.screen.CrusherScreen;
 import com.neofast.tech_revised.screen.ElectricArcFurnaceControllerScreen;
@@ -204,19 +205,19 @@ public class TechRevisedJeiPlugin implements IModPlugin {
             registration.addRecipes(ExtrusionJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(FluidToItemRecipe.Type.INSTANCE));
             registration.addRecipes(SizingJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ItemFluidToItemRecipe.Type.INSTANCE));
             
-            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "drying"), GenericIndustrialRecipe.class), 
-                    level.getRecipeManager().getAllRecipesFor(ModRecipes.DRYING_SERIALIZER.get().getType()));
-            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "winding"), GenericIndustrialRecipe.class), 
-                    level.getRecipeManager().getAllRecipesFor(ModRecipes.WINDING_SERIALIZER.get().getType()));
-            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "bundling"), GenericIndustrialRecipe.class), 
-                    level.getRecipeManager().getAllRecipesFor(ModRecipes.BUNDLING_SERIALIZER.get().getType()));
-            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "weaving"), GenericIndustrialRecipe.class), 
-                    level.getRecipeManager().getAllRecipesFor(ModRecipes.WEAVING_SERIALIZER.get().getType()));
-            registration.addRecipes(new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "chopping"), GenericIndustrialRecipe.class), 
-                    level.getRecipeManager().getAllRecipesFor(ModRecipes.CHOPPING_SERIALIZER.get().getType()));
+            registration.addRecipes(new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "drying"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.DryingRecipeType.INSTANCE));
+            registration.addRecipes(new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "winding"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.WindingRecipeType.INSTANCE));
+            registration.addRecipes(new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "bundling"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.BundlingRecipeType.INSTANCE));
+            registration.addRecipes(new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "weaving"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.WeavingRecipeType.INSTANCE));
+            registration.addRecipes(new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "chopping"), GenericIndustrialRecipe.class), 
+                    level.getRecipeManager().getAllRecipesFor(ModRecipes.ChoppingRecipeType.INSTANCE));
             
-            registration.addRecipes(PcbJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ModRecipes.PCB_SERIALIZER.get().getType()));
-            registration.addRecipes(LaminationJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ModRecipes.LAMINATION_SERIALIZER.get().getType()));
+            registration.addRecipes(PcbJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ModRecipes.PcbRecipeType.INSTANCE));
+            registration.addRecipes(LaminationJeiCategory.RECIPE_TYPE, level.getRecipeManager().getAllRecipesFor(ModRecipes.LaminationRecipeType.INSTANCE));
         }
     }
 
@@ -343,18 +344,18 @@ public class TechRevisedJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BLAST_FURNACE_CORE.get()), AlloyingJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.INDUSTRIAL_BATCHING_MIXER.get()), BatchingJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.REFRACTORY_MELTING_FURNACE.get()), MeltingJeiCategory.RECIPE_TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PLATINUM_ALLOY_BUSHING_PLATE.get()), ExtrusionJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModItems.PLATINUM_ALLOY_BUSHING_PLATE.get()), ExtrusionJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CHEMICAL_SIZING_APPLICATOR.get()), SizingJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.INDUSTRIAL_DRYING_OVEN.get()), 
-                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "drying"), GenericIndustrialRecipe.class));
+                new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "drying"), GenericIndustrialRecipe.class));
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.HIGH_SPEED_GATHERING_WINDER.get()), 
-                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "winding"), GenericIndustrialRecipe.class));
+                new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "winding"), GenericIndustrialRecipe.class));
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROVING_CREEL_CONVERTER.get()), 
-                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "bundling"), GenericIndustrialRecipe.class));
+                new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "bundling"), GenericIndustrialRecipe.class));
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.INDUSTRIAL_TEXTILE_WEAVING_LOOM.get()), 
-                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "weaving"), GenericIndustrialRecipe.class));
+                new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "weaving"), GenericIndustrialRecipe.class));
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.STRAND_CHOPPING_MACHINERY.get()), 
-                new RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "chopping"), GenericIndustrialRecipe.class));
+                new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(TechRevised.MOD_ID, "chopping"), GenericIndustrialRecipe.class));
         
         // PCB Catalysts
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.DESIGN_ENGINEERING_STATION.get()), PcbJeiCategory.RECIPE_TYPE);

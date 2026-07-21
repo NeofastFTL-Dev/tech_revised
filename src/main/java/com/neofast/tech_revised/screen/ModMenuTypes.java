@@ -29,6 +29,9 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<Windows7VmMenu>> WINDOWS_7_VM_MENU =
             registerMenuType(Windows7VmMenu::new, "windows_7_vm_menu");
 
+    public static final RegistryObject<MenuType<GenericIndustrialMachineMenu>> GENERIC_INDUSTRIAL_MACHINE_MENU =
+            registerMenuType(GenericIndustrialMachineMenu::new, "generic_industrial_machine_menu");
+
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,
                                                                                                     String name) {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));

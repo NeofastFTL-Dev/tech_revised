@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "tech_revised:block/flying_probe_tester"
+    "all": "minecraft:block/iron_block"
   }
 }

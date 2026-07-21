@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "tech_revised:block/multi_zone_reflow_oven"
+    "all": "minecraft:block/iron_block"
   }
 }

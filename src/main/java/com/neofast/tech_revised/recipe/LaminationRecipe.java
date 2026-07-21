@@ -96,7 +96,7 @@ public class LaminationRecipe implements Recipe<Container> {
 
     @Override
     public RecipeType<?> getType() {
-        return LaminationRecipeType.INSTANCE;
+        return ModRecipes.LaminationRecipeType.INSTANCE;
     }
 
     public NonNullList<Ingredient> getLayers() {

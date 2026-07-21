@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "tech_revised:block/uv_pad_exposure_station"
+    "all": "minecraft:block/iron_block"
   }
 }

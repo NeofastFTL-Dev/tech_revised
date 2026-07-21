@@ -2,6 +2,7 @@ package com.neofast.tech_revised.integration.jei;
 
 import com.neofast.tech_revised.TechRevised;
 import com.neofast.tech_revised.block.ModBlocks;
+import com.neofast.tech_revised.item.ModItems;
 import com.neofast.tech_revised.recipe.FluidToItemRecipe;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -24,7 +25,7 @@ public class ExtrusionJeiCategory implements IRecipeCategory<FluidToItemRecipe> 
 
     public ExtrusionJeiCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(new ResourceLocation(TechRevised.MOD_ID, "textures/gui/jei_gui.png"), 0, 0, 176, 50);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.PLATINUM_ALLOY_BUSHING_PLATE.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModItems.PLATINUM_ALLOY_BUSHING_PLATE.get()));
     }
 
     @Override

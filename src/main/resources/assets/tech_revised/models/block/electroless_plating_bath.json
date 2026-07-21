@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "tech_revised:block/electroless_plating_bath"
+    "all": "minecraft:block/iron_block"
   }
 }

@@ -25,7 +25,32 @@ public class AlloyingRecipe implements Recipe<Container> {
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
         if (pLevel.isClientSide()) return false;
-        return false;
+        
+        // Match inputs in any order
+        java.util.List<ItemStack> containerItems = new java.util.ArrayList<>();
+        for (int i = 0; i < pContainer.getContainerSize(); i++) {
+            ItemStack stack = pContainer.getItem(i);
+            if (!stack.isEmpty()) {
+                containerItems.add(stack);
+            }
+        }
+
+        if (containerItems.size() != inputs.size()) return false;
+
+        boolean[] matched = new boolean[inputs.size()];
+        for (ItemStack stack : containerItems) {
+            boolean foundMatch = false;
+            for (int i = 0; i < inputs.size(); i++) {
+                if (!matched[i] && inputs.get(i).test(stack)) {
+                    matched[i] = true;
+                    foundMatch = true;
+                    break;
+                }
+            }
+            if (!foundMatch) return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -68,7 +93,7 @@ public class AlloyingRecipe implements Recipe<Container> {
 
         @Override
         public String toString() {
-            return "industrialsteel:" + ID;
+            return com.neofast.tech_revised.TechRevised.MOD_ID + ":" + ID;
         }
     }
 

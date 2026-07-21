@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "tech_revised:item/chemical_lubricant"
+    "layer0": "minecraft:item/iron_ingot"
   }
 }

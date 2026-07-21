@@ -73,35 +73,35 @@ public class ModRecipes {
         SERIALIZERS.register(eventBus);
         INDUSTRIAL_STEEL_SERIALIZERS.register(eventBus);
     }
-}
 
-class DryingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
-    public static final DryingRecipeType INSTANCE = new DryingRecipeType();
-    @Override public String toString() { return "tech_revised:drying"; }
-}
-class WindingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
-    public static final WindingRecipeType INSTANCE = new WindingRecipeType();
-    @Override public String toString() { return "tech_revised:winding"; }
-}
-class BundlingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
-    public static final BundlingRecipeType INSTANCE = new BundlingRecipeType();
-    @Override public String toString() { return "tech_revised:bundling"; }
-}
-class WeavingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
-    public static final WeavingRecipeType INSTANCE = new WeavingRecipeType();
-    @Override public String toString() { return "tech_revised:weaving"; }
-}
-class ChoppingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
-    public static final ChoppingRecipeType INSTANCE = new ChoppingRecipeType();
-    @Override public String toString() { return "tech_revised:chopping"; }
-}
+    public static class DryingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
+        public static final DryingRecipeType INSTANCE = new DryingRecipeType();
+        @Override public String toString() { return "tech_revised:drying"; }
+    }
+    public static class WindingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
+        public static final WindingRecipeType INSTANCE = new WindingRecipeType();
+        @Override public String toString() { return "tech_revised:winding"; }
+    }
+    public static class BundlingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
+        public static final BundlingRecipeType INSTANCE = new BundlingRecipeType();
+        @Override public String toString() { return "tech_revised:bundling"; }
+    }
+    public static class WeavingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
+        public static final WeavingRecipeType INSTANCE = new WeavingRecipeType();
+        @Override public String toString() { return "tech_revised:weaving"; }
+    }
+    public static class ChoppingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {
+        public static final ChoppingRecipeType INSTANCE = new ChoppingRecipeType();
+        @Override public String toString() { return "tech_revised:chopping"; }
+    }
 
-class PcbRecipeType implements net.minecraft.world.item.crafting.RecipeType<PcbRecipe> {
-    public static final PcbRecipeType INSTANCE = new PcbRecipeType();
-    @Override public String toString() { return "tech_revised:pcb"; }
-}
+    public static class PcbRecipeType implements net.minecraft.world.item.crafting.RecipeType<PcbRecipe> {
+        public static final PcbRecipeType INSTANCE = new PcbRecipeType();
+        @Override public String toString() { return "tech_revised:pcb"; }
+    }
 
-class LaminationRecipeType implements net.minecraft.world.item.crafting.RecipeType<LaminationRecipe> {
-    public static final LaminationRecipeType INSTANCE = new LaminationRecipeType();
-    @Override public String toString() { return "tech_revised:lamination"; }
+    public static class LaminationRecipeType implements net.minecraft.world.item.crafting.RecipeType<LaminationRecipe> {
+        public static final LaminationRecipeType INSTANCE = new LaminationRecipeType();
+        @Override public String toString() { return "tech_revised:lamination"; }
+    }
 }

@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "tech_revised:block/alkaline_stripping_station"
+    "all": "minecraft:block/iron_block"
   }
 }

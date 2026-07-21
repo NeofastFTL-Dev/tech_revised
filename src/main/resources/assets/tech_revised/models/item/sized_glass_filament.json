@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "tech_revised:item/sized_glass_filament"
+    "layer0": "minecraft:item/iron_ingot"
   }
 }

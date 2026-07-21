@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "tech_revised:item/cad_layout"
+    "layer0": "minecraft:item/paper"
   }
 }

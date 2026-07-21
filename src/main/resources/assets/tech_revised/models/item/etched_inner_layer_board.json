@@ -1,6 +1,6 @@
-﻿{
+{
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "tech_revised:item/etched_inner_layer_board"
+    "layer0": "minecraft:item/paper"
   }
 }

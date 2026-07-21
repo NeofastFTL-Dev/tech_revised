@@ -30,8 +30,31 @@ public class BatchingRecipe implements Recipe<Container> {
     @Override
     public boolean matches(Container container, Level level) {
         if (level.isClientSide()) return false;
-        // Logic for matching multi-slot container
-        return false; 
+        
+        java.util.List<ItemStack> containerItems = new java.util.ArrayList<>();
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            ItemStack stack = container.getItem(i);
+            if (!stack.isEmpty()) {
+                containerItems.add(stack);
+            }
+        }
+
+        if (containerItems.size() != inputs.size()) return false;
+
+        boolean[] matched = new boolean[inputs.size()];
+        for (ItemStack stack : containerItems) {
+            boolean foundMatch = false;
+            for (int i = 0; i < inputs.size(); i++) {
+                if (!matched[i] && inputs.get(i).test(stack)) {
+                    matched[i] = true;
+                    foundMatch = true;
+                    break;
+                }
+            }
+            if (!foundMatch) return false;
+        }
+
+        return true;
     }
 
     @Override
