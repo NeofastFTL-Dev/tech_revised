@@ -1,0 +1,11 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:photo_resist_applicator",
+  "ingredients": [
+    { "item": "tech_revised:electroless_copper_coated_pcb" },
+    { "item": "tech_revised:photo_resist_polymer" }
+  ],
+  "result": { "item": "tech_revised:patterned_outer_layer_pcb" },
+  "process_ticks": 100,
+  "energy_per_tick": 40
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_chemicals",
+  "ingredients": [
+    { "item": "tech_revised:soda_ash" },
+    { "item": "minecraft:sand" }
+  ],
+  "result": {
+    "item": "tech_revised:sodium_carbonate_dust",
+    "count": 2
+  },
+  "show_notification": true
+}

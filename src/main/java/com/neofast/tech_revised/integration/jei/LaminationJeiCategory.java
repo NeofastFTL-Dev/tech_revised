@@ -10,6 +10,8 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -21,10 +23,12 @@ public class LaminationJeiCategory implements IRecipeCategory<LaminationRecipe> 
 
     private final IDrawable background;
     private final IDrawable icon;
+    private final IDrawable arrow;
 
     public LaminationJeiCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(new ResourceLocation(TechRevised.MOD_ID, "textures/gui/jei_gui.png"), 0, 0, 176, 100);
+        this.background = guiHelper.createBlankDrawable(150, 80);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.VACUUM_LAMINATION_PRESS.get()));
+        this.arrow = guiHelper.getRecipeArrow();
     }
 
     @Override
@@ -38,6 +42,7 @@ public class LaminationJeiCategory implements IRecipeCategory<LaminationRecipe> 
     }
 
     @Override
+    @SuppressWarnings("removal")
     public IDrawable getBackground() {
         return background;
     }
@@ -51,9 +56,28 @@ public class LaminationJeiCategory implements IRecipeCategory<LaminationRecipe> 
     public void setRecipe(IRecipeLayoutBuilder builder, LaminationRecipe recipe, IFocusGroup focuses) {
         int i = 0;
         for (Ingredient ingredient : recipe.getLayers()) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 10, 10 + (i * 18)).addIngredients(ingredient);
+            builder.addSlot(RecipeIngredientRole.INPUT, 8, 8 + i * 20)
+                    .addIngredients(ingredient);
             i++;
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 140, 40).addItemStack(recipe.getResultItem(null));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 28)
+                .addItemStack(recipe.getResultItem(null));
+        builder.addSlot(RecipeIngredientRole.CATALYST, 120, 56)
+                .addItemStack(new ItemStack(ModBlocks.VACUUM_LAMINATION_PRESS.get()));
+    }
+
+    @Override
+    public void draw(LaminationRecipe recipe,
+                     mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView,
+                     GuiGraphics guiGraphics,
+                     double mouseX,
+                     double mouseY) {
+        arrow.draw(guiGraphics, 80, 28);
+        var font = Minecraft.getInstance().font;
+        guiGraphics.drawString(font, Component.literal("Layers (top -> bottom)"), 30, 4, 0x8B8B8B, false);
+        int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
+        guiGraphics.drawString(font,
+                Component.literal(recipe.getProcessTicks() + "t / " + totalEnergy + " FE"),
+                30, 64, 0x8B8B8B, false);
     }
 }

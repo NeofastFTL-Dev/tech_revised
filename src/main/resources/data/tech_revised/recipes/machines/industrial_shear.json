@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "SPS",
+    "SRS"
+  ],
+  "key": {
+    "S": {
+      "item": "tech_revised:steel_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "tech_revised:industrial_shear"
+  }
+}

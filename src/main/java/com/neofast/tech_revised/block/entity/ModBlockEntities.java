@@ -113,6 +113,39 @@ public class ModBlockEntities {
                     BlockEntityType.Builder.of(StrandChopperBlockEntity::new,
                             ModBlocks.STRAND_CHOPPING_MACHINERY.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<PcbMachineBlockEntity>> PCB_MACHINE =
+            BLOCK_ENTITIES.register("pcb_machine_entity", () ->
+                    BlockEntityType.Builder.of(PcbMachineBlockEntity::new,
+                            ModBlocks.DESIGN_ENGINEERING_STATION.get(),
+                            ModBlocks.INDUSTRIAL_SHEAR.get(),
+                            ModBlocks.DECONTAMINATION_OVEN.get(),
+                            ModBlocks.HYDRAULIC_CLADDING_PRESS.get(),
+                            ModBlocks.PHOTO_RESIST_APPLICATOR.get(),
+                            ModBlocks.UV_LDI_IMAGER.get(),
+                            ModBlocks.CHEMICAL_DEVELOPING_WASH.get(),
+                            ModBlocks.ACIDIC_ETCHING_SPRAYER.get(),
+                            ModBlocks.ALKALINE_STRIPPING_STATION.get(),
+                            ModBlocks.XRAY_ALIGNMENT_DRILL.get(),
+                            ModBlocks.ELECTROLESS_PLATING_BATH.get(),
+                            ModBlocks.COPPER_ELECTROPLATING_TANK.get(),
+                            ModBlocks.TIN_PLATING_TANK.get(),
+                            ModBlocks.SOLDERMASK_FLOODER.get(),
+                            ModBlocks.UV_PAD_EXPOSURE_STATION.get(),
+                            ModBlocks.INKJET_SILKSCREEN_PRINTER.get(),
+                            ModBlocks.SURFACE_FINISH_STATION.get(),
+                            ModBlocks.FLYING_PROBE_TESTER.get(),
+                            ModBlocks.CNC_ROUTER.get(),
+                            ModBlocks.SOLDER_PASTE_PRINTER.get(),
+                            ModBlocks.PICK_AND_PLACE_ROBOT.get(),
+                            ModBlocks.MULTI_ZONE_REFLOW_OVEN.get(),
+                            ModBlocks.AOI_VERIFICATION_STATION.get()
+                    ).build(null));
+
+    public static final RegistryObject<BlockEntityType<LaminationMachineBlockEntity>> LAMINATION_MACHINE =
+            BLOCK_ENTITIES.register("lamination_machine_entity", () ->
+                    BlockEntityType.Builder.of(LaminationMachineBlockEntity::new,
+                            ModBlocks.VACUUM_LAMINATION_PRESS.get()).build(null));
+
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }

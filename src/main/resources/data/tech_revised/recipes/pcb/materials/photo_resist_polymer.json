@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_materials",
+  "ingredients": [
+    { "item": "minecraft:slime_ball" },
+    { "item": "minecraft:redstone" },
+    { "item": "minecraft:glowstone_dust" }
+  ],
+  "result": {
+    "item": "tech_revised:photo_resist_polymer",
+    "count": 4
+  },
+  "show_notification": true
+}

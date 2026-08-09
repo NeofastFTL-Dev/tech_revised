@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-    "down": "tech_revised:block/steel_frame_normal",
-    "up": "tech_revised:block/steel_frame_normal",
-    "north": "tech_revised:block/steel_frame_normal",
-    "south": "tech_revised:block/steel_frame_normal",
-    "west": "tech_revised:block/steel_frame_normal",
-    "east": "tech_revised:block/steel_frame_normal",
-    "particle": "tech_revised:block/steel_frame_normal"
+    "down": "tech_revised:block/machine_top",
+    "up": "tech_revised:block/machine_top",
+    "north": "tech_revised:block/crusher_front_idle",
+    "south": "tech_revised:block/machine_side",
+    "west": "tech_revised:block/machine_side",
+    "east": "tech_revised:block/machine_side",
+    "particle": "tech_revised:block/machine_side"
   }
 }

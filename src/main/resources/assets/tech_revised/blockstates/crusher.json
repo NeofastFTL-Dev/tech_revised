@@ -1,6 +1,10 @@
 {
   "variants": {
-    "active=false": { "model": "tech_revised:block/crusher_idle" },
-    "active=true": { "model": "tech_revised:block/crusher" }
+    "active=false": {
+      "model": "tech_revised:block/crusher_idle"
+    },
+    "active=true": {
+      "model": "tech_revised:block/crusher"
+    }
   }
 }

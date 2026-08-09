@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:uv_ldi_imager",
   "ingredients": [
     { "item": "tech_revised:inner_layer_patterned_board" },
     { "item": "tech_revised:verified_gerber_file" }

@@ -67,11 +67,12 @@ public class LaminationRecipe implements Recipe<Container> {
     }
 
     private boolean isCore(ItemStack stack) {
+        // multi_layer_stackup is a pre-assembled core/prepreg sandwich - not a bare core.
         return stack.is(ModItems.STRIPPED_INNER_LAYER_BOARD.get()) || stack.is(ModItems.COPPER_CLAD_LAMINATE.get());
     }
 
     private boolean isPrepreg(ItemStack stack) {
-        return stack.is(ModItems.PREPREG_FABRIC.get());
+        return stack.is(ModItems.PREPREG_FABRIC.get()) || stack.is(ModItems.MULTI_LAYER_STACKUP.get());
     }
 
     @Override
@@ -100,6 +101,11 @@ public class LaminationRecipe implements Recipe<Container> {
     }
 
     public NonNullList<Ingredient> getLayers() {
+        return layers;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
         return layers;
     }
 

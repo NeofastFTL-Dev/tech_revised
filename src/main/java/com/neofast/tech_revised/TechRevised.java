@@ -55,6 +55,7 @@ public class TechRevised
         MenuScreens.register(ModMenuTypes.ELECTRIC_ARC_FURNACE_OUTPUT_BUS_MENU.get(), ElectricArcFurnaceOutputBusScreen::new);
         MenuScreens.register(ModMenuTypes.WINDOWS_7_VM_MENU.get(), Windows7VmScreen::new);
         MenuScreens.register(ModMenuTypes.GENERIC_INDUSTRIAL_MACHINE_MENU.get(), GenericIndustrialMachineScreen::new);
+        MenuScreens.register(ModMenuTypes.MULTI_INPUT_INDUSTRIAL_MACHINE_MENU.get(), MultiInputIndustrialMachineScreen::new);
         ItemBlockRenderTypes.setRenderLayer(ModFluids.HEAVY_CRUDE_OIL.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.FLOWING_HEAVY_CRUDE_OIL.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModFluids.CREOSOTE.get(), RenderType.translucent());

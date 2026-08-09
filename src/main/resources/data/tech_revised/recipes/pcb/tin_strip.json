@@ -1,0 +1,11 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:alkaline_stripping_station",
+  "ingredients": [
+    { "item": "tech_revised:final_etched_pcb" },
+    { "item": "tech_revised:sodium_hydroxide_solution_bucket" }
+  ],
+  "result": { "item": "tech_revised:tin_stripped_pcb" },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

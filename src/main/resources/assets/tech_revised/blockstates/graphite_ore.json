@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "tech_revised:block/graphite_ore" }
+    "": {
+      "model": "tech_revised:block/graphite_ore"
+    }
   }
 }

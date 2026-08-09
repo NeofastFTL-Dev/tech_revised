@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:flying_probe_tester",
   "ingredients": [
     { "item": "tech_revised:finished_pcb_panel" }
   ],

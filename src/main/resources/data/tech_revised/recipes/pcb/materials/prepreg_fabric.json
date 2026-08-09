@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_materials",
+  "ingredients": [
+    { "item": "tech_revised:fiberglass_fabric" },
+    { "item": "tech_revised:chemical_lubricant" },
+    { "item": "minecraft:slime_ball" }
+  ],
+  "result": {
+    "item": "tech_revised:prepreg_fabric",
+    "count": 2
+  },
+  "show_notification": true
+}

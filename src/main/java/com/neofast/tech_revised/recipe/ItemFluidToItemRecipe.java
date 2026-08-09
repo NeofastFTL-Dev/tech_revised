@@ -98,7 +98,16 @@ public class ItemFluidToItemRecipe implements Recipe<Container> {
     public static class Serializer implements RecipeSerializer<ItemFluidToItemRecipe> {
         @Override
         public ItemFluidToItemRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Ingredient inputItem = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input_item"));
+            Ingredient inputItem;
+            if (json.has("input_item")) {
+                inputItem = Ingredient.fromJson(json.get("input_item"));
+            } else if (json.has("ingredient")) {
+                inputItem = Ingredient.fromJson(json.get("ingredient"));
+            } else if (json.has("ingredients")) {
+                inputItem = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "ingredients").get(0));
+            } else {
+                throw new JsonSyntaxException("Missing input_item/ingredient for sizing recipe " + recipeId);
+            }
             FluidStack inputFluid = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "input_fluid"));
             ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 100);

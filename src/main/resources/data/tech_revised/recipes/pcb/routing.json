@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:cnc_router",
   "ingredients": [
     { "item": "tech_revised:tested_pcb_panel" }
   ],

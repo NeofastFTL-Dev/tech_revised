@@ -1,12 +1,8 @@
 {
-  "parent": "block/cube",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "down": "tech_revised:block/steel_frame_normal",
-    "up": "tech_revised:block/steel_frame_normal",
-    "north": "tech_revised:block/input_bus",
-    "south": "tech_revised:block/steel_frame_normal",
-    "west": "tech_revised:block/steel_frame_normal",
-    "east": "tech_revised:block/steel_frame_normal",
-    "particle": "tech_revised:block/steel_frame_normal"
+    "top": "tech_revised:block/machine_top",
+    "front": "tech_revised:block/windows_7_vm_block_idle",
+    "side": "tech_revised:block/machine_side"
   }
 }

@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "tech_revised:block/drilling_platform_drill_head" }
+    "": {
+      "model": "tech_revised:block/drilling_platform_drill_head"
+    }
   }
 }

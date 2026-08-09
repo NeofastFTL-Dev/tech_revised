@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "tech_revised:block/chromite_ore" }
+    "": {
+      "model": "tech_revised:block/chromite_ore"
+    }
   }
 }

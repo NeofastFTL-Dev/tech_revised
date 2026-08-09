@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:design_engineering_station",
   "ingredients": [
     { "item": "tech_revised:cad_layout" }
   ],

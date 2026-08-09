@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:multi_zone_reflow_oven",
   "ingredients": [
     { "item": "tech_revised:placed_pcba" }
   ],

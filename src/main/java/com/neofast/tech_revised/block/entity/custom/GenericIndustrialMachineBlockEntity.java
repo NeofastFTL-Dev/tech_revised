@@ -174,7 +174,10 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
 
     private boolean canProcess(GenericIndustrialRecipe recipe) {
         ItemStack input = itemHandler.getStackInSlot(INPUT_SLOT);
-        if (input.isEmpty()) {
+        if (input.isEmpty() || input.getCount() < recipe.getInputCount()) {
+            return false;
+        }
+        if (!recipe.getInput().test(input)) {
             return false;
         }
 
@@ -201,7 +204,7 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
             return;
         }
 
-        itemHandler.extractItem(INPUT_SLOT, 1, false);
+        itemHandler.extractItem(INPUT_SLOT, recipe.getInputCount(), false);
 
         ItemStack output = itemHandler.getStackInSlot(OUTPUT_SLOT);
         if (output.isEmpty()) {
@@ -272,12 +275,14 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
     }
 
     public boolean isValidInput(ItemStack stack) {
-        if (level == null) {
+        if (level == null || stack.isEmpty()) {
             return true;
         }
-
-        SimpleContainer inventory = new SimpleContainer(1);
-        inventory.setItem(0, stack.copy());
-        return level.getRecipeManager().getRecipeFor(recipeType, inventory, level).isPresent();
+        for (GenericIndustrialRecipe recipe : level.getRecipeManager().getAllRecipesFor(recipeType)) {
+            if (recipe.getInput().test(stack)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

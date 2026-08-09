@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:industrial_shear",
   "ingredients": [
     { "item": "tech_revised:raw_fr4_laminate" }
   ],

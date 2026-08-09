@@ -96,8 +96,24 @@ public class MeltingRecipe implements Recipe<Container> {
     public static class Serializer implements RecipeSerializer<MeltingRecipe> {
         @Override
         public MeltingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
-            FluidStack outputFluid = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "result_fluid"));
+            Ingredient input;
+            if (json.has("ingredient")) {
+                input = Ingredient.fromJson(json.get("ingredient"));
+            } else if (json.has("ingredients")) {
+                input = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "ingredients").get(0));
+            } else {
+                throw new JsonSyntaxException("Missing ingredient/ingredients for melting recipe " + recipeId);
+            }
+
+            JsonObject fluidJson;
+            if (json.has("result_fluid")) {
+                fluidJson = GsonHelper.getAsJsonObject(json, "result_fluid");
+            } else if (json.has("output_fluid")) {
+                fluidJson = GsonHelper.getAsJsonObject(json, "output_fluid");
+            } else {
+                throw new JsonSyntaxException("Missing result_fluid/output_fluid for melting recipe " + recipeId);
+            }
+            FluidStack outputFluid = fluidStackFromJson(fluidJson);
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 200);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 40);
             return new MeltingRecipe(recipeId, input, outputFluid, processTicks, energyPerTick);

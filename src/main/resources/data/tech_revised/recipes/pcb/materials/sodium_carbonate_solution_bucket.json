@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_chemicals",
+  "ingredients": [
+    { "item": "tech_revised:sodium_carbonate_dust" },
+    { "item": "minecraft:water_bucket" }
+  ],
+  "result": {
+    "item": "tech_revised:sodium_carbonate_solution_bucket",
+    "count": 1
+  },
+  "show_notification": true
+}

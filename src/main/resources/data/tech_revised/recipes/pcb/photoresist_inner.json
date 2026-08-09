@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:photo_resist_applicator",
   "ingredients": [
     { "item": "tech_revised:copper_clad_laminate" },
     { "item": "tech_revised:photo_resist_polymer" }

@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:chemical_developing_wash",
   "ingredients": [
     { "item": "tech_revised:inner_layer_patterned_board" },
     { "item": "tech_revised:sodium_carbonate_solution_bucket" }

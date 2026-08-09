@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:alkaline_stripping_station",
   "ingredients": [
     { "item": "tech_revised:etched_inner_layer_board" },
     { "item": "tech_revised:sodium_hydroxide_solution_bucket" }

@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:aoi_verification_station",
   "ingredients": [
     { "item": "tech_revised:reflowed_pcba" }
   ],

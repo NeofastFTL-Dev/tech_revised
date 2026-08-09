@@ -1,6 +1,8 @@
 {
-  "parent": "block/cube_all",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "all": "minecraft:block/piston_top_sticky"
+    "top": "tech_revised:block/machine_top",
+    "front": "tech_revised:block/drilling_platform_drill_head_front",
+    "side": "tech_revised:block/machine_side"
   }
 }

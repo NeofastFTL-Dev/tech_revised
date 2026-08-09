@@ -1,7 +1,6 @@
 package com.neofast.tech_revised.integration.jei;
 
 import com.neofast.tech_revised.TechRevised;
-import com.neofast.tech_revised.block.ModBlocks;
 import com.neofast.tech_revised.item.ModItems;
 import com.neofast.tech_revised.recipe.FluidToItemRecipe;
 import mezz.jei.api.forge.ForgeTypes;
@@ -12,9 +11,13 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Collections;
 
 public class ExtrusionJeiCategory implements IRecipeCategory<FluidToItemRecipe> {
     public static final ResourceLocation UID = new ResourceLocation(TechRevised.MOD_ID, "extrusion");
@@ -22,10 +25,12 @@ public class ExtrusionJeiCategory implements IRecipeCategory<FluidToItemRecipe> 
 
     private final IDrawable background;
     private final IDrawable icon;
+    private final IDrawable arrow;
 
     public ExtrusionJeiCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(new ResourceLocation(TechRevised.MOD_ID, "textures/gui/jei_gui.png"), 0, 0, 176, 50);
+        this.background = guiHelper.createBlankDrawable(126, 52);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModItems.PLATINUM_ALLOY_BUSHING_PLATE.get()));
+        this.arrow = guiHelper.getRecipeArrow();
     }
 
     @Override
@@ -39,6 +44,7 @@ public class ExtrusionJeiCategory implements IRecipeCategory<FluidToItemRecipe> 
     }
 
     @Override
+    @SuppressWarnings("removal")
     public IDrawable getBackground() {
         return background;
     }
@@ -50,7 +56,25 @@ public class ExtrusionJeiCategory implements IRecipeCategory<FluidToItemRecipe> 
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FluidToItemRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 10).addIngredient(ForgeTypes.FLUID_STACK, recipe.getInputFluid());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 140, 10).addItemStack(recipe.getResultItem(null));
+        builder.addSlot(RecipeIngredientRole.INPUT, 8, 18)
+                .addIngredients(ForgeTypes.FLUID_STACK, Collections.singletonList(recipe.getInputFluid()))
+                .setFluidRenderer(Math.max(1000, recipe.getInputFluid().getAmount()), false, 16, 16);
+        builder.addSlot(RecipeIngredientRole.CATALYST, 40, 18)
+                .addItemStack(new ItemStack(ModItems.PLATINUM_ALLOY_BUSHING_PLATE.get()));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 18)
+                .addItemStack(recipe.getResultItem(null));
+    }
+
+    @Override
+    public void draw(FluidToItemRecipe recipe,
+                     mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView,
+                     GuiGraphics guiGraphics,
+                     double mouseX,
+                     double mouseY) {
+        arrow.draw(guiGraphics, 70, 18);
+        int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
+        var font = Minecraft.getInstance().font;
+        guiGraphics.drawString(font, Component.literal("Time: " + recipe.getProcessTicks() + " t"), 8, 2, 0x8B8B8B, false);
+        guiGraphics.drawString(font, Component.literal("Energy: " + totalEnergy + " FE"), 8, 42, 0x8B8B8B, false);
     }
 }

@@ -1,6 +1,6 @@
 {
-  "parent": "block/cube_all",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/iron_ore"
+    "all": "tech_revised:block/chromite_ore"
   }
 }

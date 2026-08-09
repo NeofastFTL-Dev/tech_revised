@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:electroless_plating_bath",
   "ingredients": [
     { "item": "tech_revised:drilled_pcb" },
     { "item": "minecraft:copper_ingot" }

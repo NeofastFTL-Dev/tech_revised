@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:decontamination_oven",
   "ingredients": [
     { "item": "tech_revised:sheared_fr4_laminate" }
   ],

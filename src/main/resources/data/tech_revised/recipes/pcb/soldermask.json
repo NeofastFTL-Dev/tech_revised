@@ -1,5 +1,9 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machines": [
+    "tech_revised:soldermask_flooder",
+    "tech_revised:uv_pad_exposure_station"
+  ],
   "ingredients": [
     { "item": "tech_revised:tin_stripped_pcb" },
     { "item": "tech_revised:soldermask_resin" }

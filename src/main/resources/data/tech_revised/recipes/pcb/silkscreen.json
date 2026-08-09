@@ -1,0 +1,11 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:inkjet_silkscreen_printer",
+  "ingredients": [
+    { "item": "tech_revised:masked_pcb" },
+    { "item": "minecraft:white_dye" }
+  ],
+  "result": { "item": "tech_revised:silkscreened_pcb" },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

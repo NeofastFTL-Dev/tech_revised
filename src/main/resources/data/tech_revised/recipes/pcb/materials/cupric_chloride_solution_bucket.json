@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_chemicals",
+  "ingredients": [
+    { "item": "tech_revised:cupric_chloride_dust" },
+    { "item": "minecraft:water_bucket" }
+  ],
+  "result": {
+    "item": "tech_revised:cupric_chloride_solution_bucket",
+    "count": 1
+  },
+  "show_notification": true
+}

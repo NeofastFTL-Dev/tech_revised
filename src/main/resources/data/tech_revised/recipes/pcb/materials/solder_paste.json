@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_materials",
+  "ingredients": [
+    { "item": "minecraft:iron_nugget" },
+    { "item": "minecraft:iron_nugget" },
+    { "item": "minecraft:iron_nugget" },
+    { "item": "minecraft:redstone" },
+    { "item": "minecraft:slime_ball" }
+  ],
+  "result": {
+    "item": "tech_revised:solder_paste",
+    "count": 4
+  },
+  "show_notification": true
+}

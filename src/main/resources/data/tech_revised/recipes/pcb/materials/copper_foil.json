@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_materials",
+  "ingredients": [
+    { "item": "minecraft:copper_ingot" },
+    { "item": "minecraft:copper_ingot" }
+  ],
+  "result": {
+    "item": "tech_revised:copper_foil",
+    "count": 4
+  },
+  "show_notification": true
+}

@@ -91,6 +91,11 @@ public class BatchingRecipe implements Recipe<Container> {
         return inputs;
     }
 
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return inputs;
+    }
+
     public int getProcessTicks() {
         return processTicks;
     }

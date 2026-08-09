@@ -22,6 +22,15 @@ public class ModItemColorHandlers {
         ModItems.getTintedItemColors().forEach((item, color) ->
                 event.getItemColors().register((stack, tintIndex) -> tintIndex == 0 ? color : 0xFFFFFFFF, item.get()));
 
-        event.getItemColors().register(new DynamicFluidContainerModel.Colors(), ModItems.HEAVY_CRUDE_OIL_BUCKET.get());
+        DynamicFluidContainerModel.Colors fluidBucketColors = new DynamicFluidContainerModel.Colors();
+        event.getItemColors().register(fluidBucketColors,
+                ModItems.HEAVY_CRUDE_OIL_BUCKET.get(),
+                ModItems.CREOSOTE_BUCKET.get(),
+                ModItems.OXYGEN_BUCKET.get(),
+                ModItems.HYDROGEN_BUCKET.get(),
+                ModItems.LIQUID_GLASS_BUCKET.get(),
+                ModItems.SODIUM_CARBONATE_SOLUTION_BUCKET.get(),
+                ModItems.CUPRIC_CHLORIDE_SOLUTION_BUCKET.get(),
+                ModItems.SODIUM_HYDROXIDE_SOLUTION_BUCKET.get());
     }
 }

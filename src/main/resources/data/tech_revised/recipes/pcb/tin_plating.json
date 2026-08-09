@@ -1,0 +1,11 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:tin_plating_tank",
+  "ingredients": [
+    { "item": "tech_revised:electroplated_pcb" },
+    { "item": "tech_revised:tin_plating_dust" }
+  ],
+  "result": { "item": "tech_revised:tin_plated_pcb" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

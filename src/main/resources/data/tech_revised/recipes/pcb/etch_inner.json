@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:acidic_etching_sprayer",
   "ingredients": [
     { "item": "tech_revised:developed_inner_layer_board" },
     { "item": "tech_revised:cupric_chloride_solution_bucket" }

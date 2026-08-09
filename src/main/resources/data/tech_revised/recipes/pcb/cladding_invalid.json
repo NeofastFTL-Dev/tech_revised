@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:hydraulic_cladding_press",
   "ingredients": [
     { "item": "tech_revised:sheared_fr4_laminate" },
     { "item": "tech_revised:copper_foil" }

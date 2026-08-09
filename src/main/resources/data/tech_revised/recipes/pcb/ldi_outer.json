@@ -1,0 +1,11 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:uv_ldi_imager",
+  "ingredients": [
+    { "item": "tech_revised:patterned_outer_layer_pcb" },
+    { "item": "tech_revised:verified_gerber_file" }
+  ],
+  "result": { "item": "tech_revised:patterned_outer_layer_pcb" },
+  "process_ticks": 200,
+  "energy_per_tick": 100
+}

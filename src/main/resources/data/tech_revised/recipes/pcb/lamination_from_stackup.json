@@ -1,0 +1,9 @@
+{
+  "type": "tech_revised:lamination",
+  "layers": [
+    { "item": "tech_revised:multi_layer_stackup" }
+  ],
+  "result": { "item": "tech_revised:laminated_pcb_core" },
+  "process_ticks": 300,
+  "energy_per_tick": 80
+}

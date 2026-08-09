@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "tech_revised:chromite_dust"
+    },
+    {
+      "item": "tech_revised:chromite_dust"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:chromium_dust",
+    "count": 2
+  }
+}

@@ -1,9 +1,9 @@
 package com.neofast.tech_revised.recipe;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.neofast.tech_revised.TechRevised;
 import com.neofast.tech_revised.exception.MoistureInclusionException;
 import com.neofast.tech_revised.exception.ShortCircuitException;
 import com.neofast.tech_revised.exception.SolderBridgeException;
@@ -17,11 +17,15 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class PcbRecipe implements Recipe<Container> {
@@ -31,17 +35,23 @@ public class PcbRecipe implements Recipe<Container> {
     private final ItemStack result;
     private final int processTicks;
     private final int energyPerTick;
+    /**
+     * Block IDs allowed to run this recipe. Empty means any PCB machine (legacy/fallback).
+     */
+    private final List<ResourceLocation> machines;
     private final Supplier<RecipeSerializer<?>> serializer;
     private final RecipeType<?> type;
 
     public PcbRecipe(ResourceLocation id, NonNullList<Ingredient> inputs, FluidStack inputFluid, ItemStack result,
-                     int processTicks, int energyPerTick, Supplier<RecipeSerializer<?>> serializer, RecipeType<?> type) {
+                     int processTicks, int energyPerTick, List<ResourceLocation> machines,
+                     Supplier<RecipeSerializer<?>> serializer, RecipeType<?> type) {
         this.id = id;
         this.inputs = inputs;
         this.inputFluid = inputFluid;
         this.result = result;
         this.processTicks = processTicks;
         this.energyPerTick = energyPerTick;
+        this.machines = Collections.unmodifiableList(new ArrayList<>(machines));
         this.serializer = serializer;
         this.type = type;
     }
@@ -49,11 +59,36 @@ public class PcbRecipe implements Recipe<Container> {
     @Override
     public boolean matches(Container container, Level level) {
         if (container.getContainerSize() < inputs.size()) return false;
-        // Basic matching logic: check first N slots
         for (int i = 0; i < inputs.size(); i++) {
             if (!inputs.get(i).test(container.getItem(i))) return false;
         }
         return true;
+    }
+
+    /**
+     * Whether this recipe may run on the given machine block.
+     * If no machines are listed, any PCB machine is allowed.
+     */
+    public boolean isAllowedOn(Block block) {
+        if (machines.isEmpty()) {
+            return true;
+        }
+        ResourceLocation blockId = ForgeRegistries.BLOCKS.getKey(block);
+        if (blockId == null) {
+            return false;
+        }
+        return machines.contains(blockId);
+    }
+
+    public boolean isAllowedOn(ResourceLocation blockId) {
+        if (machines.isEmpty()) {
+            return true;
+        }
+        return machines.contains(blockId);
+    }
+
+    public List<ResourceLocation> getMachines() {
+        return machines;
     }
 
     @Override
@@ -63,33 +98,21 @@ public class PcbRecipe implements Recipe<Container> {
     }
 
     private void validate(Container container) {
-        // Stage 2: Cladding validation
         if (id.getPath().contains("cladding")) {
-            boolean hasBaked = false;
             for (int i = 0; i < container.getContainerSize(); i++) {
                 ItemStack stack = container.getItem(i);
-                if (stack.is(ModItems.BAKED_FR4_LAMINATE.get())) {
-                    hasBaked = true;
-                }
                 if (stack.is(ModItems.SHEARED_FR4_LAMINATE.get())) {
                     throw new MoistureInclusionException("Substrate preparation bypassed the baking cycle. Internal core moisture detected!");
                 }
             }
         }
 
-        // Stage 9: Electrical Test validation
-        if (id.getPath().contains("electrical_test")) {
-            // Throw based on some condition or random for demo
-            if (id.getPath().contains("fail")) {
-                throw new ShortCircuitException("Electrical Flying Probe reports continuity between isolated copper paths!");
-            }
+        if (id.getPath().contains("electrical_test") && id.getPath().contains("fail")) {
+            throw new ShortCircuitException("Electrical Flying Probe reports continuity between isolated copper paths!");
         }
 
-        // Stage 10: AOI validation
-        if (id.getPath().contains("aoi_verification")) {
-            if (id.getPath().contains("fail")) {
-                throw new SolderBridgeException("AOI scan detected component pads overlapping due to soldermask misalignment!");
-            }
+        if (id.getPath().contains("aoi_verification") && id.getPath().contains("fail")) {
+            throw new SolderBridgeException("AOI scan detected component pads overlapping due to soldermask misalignment!");
         }
     }
 
@@ -119,6 +142,11 @@ public class PcbRecipe implements Recipe<Container> {
     }
 
     public NonNullList<Ingredient> getInputs() {
+        return inputs;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
         return inputs;
     }
 
@@ -163,8 +191,9 @@ public class PcbRecipe implements Recipe<Container> {
             ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 100);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 20);
+            List<ResourceLocation> machines = parseMachines(json);
 
-            return new PcbRecipe(recipeId, inputs, inputFluid, result, processTicks, energyPerTick, serializerSupplier, type);
+            return new PcbRecipe(recipeId, inputs, inputFluid, result, processTicks, energyPerTick, machines, serializerSupplier, type);
         }
 
         @Override
@@ -178,7 +207,12 @@ public class PcbRecipe implements Recipe<Container> {
             ItemStack result = buffer.readItem();
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new PcbRecipe(recipeId, inputs, inputFluid, result, processTicks, energyPerTick, serializerSupplier, type);
+            int machineCount = buffer.readVarInt();
+            List<ResourceLocation> machines = new ArrayList<>(machineCount);
+            for (int i = 0; i < machineCount; i++) {
+                machines.add(buffer.readResourceLocation());
+            }
+            return new PcbRecipe(recipeId, inputs, inputFluid, result, processTicks, energyPerTick, machines, serializerSupplier, type);
         }
 
         @Override
@@ -191,6 +225,23 @@ public class PcbRecipe implements Recipe<Container> {
             buffer.writeItem(recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
+            buffer.writeVarInt(recipe.machines.size());
+            for (ResourceLocation machine : recipe.machines) {
+                buffer.writeResourceLocation(machine);
+            }
+        }
+
+        private static List<ResourceLocation> parseMachines(JsonObject json) {
+            List<ResourceLocation> machines = new ArrayList<>();
+            if (json.has("machines")) {
+                JsonArray array = GsonHelper.getAsJsonArray(json, "machines");
+                for (JsonElement element : array) {
+                    machines.add(new ResourceLocation(element.getAsString()));
+                }
+            } else if (json.has("machine")) {
+                machines.add(new ResourceLocation(GsonHelper.getAsString(json, "machine")));
+            }
+            return machines;
         }
 
         private static FluidStack fluidStackFromJson(JsonObject json) {

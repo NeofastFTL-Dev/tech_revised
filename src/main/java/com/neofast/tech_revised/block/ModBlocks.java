@@ -115,55 +115,59 @@ public class ModBlocks {
             () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
                     ModBlockEntities.STRAND_CHOPPER));
 
-    // PCB Machines
+    // PCB Machines (multi-input processing; vacuum lamination uses a dedicated recipe type)
+    private static BlockBehaviour.Properties pcbMachineProperties() {
+        return BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops();
+    }
+
     public static final RegistryObject<Block> DESIGN_ENGINEERING_STATION = registerBlock("design_engineering_station",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> INDUSTRIAL_SHEAR = registerBlock("industrial_shear",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> DECONTAMINATION_OVEN = registerBlock("decontamination_oven",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> HYDRAULIC_CLADDING_PRESS = registerBlock("hydraulic_cladding_press",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> PHOTO_RESIST_APPLICATOR = registerBlock("photo_resist_applicator",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> UV_LDI_IMAGER = registerBlock("uv_ldi_imager",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> CHEMICAL_DEVELOPING_WASH = registerBlock("chemical_developing_wash",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> ACIDIC_ETCHING_SPRAYER = registerBlock("acidic_etching_sprayer",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> ALKALINE_STRIPPING_STATION = registerBlock("alkaline_stripping_station",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> VACUUM_LAMINATION_PRESS = registerBlock("vacuum_lamination_press",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.LAMINATION_MACHINE));
     public static final RegistryObject<Block> XRAY_ALIGNMENT_DRILL = registerBlock("xray_alignment_drill",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> ELECTROLESS_PLATING_BATH = registerBlock("electroless_plating_bath",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> COPPER_ELECTROPLATING_TANK = registerBlock("copper_electroplating_tank",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> TIN_PLATING_TANK = registerBlock("tin_plating_tank",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> SOLDERMASK_FLOODER = registerBlock("soldermask_flooder",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> UV_PAD_EXPOSURE_STATION = registerBlock("uv_pad_exposure_station",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> INKJET_SILKSCREEN_PRINTER = registerBlock("inkjet_silkscreen_printer",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> SURFACE_FINISH_STATION = registerBlock("surface_finish_station",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> FLYING_PROBE_TESTER = registerBlock("flying_probe_tester",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> CNC_ROUTER = registerBlock("cnc_router",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> SOLDER_PASTE_PRINTER = registerBlock("solder_paste_printer",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> PICK_AND_PLACE_ROBOT = registerBlock("pick_and_place_robot",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> MULTI_ZONE_REFLOW_OVEN = registerBlock("multi_zone_reflow_oven",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
     public static final RegistryObject<Block> AOI_VERIFICATION_STATION = registerBlock("aoi_verification_station",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_FRAME = registerBlock("electric_arc_furnace_frame",
             () -> new ElectricArcFurnaceFrameBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));

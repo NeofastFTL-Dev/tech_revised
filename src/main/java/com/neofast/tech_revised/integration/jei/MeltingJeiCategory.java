@@ -11,9 +11,13 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Collections;
 
 public class MeltingJeiCategory implements IRecipeCategory<MeltingRecipe> {
     public static final ResourceLocation UID = new ResourceLocation(TechRevised.MOD_ID, "melting");
@@ -21,10 +25,12 @@ public class MeltingJeiCategory implements IRecipeCategory<MeltingRecipe> {
 
     private final IDrawable background;
     private final IDrawable icon;
+    private final IDrawable arrow;
 
     public MeltingJeiCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(new ResourceLocation(TechRevised.MOD_ID, "textures/gui/jei_gui.png"), 0, 0, 176, 50);
+        this.background = guiHelper.createBlankDrawable(126, 52);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.REFRACTORY_MELTING_FURNACE.get()));
+        this.arrow = guiHelper.getRecipeArrow();
     }
 
     @Override
@@ -38,6 +44,7 @@ public class MeltingJeiCategory implements IRecipeCategory<MeltingRecipe> {
     }
 
     @Override
+    @SuppressWarnings("removal")
     public IDrawable getBackground() {
         return background;
     }
@@ -49,7 +56,23 @@ public class MeltingJeiCategory implements IRecipeCategory<MeltingRecipe> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MeltingRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 10, 10).addIngredients(recipe.getIngredients().get(0));
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 140, 10).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid());
+        builder.addSlot(RecipeIngredientRole.INPUT, 8, 18)
+                .addIngredients(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 18)
+                .addIngredients(ForgeTypes.FLUID_STACK, Collections.singletonList(recipe.getOutputFluid()))
+                .setFluidRenderer(Math.max(1000, recipe.getOutputFluid().getAmount()), false, 16, 16);
+    }
+
+    @Override
+    public void draw(MeltingRecipe recipe,
+                     mezz.jei.api.gui.ingredient.IRecipeSlotsView recipeSlotsView,
+                     GuiGraphics guiGraphics,
+                     double mouseX,
+                     double mouseY) {
+        arrow.draw(guiGraphics, 58, 18);
+        int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
+        var font = Minecraft.getInstance().font;
+        guiGraphics.drawString(font, Component.literal("Time: " + recipe.getProcessTicks() + " t"), 8, 2, 0x8B8B8B, false);
+        guiGraphics.drawString(font, Component.literal("Energy: " + totalEnergy + " FE"), 8, 42, 0x8B8B8B, false);
     }
 }

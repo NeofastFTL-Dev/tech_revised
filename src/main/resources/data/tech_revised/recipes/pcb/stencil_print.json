@@ -1,0 +1,11 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:solder_paste_printer",
+  "ingredients": [
+    { "item": "tech_revised:routed_pcb" },
+    { "item": "tech_revised:solder_paste" }
+  ],
+  "result": { "item": "tech_revised:stencil_printed_pcb" },
+  "process_ticks": 150,
+  "energy_per_tick": 40
+}

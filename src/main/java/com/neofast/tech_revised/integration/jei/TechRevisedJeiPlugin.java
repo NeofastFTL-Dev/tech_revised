@@ -224,93 +224,74 @@ public class TechRevisedJeiPlugin implements IModPlugin {
     private static List<MultiblockLayoutJeiRecipe> createMultiblockLayoutRecipes() {
         List<MultiblockLayoutJeiRecipe> recipes = new ArrayList<>();
 
+        MultiblockStructureBlueprint eaf = MultiblockStructureBlueprint.electricArcFurnace();
         recipes.add(new MultiblockLayoutJeiRecipe(
                 Component.translatable("jei.tech_revised.layout.electric_arc_furnace"),
                 new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_CONTROLLER.get()),
-                List.of(
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FRAME.get(), 29),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_HEATER.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_INPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_OUTPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_INPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_ENERGY_INPUT_HATCH.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_OUTPUT_BUS.get())
-                ),
-                Component.literal("Size: 3W x 3L x 4H"),
+                eaf.getMaterials(),
+                Component.literal("Size: " + eaf.getSizeX() + "W x " + eaf.getSizeZ() + "L x " + eaf.getSizeY() + "H"),
                 List.of(
                         Component.translatable("jei.tech_revised.layout.eaf.line1"),
                         Component.translatable("jei.tech_revised.layout.eaf.line2"),
                         Component.translatable("jei.tech_revised.layout.eaf.line3")
-                )
+                ),
+                eaf
         ));
 
+        MultiblockStructureBlueprint drilling = MultiblockStructureBlueprint.drillingPlatform();
         recipes.add(new MultiblockLayoutJeiRecipe(
                 Component.translatable("jei.tech_revised.layout.drilling_platform"),
                 new ItemStack(ModBlocks.DRILLING_PLATFORM_CONTROLLER.get()),
-                List.of(
-                        new ItemStack(ModBlocks.DRILLING_PLATFORM_FRAME.get(), 56),
-                        new ItemStack(ModBlocks.DRILLING_PLATFORM_DRILL_HEAD.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_ENERGY_INPUT_HATCH.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_OUTPUT_BUS.get())
-                ),
-                Component.literal("Size: 5W x 4L x 3H"),
+                drilling.getMaterials(),
+                Component.literal("Size: " + drilling.getSizeX() + "W x " + drilling.getSizeZ() + "L x " + drilling.getSizeY() + "H"),
                 List.of(
                         Component.translatable("jei.tech_revised.layout.drilling.line1"),
                         Component.translatable("jei.tech_revised.layout.drilling.line2"),
                         Component.translatable("jei.tech_revised.layout.drilling.line3")
-                )
+                ),
+                drilling
         ));
 
+        MultiblockStructureBlueprint coke = MultiblockStructureBlueprint.cokeOven();
         recipes.add(new MultiblockLayoutJeiRecipe(
                 Component.translatable("jei.tech_revised.layout.coke_oven"),
                 new ItemStack(ModBlocks.COKE_OVEN_CONTROLLER.get()),
-                List.of(
-                        new ItemStack(ModBlocks.COKE_OVEN_FRAME.get(), 23),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_INPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_OUTPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_OUTPUT_BUS.get())
-                ),
-                Component.literal("Size: 3W x 3L x 3H"),
+                coke.getMaterials(),
+                Component.literal("Size: " + coke.getSizeX() + "W x " + coke.getSizeZ() + "L x " + coke.getSizeY() + "H"),
                 List.of(
                         Component.translatable("jei.tech_revised.layout.coke.line1"),
                         Component.translatable("jei.tech_revised.layout.coke.line2"),
                         Component.translatable("jei.tech_revised.layout.coke.line3")
-                )
+                ),
+                coke
         ));
 
+        MultiblockStructureBlueprint aod = MultiblockStructureBlueprint.aodConverter();
         recipes.add(new MultiblockLayoutJeiRecipe(
                 Component.translatable("jei.tech_revised.layout.argon_oxygen_decarburization_converter"),
                 new ItemStack(ModBlocks.ARGON_OXYGEN_DECARBURIZATION_CONVERTER_CONTROLLER.get()),
-                List.of(
-                        new ItemStack(ModBlocks.ARGON_OXYGEN_DECARBURIZATION_CONVERTER_FRAME.get(), 187),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_INPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_OUTPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_INPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_ENERGY_INPUT_HATCH.get())
-                ),
-                Component.literal("Size: 5W x 5L x 12H"),
+                aod.getMaterials(),
+                Component.literal("Size: " + aod.getSizeX() + "W x " + aod.getSizeZ() + "L x " + aod.getSizeY() + "H"),
                 List.of(
                         Component.translatable("jei.tech_revised.layout.aod_converter.line1"),
                         Component.translatable("jei.tech_revised.layout.aod_converter.line2"),
                         Component.translatable("jei.tech_revised.layout.aod_converter.line3")
-                )
+                ),
+                aod
         ));
 
+        MultiblockStructureBlueprint oxygen = MultiblockStructureBlueprint.oxygenConverter();
         recipes.add(new MultiblockLayoutJeiRecipe(
                 Component.translatable("jei.tech_revised.layout.oxygen_converter"),
                 new ItemStack(ModBlocks.OXYGEN_CONVERTER_CONTROLLER.get()),
-                List.of(
-                        new ItemStack(ModBlocks.OXYGEN_CONVERTER_FRAME.get(), 107),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_INPUT_BUS.get()),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_OUTPUT_BUS.get(), 2),
-                        new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_ENERGY_INPUT_HATCH.get())
-                ),
-                Component.literal("Size: 5W x 5L x 7H"),
+                oxygen.getMaterials(),
+                Component.literal("Size: " + oxygen.getSizeX() + "W x " + oxygen.getSizeZ() + "L x " + oxygen.getSizeY() + "H"),
                 List.of(
                         Component.translatable("jei.tech_revised.layout.oxygen_converter.line1"),
                         Component.translatable("jei.tech_revised.layout.oxygen_converter.line2"),
                         Component.translatable("jei.tech_revised.layout.oxygen_converter.line3")
-                )
+                ),
+                oxygen
         ));
 
         return recipes;

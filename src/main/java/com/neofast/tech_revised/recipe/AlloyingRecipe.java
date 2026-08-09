@@ -87,6 +87,11 @@ public class AlloyingRecipe implements Recipe<Container> {
         return inputs;
     }
 
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return inputs;
+    }
+
     public static class Type implements RecipeType<AlloyingRecipe> {
         public static final Type INSTANCE = new Type();
         public static final String ID = "alloying";

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_materials",
+  "ingredients": [
+    { "item": "minecraft:paper" },
+    { "item": "minecraft:paper" },
+    { "item": "minecraft:redstone" },
+    { "item": "minecraft:ink_sac" }
+  ],
+  "result": {
+    "item": "tech_revised:cad_layout",
+    "count": 1
+  },
+  "show_notification": true
+}

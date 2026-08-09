@@ -1,5 +1,6 @@
-﻿{
+{
   "type": "tech_revised:pcb",
+  "machine": "tech_revised:pick_and_place_robot",
   "ingredients": [
     { "item": "tech_revised:stencil_printed_pcb" },
     { "item": "minecraft:redstone" }

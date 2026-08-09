@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "tech_revised:block/pcb_machine_top",
+    "front": "tech_revised:block/soldermask_flooder_front_on",
+    "side": "tech_revised:block/pcb_machine_side"
+  }
+}

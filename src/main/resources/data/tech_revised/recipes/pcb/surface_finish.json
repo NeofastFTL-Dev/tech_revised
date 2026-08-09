@@ -1,0 +1,10 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:surface_finish_station",
+  "ingredients": [
+    { "item": "tech_revised:silkscreened_pcb" }
+  ],
+  "result": { "item": "tech_revised:finished_pcb_panel" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

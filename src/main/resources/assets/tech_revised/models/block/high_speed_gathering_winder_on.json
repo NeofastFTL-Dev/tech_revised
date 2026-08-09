@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "tech_revised:block/machine_top",
+    "front": "tech_revised:block/high_speed_gathering_winder_front_on",
+    "side": "tech_revised:block/machine_side"
+  }
+}
