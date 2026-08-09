@@ -1,7 +1,12 @@
-{
+﻿{
   "variants": {
-    "": {
-      "model": "tech_revised:block/windows_7_vm_block"
-    }
+    "facing=north,active=false": { "model": "tech_revised:block/windows_7_vm_block_idle" },
+    "facing=north,active=true": { "model": "tech_revised:block/windows_7_vm_block" },
+    "facing=east,active=false": { "model": "tech_revised:block/windows_7_vm_block_idle", "y": 90 },
+    "facing=east,active=true": { "model": "tech_revised:block/windows_7_vm_block", "y": 90 },
+    "facing=south,active=false": { "model": "tech_revised:block/windows_7_vm_block_idle", "y": 180 },
+    "facing=south,active=true": { "model": "tech_revised:block/windows_7_vm_block", "y": 180 },
+    "facing=west,active=false": { "model": "tech_revised:block/windows_7_vm_block_idle", "y": 270 },
+    "facing=west,active=true": { "model": "tech_revised:block/windows_7_vm_block", "y": 270 }
   }
 }

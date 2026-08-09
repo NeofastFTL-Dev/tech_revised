@@ -1,7 +1,8 @@
-{
+﻿{
   "variants": {
-    "": {
-      "model": "tech_revised:block/refractory_melting_furnace"
-    }
+    "facing=north": { "model": "tech_revised:block/refractory_melting_furnace" },
+    "facing=east": { "model": "tech_revised:block/refractory_melting_furnace", "y": 90 },
+    "facing=south": { "model": "tech_revised:block/refractory_melting_furnace", "y": 180 },
+    "facing=west": { "model": "tech_revised:block/refractory_melting_furnace", "y": 270 }
   }
 }

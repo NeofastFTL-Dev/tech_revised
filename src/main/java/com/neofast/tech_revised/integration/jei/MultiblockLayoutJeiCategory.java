@@ -26,7 +26,7 @@ import java.util.Map;
  * JEI multiblock page with:
  * - materials list (what you need)
  * - isometric 3D structure preview
- * - layer toggle (buttons + mouse wheel)
+ * - layer toggle + zoom controls
  */
 public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLayoutJeiRecipe> {
     public static final RecipeType<MultiblockLayoutJeiRecipe> RECIPE_TYPE =
@@ -55,8 +55,19 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
     private static final int BTN_W = 16;
     private static final int BTN_H = 12;
 
+    // Zoom buttons sit on the preview panel (top-right)
+    private static final int BTN_ZOOM_OUT_X = PREVIEW_X + PREVIEW_W - 34;
+    private static final int BTN_ZOOM_IN_X = PREVIEW_X + PREVIEW_W - 16;
+    private static final int BTN_ZOOM_Y = PREVIEW_Y + 2;
+    private static final float ZOOM_MIN = 0.5f;
+    private static final float ZOOM_MAX = 2.5f;
+    private static final float ZOOM_STEP = 0.25f;
+    private static final float ZOOM_DEFAULT = 1.0f;
+
     /** Layer state per blueprint id. Integer.MIN_VALUE = show all layers. */
     private static final Map<String, Integer> LAYER_STATE = new HashMap<>();
+    /** Zoom multiplier per blueprint id (1.0 = fit). */
+    private static final Map<String, Float> ZOOM_STATE = new HashMap<>();
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -127,9 +138,11 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
 
         if (bp != null) {
             int layer = getLayer(bp);
-            MultiblockStructureBlueprint.Cell hovered = findHoveredCell(bp, layer, mouseX, mouseY);
-            drawIsometric(guiGraphics, bp, layer, hovered);
+            float zoom = getZoom(bp);
+            MultiblockStructureBlueprint.Cell hovered = findHoveredCell(bp, layer, zoom, mouseX, mouseY);
+            drawIsometric(guiGraphics, bp, layer, zoom, hovered);
             drawLayerControls(guiGraphics, font, bp, layer);
+            drawZoomControls(guiGraphics, font, zoom);
 
             if (hovered != null) {
                 Component name = hovered.stack().getHoverName();
@@ -157,13 +170,11 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
             return false;
         }
 
-        // Mouse wheel over preview: cycle layers
         if (input.getType() == InputConstants.Type.MOUSE) {
             int value = input.getValue();
             boolean overPreview = mouseX >= PREVIEW_X && mouseX < PREVIEW_X + PREVIEW_W
                     && mouseY >= PREVIEW_Y && mouseY < PREVIEW_Y + PREVIEW_H;
 
-            // GLFW_MOUSE_BUTTON_4/5 aren't used; scroll is typically key codes from JEI as mouse with value 0 left click
             if (value == 0) { // left click
                 if (inBtn(mouseX, mouseY, BTN_PREV_X, BTN_Y)) {
                     cycleLayer(bp, -1);
@@ -177,7 +188,15 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
                     LAYER_STATE.put(bp.getId(), Integer.MIN_VALUE);
                     return true;
                 }
-                // Click preview to advance layer
+                if (inBtn(mouseX, mouseY, BTN_ZOOM_OUT_X, BTN_ZOOM_Y)) {
+                    adjustZoom(bp, -ZOOM_STEP);
+                    return true;
+                }
+                if (inBtn(mouseX, mouseY, BTN_ZOOM_IN_X, BTN_ZOOM_Y)) {
+                    adjustZoom(bp, ZOOM_STEP);
+                    return true;
+                }
+                // Click preview body to advance layer (ignore zoom buttons)
                 if (overPreview) {
                     cycleLayer(bp, 1);
                     return true;
@@ -185,7 +204,7 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
             }
         }
 
-        // Keyboard: left/right arrows and A for all (when JEI routes keys)
+        // Keyboard: arrows / A for layers, + / - / 0 for zoom
         if (input.getType() == InputConstants.Type.KEYSYM) {
             int key = input.getValue();
             if (key == 263 || key == 265) { // left / up
@@ -198,6 +217,18 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
             }
             if (key == 65) { // A
                 LAYER_STATE.put(bp.getId(), Integer.MIN_VALUE);
+                return true;
+            }
+            if (key == 61 || key == 334) { // = / + or KP_ADD
+                adjustZoom(bp, ZOOM_STEP);
+                return true;
+            }
+            if (key == 45 || key == 333) { // - or KP_SUBTRACT
+                adjustZoom(bp, -ZOOM_STEP);
+                return true;
+            }
+            if (key == 48 || key == 320) { // 0 or KP_0 - reset zoom
+                ZOOM_STATE.put(bp.getId(), ZOOM_DEFAULT);
                 return true;
             }
         }
@@ -223,7 +254,13 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
         if (inBtn(mouseX, mouseY, BTN_ALL_X, BTN_Y)) {
             return List.of(Component.translatable("jei.tech_revised.layout.layer_all"));
         }
-        MultiblockStructureBlueprint.Cell hovered = findHoveredCell(bp, getLayer(bp), mouseX, mouseY);
+        if (inBtn(mouseX, mouseY, BTN_ZOOM_OUT_X, BTN_ZOOM_Y)) {
+            return List.of(Component.translatable("jei.tech_revised.layout.zoom_out"));
+        }
+        if (inBtn(mouseX, mouseY, BTN_ZOOM_IN_X, BTN_ZOOM_Y)) {
+            return List.of(Component.translatable("jei.tech_revised.layout.zoom_in"));
+        }
+        MultiblockStructureBlueprint.Cell hovered = findHoveredCell(bp, getLayer(bp), getZoom(bp), mouseX, mouseY);
         if (hovered != null) {
             return List.of(
                     hovered.stack().getHoverName(),
@@ -234,6 +271,7 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
         if (mouseX >= PREVIEW_X && mouseX < PREVIEW_X + PREVIEW_W
                 && mouseY >= PREVIEW_Y && mouseY < PREVIEW_Y + PREVIEW_H) {
             tips.add(Component.translatable("jei.tech_revised.layout.click_preview"));
+            tips.add(Component.translatable("jei.tech_revised.layout.zoom_hint"));
             tips.addAll(recipe.getNotes());
             return tips;
         }
@@ -269,6 +307,18 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
         // Tall shells open in "all layers" so the full cylinder is visible first.
         int defaultLayer = bp.getSizeY() >= 5 ? Integer.MIN_VALUE : bp.getMinY();
         return LAYER_STATE.getOrDefault(bp.getId(), defaultLayer);
+    }
+
+    private static float getZoom(MultiblockStructureBlueprint bp) {
+        return ZOOM_STATE.getOrDefault(bp.getId(), ZOOM_DEFAULT);
+    }
+
+    private static void adjustZoom(MultiblockStructureBlueprint bp, float delta) {
+        float next = getZoom(bp) + delta;
+        next = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, next));
+        // Snap to step grid to avoid float drift in the label
+        next = Math.round(next / ZOOM_STEP) * ZOOM_STEP;
+        ZOOM_STATE.put(bp.getId(), next);
     }
 
     private static void cycleLayer(MultiblockStructureBlueprint bp, int delta) {
@@ -307,6 +357,15 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
         g.drawString(font, label, 90, 118, 0xCCCCCC, false);
     }
 
+    private void drawZoomControls(GuiGraphics g, Font font, float zoom) {
+        drawButton(g, BTN_ZOOM_OUT_X, BTN_ZOOM_Y, "-");
+        drawButton(g, BTN_ZOOM_IN_X, BTN_ZOOM_Y, "+");
+        // Compact percent under the zoom pair (left of buttons, inside panel)
+        String pct = Math.round(zoom * 100) + "%";
+        int tw = font.width(pct);
+        g.drawString(font, pct, BTN_ZOOM_OUT_X - tw - 3, BTN_ZOOM_Y + 2, 0xAAAAAA, false);
+    }
+
     private void drawButton(GuiGraphics g, int x, int y, String text) {
         fillRect(g, x, y, x + BTN_W, y + BTN_H, 0xFF2A2A38);
         fillRect(g, x + 1, y + 1, x + BTN_W - 1, y + BTN_H - 1, 0xFF505068);
@@ -315,12 +374,9 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
         g.drawString(font, text, x + (BTN_W - tw) / 2, y + 2, 0xFFFFFF, false);
     }
 
-    private void drawIsometric(GuiGraphics g, MultiblockStructureBlueprint bp, int layer,
-                               @Nullable MultiblockStructureBlueprint.Cell hovered) {
+    /** Base tile size that fits the structure, then scaled by zoom. */
+    private static float computeTile(MultiblockStructureBlueprint bp, int layer, int cellCount, float zoom) {
         boolean all = layer == Integer.MIN_VALUE;
-        List<MultiblockStructureBlueprint.Cell> cells = bp.getCellsSortedForDraw(
-                y -> all || y == layer);
-
         float sizeX = bp.getSizeX();
         float sizeZ = bp.getSizeZ();
         float sizeY = Math.max(1, all ? bp.getSizeY() : 1);
@@ -329,16 +385,37 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
                 (PREVIEW_W - 10f) / Math.max(2f, sizeX + sizeZ),
                 (PREVIEW_H - 10f) / Math.max(2f, (sizeX + sizeZ) * 0.5f + sizeY)
         );
-        // Dense shells (AOD / oxygen) get smaller tiles so the ring stays readable
-        if (cells.size() > 80) {
+        // Dense shells (AOD / oxygen) get smaller tiles so the ring stays readable at 100%
+        if (cellCount > 80) {
             tile = Math.min(tile, 8f);
         }
         tile = Math.max(5f, Math.min(tile, 14f));
+        tile *= zoom;
+        return Math.max(3f, Math.min(tile, 32f));
+    }
 
+    private void drawIsometric(GuiGraphics g, MultiblockStructureBlueprint bp, int layer, float zoom,
+                               @Nullable MultiblockStructureBlueprint.Cell hovered) {
+        boolean all = layer == Integer.MIN_VALUE;
+        List<MultiblockStructureBlueprint.Cell> cells = bp.getCellsSortedForDraw(
+                y -> all || y == layer);
+
+        if (cells.isEmpty()) {
+            return;
+        }
+
+        float tile = computeTile(bp, layer, cells.size(), zoom);
         float originX = PREVIEW_X + PREVIEW_W * 0.5f;
         float originY = PREVIEW_Y + PREVIEW_H * 0.68f;
-
         float itemScale = Math.min(0.85f, tile / 16f);
+
+        // Soft clip in recipe-local space. Do NOT use GuiGraphics.enableScissor here:
+        // JEI draws with a translated pose stack, while scissor uses absolute screen coords
+        // and would clip the entire preview away.
+        int clipL = PREVIEW_X - 4;
+        int clipT = PREVIEW_Y - 4;
+        int clipR = PREVIEW_X + PREVIEW_W + 4;
+        int clipB = PREVIEW_Y + PREVIEW_H + 4;
 
         for (MultiblockStructureBlueprint.Cell cell : cells) {
             float lx = cell.x() - (bp.getMinX() + bp.getSizeX() * 0.5f - 0.5f);
@@ -347,6 +424,17 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
 
             float sx = originX + (lx - lz) * tile * 0.5f;
             float sy = originY + (lx + lz) * tile * 0.25f - ly * tile * 0.55f;
+
+            int cx = Math.round(sx);
+            int cy = Math.round(sy);
+            int hw = Math.max(3, Math.round(tile * 0.45f));
+            int hh = Math.max(2, Math.round(tile * 0.25f));
+            int depth = Math.max(3, Math.round(tile * 0.45f));
+
+            // Skip cubes fully outside the preview panel
+            if (cx + hw < clipL || cx - hw > clipR || cy + depth < clipT || cy - hh > clipB) {
+                continue;
+            }
 
             boolean isHovered = hovered != null
                     && hovered.x() == cell.x() && hovered.y() == cell.y() && hovered.z() == cell.z();
@@ -359,29 +447,18 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
             int left = darken(base, 25);
             int right = darken(base, 45);
 
-            int cx = Math.round(sx);
-            int cy = Math.round(sy);
-            int hw = Math.max(3, Math.round(tile * 0.45f));
-            int hh = Math.max(2, Math.round(tile * 0.25f));
-            int depth = Math.max(3, Math.round(tile * 0.45f));
-
-            // Drop shadow
             fillRect(g, cx - hw + 1, cy + depth + 1, cx + hw + 1, cy + depth + 3, 0x55000000);
-
-            // Isometric cube faces (top / left / right)
             drawDiamond(g, cx, cy - hh, hw, hh, top | 0xFF000000);
             fillRect(g, cx - hw, cy, cx, cy + depth, left | 0xFF000000);
             fillRect(g, cx, cy, cx + hw, cy + depth, right | 0xFF000000);
 
             if (isHovered) {
-                // Soft outline so the selected cell reads clearly in dense shells
                 fillRect(g, cx - hw - 1, cy - hh - 1, cx + hw + 1, cy - hh, 0xAAFFE080);
                 fillRect(g, cx - hw - 1, cy + depth, cx + hw + 1, cy + depth + 1, 0xAAFFE080);
             }
 
-            // Item icon on top of cube for specialty blocks; frames stay solid color only when dense
             boolean specialty = isSpecialty(cell.stack());
-            if (specialty || cells.size() <= 60 || isHovered) {
+            if (specialty || cells.size() <= 60 || isHovered || zoom >= 1.25f) {
                 g.pose().pushPose();
                 g.pose().translate(sx - 8 * itemScale, sy - 10 * itemScale, 100);
                 g.pose().scale(itemScale, itemScale, 1f);
@@ -402,26 +479,19 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
 
     @Nullable
     private MultiblockStructureBlueprint.Cell findHoveredCell(MultiblockStructureBlueprint bp, int layer,
-                                                              double mouseX, double mouseY) {
+                                                              float zoom, double mouseX, double mouseY) {
         if (mouseX < PREVIEW_X || mouseX > PREVIEW_X + PREVIEW_W
                 || mouseY < PREVIEW_Y || mouseY > PREVIEW_Y + PREVIEW_H) {
+            return null;
+        }
+        // Ignore hover over zoom buttons so tooltips stay clean
+        if (inBtn(mouseX, mouseY, BTN_ZOOM_OUT_X, BTN_ZOOM_Y) || inBtn(mouseX, mouseY, BTN_ZOOM_IN_X, BTN_ZOOM_Y)) {
             return null;
         }
 
         boolean all = layer == Integer.MIN_VALUE;
         List<MultiblockStructureBlueprint.Cell> cells = bp.getCellsSortedForDraw(y -> all || y == layer);
-
-        float sizeX = bp.getSizeX();
-        float sizeZ = bp.getSizeZ();
-        float sizeY = Math.max(1, all ? bp.getSizeY() : 1);
-        float tile = Math.min(
-                (PREVIEW_W - 10f) / Math.max(2f, sizeX + sizeZ),
-                (PREVIEW_H - 10f) / Math.max(2f, (sizeX + sizeZ) * 0.5f + sizeY)
-        );
-        if (cells.size() > 80) {
-            tile = Math.min(tile, 8f);
-        }
-        tile = Math.max(5f, Math.min(tile, 14f));
+        float tile = computeTile(bp, layer, cells.size(), zoom);
         float originX = PREVIEW_X + PREVIEW_W * 0.5f;
         float originY = PREVIEW_Y + PREVIEW_H * 0.68f;
         float hit = Math.max(5f, tile * 0.55f);

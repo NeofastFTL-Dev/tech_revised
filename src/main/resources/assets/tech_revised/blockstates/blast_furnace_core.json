@@ -1,7 +1,8 @@
-{
+﻿{
   "variants": {
-    "": {
-      "model": "tech_revised:block/blast_furnace_core"
-    }
+    "facing=north": { "model": "tech_revised:block/blast_furnace_core" },
+    "facing=east": { "model": "tech_revised:block/blast_furnace_core", "y": 90 },
+    "facing=south": { "model": "tech_revised:block/blast_furnace_core", "y": 180 },
+    "facing=west": { "model": "tech_revised:block/blast_furnace_core", "y": 270 }
   }
 }

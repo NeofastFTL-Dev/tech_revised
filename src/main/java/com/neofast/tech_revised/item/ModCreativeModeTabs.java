@@ -40,6 +40,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.FERROCHROMIUM_NUGGET.get());
                         output.accept(ModItems.CONFIGURATOR.get());
                         output.accept(ModBlocks.ELECTRIC_ARC_FURNACE_CONTROLLER.get());
+                        output.accept(ModBlocks.TRANSPORT_FRAME.get());
                         output.accept(ModBlocks.ELECTRIC_ARC_FURNACE_INPUT_BUS.get());
                         output.accept(ModBlocks.ELECTRIC_ARC_FURNACE_OUTPUT_BUS.get());
                         output.accept(ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_INPUT_BUS.get());

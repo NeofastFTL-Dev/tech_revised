@@ -3,14 +3,8 @@
   "category": "misc",
   "group": "items",
   "key": {
-    "B": {
-      "item": "minecraft:chest"
-    },
     "C": {
       "item": "minecraft:copper_ingot"
-    },
-    "F": {
-      "item": "tech_revised:transport_frame"
     },
     "I": {
       "item": "minecraft:iron_ingot"
@@ -18,11 +12,12 @@
   },
   "pattern": [
     "ICI",
-    "IBI",
-    "IFI"
+    "I I",
+    "ICI"
   ],
   "result": {
-    "item": "tech_revised:electric_arc_furnace_output_bus"
+    "count": 4,
+    "item": "tech_revised:transport_frame"
   },
   "show_notification": true
 }

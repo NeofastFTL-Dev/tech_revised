@@ -80,6 +80,10 @@ public class ModBlocks {
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_ENERGY_INPUT_HATCH = registerBlock("electric_arc_furnace_energy_input_hatch",
             () -> new ElectricArcFurnaceEnergyInputHatchBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
+    /** Shared chassis used to craft item/fluid buses and energy hatches for all multiblocks. */
+    public static final RegistryObject<Block> TRANSPORT_FRAME = registerBlock("transport_frame",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_HEATER = registerBlock("electric_arc_furnace_heater",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 12)));
 
