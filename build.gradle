@@ -16,14 +16,27 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.3'
-group = 'com.neofast.tech_revised' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'tech_revised'
+// Load version from build.properties (preferred) or fall back to gradle.properties mod_version
+def loadBuildVersion() {
+    def propsFile = file('build.properties')
+    if (propsFile.exists()) {
+        def props = new Properties()
+        propsFile.withInputStream { props.load(it) }
+        def v = props.getProperty('mod_version')
+        if (v) return v.trim()
+    }
+    return project.findProperty('mod_version') ?: '1.0'
+}
+
+version = loadBuildVersion()
+group = project.findProperty('mod_group_id') ?: 'com.neofast.tech_revised'
+archivesBaseName = project.findProperty('mod_id') ?: 'tech_revised'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println("Building ${archivesBaseName}-${version}.jar")
 minecraft {
     // The mappings can be changed at any time and must be in the following format.
     // Channel:   Version:
@@ -167,12 +180,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "examplemod",
-                "Specification-Vendor"    : "examplemodsareus",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Title"     : "tech_revised",
+                "Specification-Vendor"    : "NeofastFTL",
+                "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "examplemodsareus",
+                "Implementation-Vendor"   : "NeofastFTL",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
@@ -194,5 +207,73 @@ publishing {
         maven {
             url "file://${project.projectDir}/mcmodsrepo"
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Version increment helper
+// Run:  ./gradlew incrementVersion          -> bumps 1.5 -> 1.6
+//        ./gradlew incrementVersion -Ppart=major  -> 1.5 -> 2.0
+//        ./gradlew incrementVersion -Ppart=minor  -> 1.5 -> 1.6 (default)
+//        ./gradlew incrementVersion -Ppart=patch  -> 1.5.0 -> 1.5.1
+// Then rebuild:  ./gradlew build
+// ---------------------------------------------------------------------------
+tasks.register('incrementVersion') {
+    group = 'build'
+    description = 'Increments mod_version in build.properties (and syncs gradle.properties)'
+
+    doLast {
+        def propsFile = file('build.properties')
+        if (!propsFile.exists()) {
+            propsFile.text = "# Build properties for Technology Revised\nmod_version=1.0\n"
+        }
+
+        def props = new Properties()
+        propsFile.withInputStream { props.load(it) }
+        def current = (props.getProperty('mod_version') ?: '1.0').trim()
+
+        def parts = current.tokenizeAll(/[^0-9]+/, ' ').trim().split(/\s+/).findAll { it }.collect { it as int }
+        while (parts.size() < 2) parts << 0   // at least major.minor
+
+        def part = (project.findProperty('part') ?: 'minor').toString().toLowerCase()
+        switch (part) {
+            case 'major':
+                parts[0]++
+                for (int i = 1; i < parts.size(); i++) parts[i] = 0
+                break
+            case 'patch':
+                if (parts.size() < 3) parts << 0
+                parts[2]++
+                break
+            case 'minor':
+            default:
+                parts[1]++
+                for (int i = 2; i < parts.size(); i++) parts[i] = 0
+                break
+        }
+
+        def newVersion = parts.join('.')
+        props.setProperty('mod_version', newVersion)
+
+        // Write build.properties preserving a short header
+        propsFile.text = """# Build properties for Technology Revised
+# Edit mod_version (or run ./gradlew incrementVersion) when you add new features.
+# The built jar will be named: tech_revised-<mod_version>.jar
+
+mod_version=${newVersion}
+""".stripIndent()
+
+        // Keep gradle.properties in sync if it contains mod_version
+        def gp = file('gradle.properties')
+        if (gp.exists()) {
+            def text = gp.getText('UTF-8')
+            if (text.contains('mod_version=')) {
+                gp.text = text.replaceAll(/(?m)^mod_version=.*/, "mod_version=${newVersion}")
+            }
+        }
+
+        println "Version incremented: ${current} -> ${newVersion}"
+        println "Next jar will be: ${archivesBaseName}-${newVersion}.jar"
+        println "Run ./gradlew build to produce the new jar."
     }
 }
