@@ -5,6 +5,7 @@ import com.neofast.tech_revised.block.ModBlocks;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceControllerBlockEntity;
 import com.neofast.tech_revised.item.ModItems;
+import com.neofast.tech_revised.multiblock.MultiblockPreviewHelper;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
@@ -94,7 +95,6 @@ public class ElectricArcFurnaceControllerBlock extends BaseEntityBlock {
         Direction front = state.getValue(FACING);
         ItemStack heldStack = player.getItemInHand(hand);
 
-        // Let offhand configurator interactions pass through when main hand is used first.
         if (hand == InteractionHand.MAIN_HAND
                 && !heldStack.is(ModItems.CONFIGURATOR.get())
                 && player.getItemInHand(InteractionHand.OFF_HAND).is(ModItems.CONFIGURATOR.get())) {
@@ -106,6 +106,7 @@ public class ElectricArcFurnaceControllerBlock extends BaseEntityBlock {
         }
 
         if (player.isShiftKeyDown()) {
+            MultiblockPreviewHelper.showPreview(player, pos, front, "eaf");
             showStructureHologram(level, pos, front);
             player.displayClientMessage(Component.translatable("message.tech_revised.electric_arc_furnace.hologram"), true);
             return InteractionResult.CONSUME;
@@ -145,13 +146,13 @@ public class ElectricArcFurnaceControllerBlock extends BaseEntityBlock {
                     }
 
                     BlockPos checkPos = localToWorld(controllerPos, front, x, y, z);
-                    BlockState state = level.getBlockState(checkPos);
-                    if (!state.hasProperty(ElectricArcFurnaceFrameBlock.FORMED)) {
+                    BlockState frameState = level.getBlockState(checkPos);
+                    if (!frameState.hasProperty(ElectricArcFurnaceFrameBlock.FORMED)) {
                         continue;
                     }
 
-                    if (state.getValue(ElectricArcFurnaceFrameBlock.FORMED) != formed) {
-                        level.setBlock(checkPos, state.setValue(ElectricArcFurnaceFrameBlock.FORMED, formed), Block.UPDATE_CLIENTS);
+                    if (frameState.getValue(ElectricArcFurnaceFrameBlock.FORMED) != formed) {
+                        level.setBlock(checkPos, frameState.setValue(ElectricArcFurnaceFrameBlock.FORMED, formed), Block.UPDATE_CLIENTS);
                     }
                 }
             }
@@ -407,7 +408,6 @@ public class ElectricArcFurnaceControllerBlock extends BaseEntityBlock {
         return "message.tech_revised.electric_arc_furnace.missing_frame";
     }
 
-    // localX is right-left, localY is up-down, localZ is distance behind the controller front
     private static BlockPos localToWorld(BlockPos origin, Direction front, int localX, int localY, int localZ) {
         Direction right = front.getClockWise();
         Direction back = front.getOpposite();
