@@ -6,10 +6,7 @@ import com.neofast.tech_revised.block.entity.custom.BlastFurnaceControllerBlockE
 import com.neofast.tech_revised.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -78,7 +75,6 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
         }
 
         if (player.isShiftKeyDown()) {
-            showStructureHologram(level, pos, front);
             player.displayClientMessage(Component.translatable("message.tech_revised.blast_furnace.hologram"), true);
             return InteractionResult.CONSUME;
         }
@@ -87,7 +83,7 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
         if (blockEntity instanceof BlastFurnaceControllerBlockEntity controller) {
             String validationKey = validateMultiblock(level, pos, front);
             boolean formed = "message.tech_revised.blast_furnace.formed".equals(validationKey);
-            
+
             if (formed) {
                 NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player, controller, pos);
             } else {
@@ -103,12 +99,11 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
     }
 
     public static String validateMultiblock(Level level, BlockPos controllerPos, Direction front) {
-        // Simple 3x3x4 multiblock for now as example
         for (int y = 0; y < 4; y++) {
             for (int x = -1; x <= 1; x++) {
                 for (int z = 0; z < 3; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue; // Controller position
-                    
+                    if (x == 0 && y == 0 && z == 0) continue;
+
                     Block expected = getExpectedBlock(x, y, z);
                     BlockPos target = localToWorld(controllerPos, front, x, y, z);
                     if (!level.getBlockState(target).is(expected)) {
@@ -121,32 +116,13 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
     }
 
     private static Block getExpectedBlock(int x, int y, int z) {
-        // Example: Input bus at back-bottom, output at front-bottom-left, etc.
         if (x == 0 && y == 0 && z == 2) return ModBlocks.ELECTRIC_ARC_FURNACE_INPUT_BUS.get();
         if (x == 1 && y == 0 && z == 0) return ModBlocks.ELECTRIC_ARC_FURNACE_OUTPUT_BUS.get();
         if (x == -1 && y == 0 && z == 0) return ModBlocks.ELECTRIC_ARC_FURNACE_ENERGY_INPUT_HATCH.get();
-        return ModBlocks.ELECTRIC_ARC_FURNACE_FRAME.get(); // Reuse EAF frames for consistency
-    }
-
-    private static void showStructureHologram(Level level, BlockPos controllerPos, Direction front) {
-        if (!(level instanceof ServerLevel serverLevel)) return;
-        for (int y = 0; y < 4; y++) {
-            for (int x = -1; x <= 1; x++) {
-                for (int z = 0; z < 3; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue;
-                    Block expected = getExpectedBlock(x, y, z);
-                    BlockPos target = localToWorld(controllerPos, front, x, y, z);
-                    if (!level.getBlockState(target).is(expected)) {
-                        BlockParticleOption particle = new BlockParticleOption(ParticleTypes.BLOCK_MARKER, expected.defaultBlockState());
-                        serverLevel.sendParticles(particle, target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1, 0, 0, 0, 0);
-                    }
-                }
-            }
-        }
+        return ModBlocks.ELECTRIC_ARC_FURNACE_FRAME.get();
     }
 
     private InteractionResult tryAutoBuildWithConfigurator(Level level, BlockPos controllerPos, Direction front, Player player) {
-        // Implementation similar to EAF
         return InteractionResult.SUCCESS;
     }
 
