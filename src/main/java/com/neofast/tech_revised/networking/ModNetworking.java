@@ -3,6 +3,7 @@ package com.neofast.tech_revised.networking;
 import com.neofast.tech_revised.TechRevised;
 import com.neofast.tech_revised.networking.packet.RequestVmScreenshotPacket;
 import com.neofast.tech_revised.networking.packet.SaveVmConfigPacket;
+import com.neofast.tech_revised.networking.packet.ShowMultiblockPreviewPacket;
 import com.neofast.tech_revised.networking.packet.VmKeyboardInputPacket;
 import com.neofast.tech_revised.networking.packet.VmMouseInputPacket;
 import com.neofast.tech_revised.networking.packet.VmScreenshotPacket;
@@ -68,6 +69,13 @@ public final class ModNetworking {
                 VmMouseInputPacket::encode,
                 VmMouseInputPacket::decode,
                 VmMouseInputPacket::handle
+        );
+        CHANNEL.registerMessage(
+                packetId++,
+                ShowMultiblockPreviewPacket.class,
+                ShowMultiblockPreviewPacket::encode,
+                ShowMultiblockPreviewPacket::decode,
+                ShowMultiblockPreviewPacket::handle
         );
     }
 }
