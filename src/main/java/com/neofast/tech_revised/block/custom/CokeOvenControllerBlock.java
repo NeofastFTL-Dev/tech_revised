@@ -5,12 +5,10 @@ import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.block.entity.custom.CokeOvenControllerBlockEntity;
 import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceFluidOutputBusBlockEntity;
 import com.neofast.tech_revised.item.ModItems;
+import com.neofast.tech_revised.multiblock.MultiblockPreviewHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -79,7 +77,6 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
         Direction front = state.getValue(FACING);
         ItemStack heldStack = player.getItemInHand(hand);
 
-        // Let offhand configurator interactions pass through when main hand is used first.
         if (hand == InteractionHand.MAIN_HAND
                 && !heldStack.is(ModItems.CONFIGURATOR.get())
                 && player.getItemInHand(InteractionHand.OFF_HAND).is(ModItems.CONFIGURATOR.get())) {
@@ -91,7 +88,7 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
         }
 
         if (player.isShiftKeyDown()) {
-            showStructureHologram(level, pos, front);
+            MultiblockPreviewHelper.showPreview(player, pos, front, "coke_oven");
             player.displayClientMessage(Component.translatable("message.tech_revised.coke_oven.hologram"), true);
             return InteractionResult.CONSUME;
         }
@@ -182,34 +179,6 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
         }
 
         return "message.tech_revised.coke_oven.formed";
-    }
-
-    private static void showStructureHologram(Level level, BlockPos controllerPos, Direction front) {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
-
-        for (int y = MIN_Y; y <= MAX_Y; y++) {
-            for (int z = MIN_Z; z <= MAX_Z; z++) {
-                for (int x = MIN_X; x <= MAX_X; x++) {
-                    if (isControllerPosition(x, y, z)) {
-                        continue;
-                    }
-                    showPartHologram(serverLevel, controllerPos, front, x, y, z, getExpectedBlock(x, y, z));
-                }
-            }
-        }
-    }
-
-    private static void showPartHologram(ServerLevel level, BlockPos controllerPos, Direction front,
-                                         int localX, int localY, int localZ, Block expectedBlock) {
-        BlockPos targetPos = localToWorld(controllerPos, front, localX, localY, localZ);
-        if (!level.getBlockState(targetPos).is(expectedBlock)) {
-            BlockParticleOption particle = new BlockParticleOption(ParticleTypes.BLOCK_MARKER, expectedBlock.defaultBlockState());
-            level.sendParticles(particle, targetPos.getX() + 0.5D, targetPos.getY() + 0.2D, targetPos.getZ() + 0.5D, 1, 0, 0, 0, 0);
-            level.sendParticles(particle, targetPos.getX() + 0.5D, targetPos.getY() + 0.5D, targetPos.getZ() + 0.5D, 1, 0, 0, 0, 0);
-            level.sendParticles(particle, targetPos.getX() + 0.5D, targetPos.getY() + 0.8D, targetPos.getZ() + 0.5D, 1, 0, 0, 0, 0);
-        }
     }
 
     private static InteractionResult tryAutoBuildWithConfigurator(Level level, BlockPos controllerPos, Direction front, Player player) {
@@ -351,7 +320,6 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
         return "message.tech_revised.coke_oven.missing_frame";
     }
 
-    // localX is right-left, localY is up-down, localZ is distance behind the controller front
     private static BlockPos localToWorld(BlockPos origin, Direction front, int localX, int localY, int localZ) {
         Direction right = front.getClockWise();
         Direction back = front.getOpposite();
