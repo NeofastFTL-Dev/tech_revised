@@ -346,7 +346,7 @@ public class ElectricArcFurnaceControllerBlock extends BaseEntityBlock {
         if (localX == 1 && localY == 0 && localZ == 2) {
             return ModBlocks.ELECTRIC_ARC_FURNACE_FLUID_OUTPUT_BUS.get();
         }
-        return ModBlocks.ELECTRIC_ARC_FURNACE_FRAME.get();
+        return ModBlocks.TRANSPORT_FRAME.get();
     }
 
     private static String getMissingMessageForExpectedBlock(Block expectedBlock) {
