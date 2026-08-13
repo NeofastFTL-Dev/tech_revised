@@ -1,0 +1,12 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:pick_and_place_robot",
+  "ingredients": [
+    { "item": "tech_revised:final_pcba" },
+    { "item": "tech_revised:dram_package" },
+    { "item": "tech_revised:spd_eeprom" }
+  ],
+  "result": { "item": "tech_revised:unprogrammed_ram_module" },
+  "process_ticks": 400,
+  "energy_per_tick": 120
+}

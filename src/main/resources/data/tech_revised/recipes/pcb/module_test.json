@@ -1,0 +1,10 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:flying_probe_tester",
+  "ingredients": [
+    { "item": "tech_revised:unprogrammed_ram_module" }
+  ],
+  "result": { "item": "tech_revised:ram_stick" },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

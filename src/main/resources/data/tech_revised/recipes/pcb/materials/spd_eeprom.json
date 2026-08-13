@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "pcb_materials",
+  "pattern": [
+    "GRG",
+    "RER",
+    "GRG"
+  ],
+  "key": {
+    "G": { "item": "minecraft:gold_nugget" },
+    "R": { "item": "minecraft:redstone" },
+    "E": { "item": "minecraft:emerald" }
+  },
+  "result": {
+    "item": "tech_revised:spd_eeprom",
+    "count": 2
+  },
+  "show_notification": true
+}
