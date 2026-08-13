@@ -170,6 +170,17 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> FINAL_PCBA = ITEMS.register("final_pcba",
             () -> new Item(new Item.Properties()));
+
+    // PCB Stage 11 — RAM module assembly (DIMM)
+    public static final RegistryObject<Item> DRAM_PACKAGE = ITEMS.register("dram_package",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SPD_EEPROM = ITEMS.register("spd_eeprom",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> UNPROGRAMMED_RAM_MODULE = ITEMS.register("unprogrammed_ram_module",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RAM_STICK = ITEMS.register("ram_stick",
+            () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> ELECTRODE = ITEMS.register("electrode",
             () -> new Item(new Item.Properties().durability(256)));
     public static final RegistryObject<Item> CHROMITE_DUST = ITEMS.register("chromite_dust",
