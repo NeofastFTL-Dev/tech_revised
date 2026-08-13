@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 
 public class MultiInputIndustrialMachineScreen extends AbstractContainerScreen<MultiInputIndustrialMachineMenu> {
     private static final ResourceLocation TEXTURE =
@@ -27,6 +28,13 @@ public class MultiInputIndustrialMachineScreen extends AbstractContainerScreen<M
         int y = (height - imageHeight) / 2;
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
+        // Draw slot backgrounds for machine slots (covers texture mismatch for any input count)
+        int teSlotStart = 36; // vanilla player slots: 0-35, TE starts at 36
+        for (int i = teSlotStart; i < menu.slots.size(); i++) {
+            Slot slot = menu.slots.get(i);
+            drawSlotBackground(guiGraphics, x + slot.x, y + slot.y);
+        }
+
         int left = x + ENERGY_BAR_X;
         int top = y + ENERGY_BAR_Y;
         int right = left + ENERGY_BAR_WIDTH;
@@ -40,7 +48,6 @@ public class MultiInputIndustrialMachineScreen extends AbstractContainerScreen<M
             guiGraphics.fill(left + 1, bottom - 1 - scaledEnergy, right - 1, bottom - 1, 0xFF2ED05A);
         }
 
-        // Progress bar between inputs and output
         int processTicks = menu.getProcessTicks();
         int progress = menu.getProgress();
         if (processTicks > 0 && progress > 0) {
@@ -55,30 +62,43 @@ public class MultiInputIndustrialMachineScreen extends AbstractContainerScreen<M
         }
     }
 
+    private static void drawSlotBackground(GuiGraphics guiGraphics, int sx, int sy) {
+        // Vanilla-style 18x18 slot frame around the item position
+        guiGraphics.fill(sx - 1, sy - 1, sx + 17, sy + 17, 0xFF373737);
+        guiGraphics.fill(sx, sy, sx + 16, sy + 16, 0xFF8B8B8B);
+        // top/left highlight
+        guiGraphics.fill(sx - 1, sy - 1, sx + 16, sy, 0xFFFFFFFF);
+        guiGraphics.fill(sx - 1, sy - 1, sx, sy + 16, 0xFFFFFFFF);
+    }
+
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0x404040, false);
-        guiGraphics.drawString(this.font,
-                "FE: " + menu.getEnergyStored() + " / " + menu.getMaxEnergyStored(),
-                8, 20, 0x404040, false);
-        guiGraphics.drawString(this.font,
-                "Progress: " + menu.getProgress() + " / " + menu.getProcessTicks(),
-                8, 58, 0x404040, false);
         guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0x404040, false);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics);
-        super.render(guiGraphics, mouseX, mouseY, delta);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTooltip(guiGraphics, mouseX, mouseY);
+
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        int left = x + ENERGY_BAR_X;
+        int top = y + ENERGY_BAR_Y;
+        int right = left + ENERGY_BAR_WIDTH;
+        int bottom = top + ENERGY_BAR_HEIGHT;
+        if (mouseX >= left && mouseX < right && mouseY >= top && mouseY < bottom) {
+            guiGraphics.renderTooltip(this.font,
+                    Component.literal(menu.getEnergyStored() + " / " + menu.getMaxEnergyStored() + " FE"),
+                    mouseX, mouseY);
+        }
     }
 
-    private int getScaledEnergy(int pixels) {
+    private int getScaledEnergy(int height) {
+        int energy = menu.getEnergyStored();
         int maxEnergy = menu.getMaxEnergyStored();
-        if (maxEnergy <= 0) {
-            return 0;
-        }
-        return Math.min(pixels, menu.getEnergyStored() * pixels / maxEnergy);
+        return maxEnergy == 0 ? 0 : (int) ((long) energy * height / maxEnergy);
     }
 }
