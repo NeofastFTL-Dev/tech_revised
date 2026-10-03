@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
-public class LaminationRecipe implements Recipe<Container> {
+public class LaminationRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final NonNullList<Ingredient> layers;
     private final ItemStack result;
@@ -35,7 +35,7 @@ public class LaminationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         if (container.getContainerSize() < layers.size()) return false;
         for (int i = 0; i < layers.size(); i++) {
             if (!layers.get(i).test(container.getItem(i))) return false;
@@ -44,12 +44,12 @@ public class LaminationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         validate(container);
         return result.copy();
     }
 
-    private void validate(Container container) {
+    private void validate(ContainerInput container) {
         // Multi-layer laminates must fail validation if core steps alternate without a designated Pre-preg buffer layer.
         // We assume layers 0, 2, 4... are cores and 1, 3, 5... are pre-pregs (or vice versa).
         // For simplicity, let's check if any two cores are adjacent.
@@ -81,12 +81,11 @@ public class LaminationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -118,48 +117,45 @@ public class LaminationRecipe implements Recipe<Container> {
     }
 
 
-    public static class Serializer implements RecipeSerializer<LaminationRecipe> {
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<LaminationRecipe> {
         private final Supplier<RecipeSerializer<?>> serializerSupplier;
 
         public Serializer(Supplier<RecipeSerializer<?>> serializerSupplier) {
             this.serializerSupplier = serializerSupplier;
         }
 
-        @Override
-        public LaminationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+                public LaminationRecipe fromJson(JsonObject json) {
             NonNullList<Ingredient> layers = NonNullList.create();
             JsonArray jsonArray = GsonHelper.getAsJsonArray(json, "layers");
             for (int i = 0; i < jsonArray.size(); i++) {
-                layers.add(Ingredient.fromJson(jsonArray.get(i)));
+                layers.add(com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(jsonArray.get(i)));
             }
 
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 400);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 100);
 
-            return new LaminationRecipe(recipeId, layers, result, processTicks, energyPerTick, serializerSupplier);
+            return new LaminationRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), layers, result, processTicks, energyPerTick, serializerSupplier);
         }
 
-        @Override
-        public LaminationRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+                public LaminationRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
             int layerCount = buffer.readVarInt();
             NonNullList<Ingredient> layers = NonNullList.withSize(layerCount, Ingredient.EMPTY);
             for (int i = 0; i < layerCount; i++) {
-                layers.set(i, Ingredient.fromNetwork(buffer));
+                layers.set(i, com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer));
             }
-            ItemStack result = buffer.readItem();
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.readItem(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new LaminationRecipe(recipeId, layers, result, processTicks, energyPerTick, serializerSupplier);
+            return new LaminationRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), layers, result, processTicks, energyPerTick, serializerSupplier);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, LaminationRecipe recipe) {
             buffer.writeVarInt(recipe.layers.size());
             for (Ingredient ingredient : recipe.layers) {
-                ingredient.toNetwork(buffer);
+                com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(ingredient, buffer);
             }
-            buffer.writeItem(recipe.result);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeItem(buffer, recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
         }

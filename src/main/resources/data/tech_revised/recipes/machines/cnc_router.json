@@ -3,7 +3,7 @@
   "category": "misc",
   "pattern": [
     "SDS",
-    "SPS",
+    "BPS",
     "SRS"
   ],
   "key": {
@@ -18,9 +18,12 @@
     },
     "R": {
       "item": "minecraft:redstone"
+    },
+    "B": {
+      "item": "tech_revised:platinum_alloy_bushing_plate"
     }
   },
   "result": {
-    "item": "tech_revised:cnc_router"
+    "id": "tech_revised:cnc_router"
   }
 }

@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
-public class CrusherRecipe implements Recipe<Container> {
+public class CrusherRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final Ingredient input;
     private final ItemStack result;
@@ -31,7 +31,7 @@ public class CrusherRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         if (container.getContainerSize() < 1) {
             return false;
         }
@@ -39,7 +39,7 @@ public class CrusherRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
@@ -49,12 +49,11 @@ public class CrusherRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -95,29 +94,26 @@ public class CrusherRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<CrusherRecipe> {
-        @Override
-        public CrusherRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Ingredient ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<CrusherRecipe> {
+                public CrusherRecipe fromJson(JsonObject json) {
+            Ingredient ingredient = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 100);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 20);
-            return new CrusherRecipe(recipeId, ingredient, result, processTicks, energyPerTick);
+            return new CrusherRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), ingredient, result, processTicks, energyPerTick);
         }
 
-        @Override
-        public CrusherRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            Ingredient ingredient = Ingredient.fromNetwork(buffer);
-            ItemStack result = buffer.readItem();
+                public CrusherRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
+            Ingredient ingredient = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer);
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.readItem(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new CrusherRecipe(recipeId, ingredient, result, processTicks, energyPerTick);
+            return new CrusherRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), ingredient, result, processTicks, energyPerTick);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, CrusherRecipe recipe) {
-            recipe.input.toNetwork(buffer);
-            buffer.writeItem(recipe.result);
+            com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(recipe.input, buffer);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeItem(buffer, recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
         }

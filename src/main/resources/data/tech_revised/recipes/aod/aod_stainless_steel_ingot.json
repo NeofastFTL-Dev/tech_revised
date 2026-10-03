@@ -3,7 +3,7 @@
   "energy_per_tick": 80,
   "oxygen_amount": 500,
   "primary_input": {
-    "item": "tech_revised:coal_coke"
+    "item": "tech_revised:ferrochromium_ingot"
   },
   "process_ticks": 160,
   "result": {
@@ -11,6 +11,6 @@
     "item": "tech_revised:stainless_steel_ingot"
   },
   "secondary_input": {
-    "item": "tech_revised:steel_ingot"
+    "item": "tech_revised:nickel_dust"
   }
 }

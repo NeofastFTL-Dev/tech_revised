@@ -3,17 +3,17 @@
   "category": "misc",
   "group": "items",
   "pattern": [
-    "S  ",
-    " S ",
-    "  S"
+    "GG",
+    "GG"
   ],
   "key": {
-    "S": {
-      "item": "tech_revised:steel_ingot"
+    "G": {
+      "item": "tech_revised:graphite_dust"
     }
   },
   "result": {
-    "item": "tech_revised:electrode"
+    "count": 1,
+    "id": "tech_revised:electrode"
   },
   "show_notification": true
 }

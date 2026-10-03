@@ -4,6 +4,8 @@ import com.neofast.tech_revised.TechRevised;
 import com.neofast.tech_revised.block.ModBlocks;
 import com.neofast.tech_revised.fluid.ModFluids;
 import com.neofast.tech_revised.item.ModItems;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
 import com.neofast.tech_revised.recipe.ArgonOxygenDecarburizationConverterRecipe;
 import com.neofast.tech_revised.recipe.CokeOvenRecipe;
 import com.neofast.tech_revised.recipe.CrusherRecipe;
@@ -25,10 +27,16 @@ import com.neofast.tech_revised.screen.ElectricArcFurnaceControllerScreen;
 import com.neofast.tech_revised.screen.ElectricArcFurnaceInputBusMenu;
 import com.neofast.tech_revised.screen.ElectricArcFurnaceInputBusScreen;
 import com.neofast.tech_revised.screen.ModMenuTypes;
+import com.neofast.tech_revised.screen.GenericIndustrialMachineScreen;
+import com.neofast.tech_revised.screen.MultiInputIndustrialMachineScreen;
+import com.neofast.tech_revised.screen.MultiblockControllerScreen;
 import com.neofast.tech_revised.screen.Windows7VmScreen;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
@@ -55,9 +63,30 @@ public class TechRevisedJeiPlugin implements IModPlugin {
     private static final int EAF_SMELTING_ENERGY_PER_TICK = 40;
     private static final int EAF_SMELTING_WATER_PER_OPERATION = 250;
 
+    private static IJeiRuntime runtime;
+
     @Override
     public ResourceLocation getPluginUid() {
         return PLUGIN_UID;
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        runtime = jeiRuntime;
+    }
+
+    @Override
+    public void onRuntimeUnavailable() {
+        runtime = null;
+    }
+
+    public static void showItemRecipes(ItemStack stack, boolean uses) {
+        if (runtime == null || stack == null || stack.isEmpty()) {
+            return;
+        }
+        RecipeIngredientRole role = uses ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT;
+        runtime.getRecipesGui().show(runtime.getJeiHelpers().getFocusFactory().createFocus(
+                role, VanillaTypes.ITEM_STACK, stack));
     }
 
     @Override
@@ -223,77 +252,21 @@ public class TechRevisedJeiPlugin implements IModPlugin {
 
     private static List<MultiblockLayoutJeiRecipe> createMultiblockLayoutRecipes() {
         List<MultiblockLayoutJeiRecipe> recipes = new ArrayList<>();
-
-        MultiblockStructureBlueprint eaf = MultiblockStructureBlueprint.electricArcFurnace();
-        recipes.add(new MultiblockLayoutJeiRecipe(
-                Component.translatable("jei.tech_revised.layout.electric_arc_furnace"),
-                new ItemStack(ModBlocks.ELECTRIC_ARC_FURNACE_CONTROLLER.get()),
-                eaf.getMaterials(),
-                Component.literal("Size: " + eaf.getSizeX() + "W x " + eaf.getSizeZ() + "L x " + eaf.getSizeY() + "H"),
-                List.of(
-                        Component.translatable("jei.tech_revised.layout.eaf.line1"),
-                        Component.translatable("jei.tech_revised.layout.eaf.line2"),
-                        Component.translatable("jei.tech_revised.layout.eaf.line3")
-                ),
-                eaf
-        ));
-
-        MultiblockStructureBlueprint drilling = MultiblockStructureBlueprint.drillingPlatform();
-        recipes.add(new MultiblockLayoutJeiRecipe(
-                Component.translatable("jei.tech_revised.layout.drilling_platform"),
-                new ItemStack(ModBlocks.DRILLING_PLATFORM_CONTROLLER.get()),
-                drilling.getMaterials(),
-                Component.literal("Size: " + drilling.getSizeX() + "W x " + drilling.getSizeZ() + "L x " + drilling.getSizeY() + "H"),
-                List.of(
-                        Component.translatable("jei.tech_revised.layout.drilling.line1"),
-                        Component.translatable("jei.tech_revised.layout.drilling.line2"),
-                        Component.translatable("jei.tech_revised.layout.drilling.line3")
-                ),
-                drilling
-        ));
-
-        MultiblockStructureBlueprint coke = MultiblockStructureBlueprint.cokeOven();
-        recipes.add(new MultiblockLayoutJeiRecipe(
-                Component.translatable("jei.tech_revised.layout.coke_oven"),
-                new ItemStack(ModBlocks.COKE_OVEN_CONTROLLER.get()),
-                coke.getMaterials(),
-                Component.literal("Size: " + coke.getSizeX() + "W x " + coke.getSizeZ() + "L x " + coke.getSizeY() + "H"),
-                List.of(
-                        Component.translatable("jei.tech_revised.layout.coke.line1"),
-                        Component.translatable("jei.tech_revised.layout.coke.line2"),
-                        Component.translatable("jei.tech_revised.layout.coke.line3")
-                ),
-                coke
-        ));
-
-        MultiblockStructureBlueprint aod = MultiblockStructureBlueprint.aodConverter();
-        recipes.add(new MultiblockLayoutJeiRecipe(
-                Component.translatable("jei.tech_revised.layout.argon_oxygen_decarburization_converter"),
-                new ItemStack(ModBlocks.ARGON_OXYGEN_DECARBURIZATION_CONVERTER_CONTROLLER.get()),
-                aod.getMaterials(),
-                Component.literal("Size: " + aod.getSizeX() + "W x " + aod.getSizeZ() + "L x " + aod.getSizeY() + "H"),
-                List.of(
-                        Component.translatable("jei.tech_revised.layout.aod_converter.line1"),
-                        Component.translatable("jei.tech_revised.layout.aod_converter.line2"),
-                        Component.translatable("jei.tech_revised.layout.aod_converter.line3")
-                ),
-                aod
-        ));
-
-        MultiblockStructureBlueprint oxygen = MultiblockStructureBlueprint.oxygenConverter();
-        recipes.add(new MultiblockLayoutJeiRecipe(
-                Component.translatable("jei.tech_revised.layout.oxygen_converter"),
-                new ItemStack(ModBlocks.OXYGEN_CONVERTER_CONTROLLER.get()),
-                oxygen.getMaterials(),
-                Component.literal("Size: " + oxygen.getSizeX() + "W x " + oxygen.getSizeZ() + "L x " + oxygen.getSizeY() + "H"),
-                List.of(
-                        Component.translatable("jei.tech_revised.layout.oxygen_converter.line1"),
-                        Component.translatable("jei.tech_revised.layout.oxygen_converter.line2"),
-                        Component.translatable("jei.tech_revised.layout.oxygen_converter.line3")
-                ),
-                oxygen
-        ));
-
+        for (MachineLayout layout : MachineLayouts.all()) {
+            MultiblockStructureBlueprint blueprint = layout.toBlueprint();
+            recipes.add(new MultiblockLayoutJeiRecipe(
+                    layout.getController().getName(),
+                    new ItemStack(layout.getController()),
+                    blueprint.getMaterials(),
+                    Component.translatable("jei.tech_revised.size", blueprint.getSizeX(), blueprint.getSizeZ(), blueprint.getSizeY()),
+                    List.of(
+                            Component.translatable("jei.tech_revised.layout.generic.line1"),
+                            Component.translatable("jei.tech_revised.layout.generic.line2"),
+                            Component.translatable("jei.tech_revised.layout.generic.line3")
+                    ),
+                    blueprint
+            ));
+        }
         return recipes;
     }
 
@@ -363,6 +336,14 @@ public class TechRevisedJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.PICK_AND_PLACE_ROBOT.get()), PcbJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MULTI_ZONE_REFLOW_OVEN.get()), PcbJeiCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.AOI_VERIFICATION_STATION.get()), PcbJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModItems.CONFIGURATOR.get()), MultiblockLayoutJeiCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModItems.PC_SURVIVAL_MANUAL.get()), MultiblockLayoutJeiCategory.RECIPE_TYPE);
+        for (MachineLayout layout : MachineLayouts.all()) {
+            registration.addRecipeCatalyst(new ItemStack(layout.getController()), MultiblockLayoutJeiCategory.RECIPE_TYPE);
+        }
+        for (var machine : ModBlocks.PC_PRODUCTION_MACHINES) {
+            registration.addRecipeCatalyst(new ItemStack(machine.get()), PcbJeiCategory.RECIPE_TYPE);
+        }
     }
 
     @Override
@@ -396,6 +377,17 @@ public class TechRevisedJeiPlugin implements IModPlugin {
         registration.addRecipeClickArea(CrusherScreen.class,
                 56, 34, 60, 18,
                 CrusherJeiCategory.RECIPE_TYPE);
+        registration.addRecipeClickArea(GenericIndustrialMachineScreen.class,
+                8, 6, 138, 12,
+                MultiblockLayoutJeiCategory.RECIPE_TYPE);
+        registration.addRecipeClickArea(MultiInputIndustrialMachineScreen.class,
+                8, 6, 138, 12,
+                PcbJeiCategory.RECIPE_TYPE,
+                LaminationJeiCategory.RECIPE_TYPE,
+                MultiblockLayoutJeiCategory.RECIPE_TYPE);
+        registration.addRecipeClickArea(MultiblockControllerScreen.class,
+                8, 6, 138, 12,
+                MultiblockLayoutJeiCategory.RECIPE_TYPE);
 
         registration.addGuiContainerHandler(Windows7VmScreen.class, new IGuiContainerHandler<>() {
             @Override

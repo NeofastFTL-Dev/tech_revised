@@ -25,7 +25,7 @@
     "IRI"
   ],
   "result": {
-    "item": "tech_revised:coke_oven_controller"
+    "id": "tech_revised:coke_oven_controller"
   },
   "show_notification": true
 }

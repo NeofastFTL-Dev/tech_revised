@@ -22,7 +22,7 @@ public final class MultiblockPreviewHelper {
      * @param player        target player (must be a ServerPlayer for the packet to send)
      * @param controllerPos world position of the controller block
      * @param front         horizontal facing of the controller
-     * @param blueprintId   one of: eaf, coke_oven, drilling_platform, oxygen_converter, aod_converter
+      * @param blueprintId   eaf, coke_oven, drilling_platform, oxygen_converter, aod_converter, workstation, blast_furnace
      */
     public static void showPreview(Player player, BlockPos controllerPos, Direction front, String blueprintId) {
         if (!(player instanceof ServerPlayer serverPlayer)) {

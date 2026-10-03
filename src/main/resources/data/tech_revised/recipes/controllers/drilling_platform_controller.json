@@ -28,7 +28,7 @@
     "RPR"
   ],
   "result": {
-    "item": "tech_revised:drilling_platform_controller"
+    "id": "tech_revised:drilling_platform_controller"
   },
   "show_notification": true
 }

@@ -1,33 +1,63 @@
 {
   "variants": {
-    "facing=north,active=false": {
+    "active=false,facing=north,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer"
     },
-    "facing=north,active=true": {
+    "active=true,facing=north,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer_on"
     },
-    "facing=east,active=false": {
+    "active=false,facing=north,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed"
+    },
+    "active=true,facing=north,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed_on"
+    },
+    "active=false,facing=east,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer",
       "y": 90
     },
-    "facing=east,active=true": {
+    "active=true,facing=east,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer_on",
       "y": 90
     },
-    "facing=south,active=false": {
+    "active=false,facing=east,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed",
+      "y": 90
+    },
+    "active=true,facing=east,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed_on",
+      "y": 90
+    },
+    "active=false,facing=south,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer",
       "y": 180
     },
-    "facing=south,active=true": {
+    "active=true,facing=south,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer_on",
       "y": 180
     },
-    "facing=west,active=false": {
+    "active=false,facing=south,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed",
+      "y": 180
+    },
+    "active=true,facing=south,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed_on",
+      "y": 180
+    },
+    "active=false,facing=west,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer",
       "y": 270
     },
-    "facing=west,active=true": {
+    "active=true,facing=west,formed=false": {
       "model": "tech_revised:block/acidic_etching_sprayer_on",
+      "y": 270
+    },
+    "active=false,facing=west,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed",
+      "y": 270
+    },
+    "active=true,facing=west,formed=true": {
+      "model": "tech_revised:block/acidic_etching_sprayer_formed_on",
       "y": 270
     }
   }

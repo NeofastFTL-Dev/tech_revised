@@ -16,7 +16,7 @@ public final class ModNetworking {
     private static final String PROTOCOL_VERSION = "1";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(TechRevised.MOD_ID, "messages"),
+            ResourceLocation.fromNamespaceAndPath(TechRevised.MOD_ID, "messages"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals

@@ -1,7 +1,9 @@
 package com.neofast.tech_revised.screen;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.neofast.tech_revised.TechRevised;
+import com.neofast.tech_revised.client.IndustrialGuiStyle;
 import com.neofast.tech_revised.client.VmScreenClientState;
 import com.neofast.tech_revised.integration.vm.VmCommandIntegration;
 import com.neofast.tech_revised.networking.ModNetworking;
@@ -38,6 +40,7 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
     private Button saveButton;
     private Button refreshButton;
     private Button closeButton;
+    private Button fullscreenButton;
     private ResourceLocation previewTextureLocation;
     private DynamicTexture previewTexture;
     private int previewTextureWidth = 1;
@@ -55,6 +58,11 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
     private int previewDrawY = -1;
     private int previewDrawWidth = 0;
     private int previewDrawHeight = 0;
+    private int heldMouseButtons = 0;
+    private long lastPointerSendMs = 0L;
+    private int lastSentMask = -1;
+    private double lastSentX = Double.NaN;
+    private double lastSentY = Double.NaN;
 
     public Windows7VmScreen(Windows7VmMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -110,6 +118,13 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
                 .build();
         addRenderableWidget(closeButton);
 
+        fullscreenButton = Button.builder(
+                        Component.translatable("screen.tech_revised.vm.button.fullscreen"),
+                        button -> toggleVmFullscreen())
+                .bounds(this.leftPos + PREVIEW_X, this.topPos + 176, 80, 20)
+                .build();
+        addRenderableWidget(fullscreenButton);
+
         VmScreenClientState.clear(menu.getBlockPos());
         lastPreviewUpdateId = -1L;
         previewStatus = Component.translatable("screen.tech_revised.vm.preview.connecting").getString();
@@ -124,10 +139,9 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
     @Override
     public void containerTick() {
         super.containerTick();
+        pollNativePointer();
         if (vmNameBox.visible) {
-            vmNameBox.tick();
-            startCommandBox.tick();
-            stopCommandBox.tick();
+            // EditBox no longer ticks in 1.21.1.
         }
     }
 
@@ -140,9 +154,9 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
         } else {
             int left = this.leftPos;
             int top = this.topPos;
-            guiGraphics.fill(left, top, left + this.imageWidth, top + this.imageHeight, 0xFF1E1F23);
-            guiGraphics.fill(left + 1, top + 1, left + this.imageWidth - 1, top + this.imageHeight - 1, 0xFF2B2E36);
-            guiGraphics.fill(left + 10, top + 28, left + this.imageWidth - 10, top + 30, 0xFF5A6070);
+            IndustrialGuiStyle.drawMetalPanel(guiGraphics, left, top, this.imageWidth, this.imageHeight);
+            IndustrialGuiStyle.drawRecess(guiGraphics, left + 10, top + 28, FIELD_WIDTH + 4, 122);
+            IndustrialGuiStyle.drawRecess(guiGraphics, left + PREVIEW_X - 4, top + 28, PREVIEW_WIDTH + 8, 148);
         }
 
         int previewLeft = previewAreaX;
@@ -158,24 +172,30 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
             guiGraphics.fill(previewLeft + previewWidth - 1, previewTop, previewLeft + previewWidth, previewTop + previewHeight, 0xFF6AA9FF);
         }
 
-        previewDrawX = previewLeft + 1;
-        previewDrawY = previewTop + 1;
-        previewDrawWidth = previewWidth - 2;
-        previewDrawHeight = previewHeight - 2;
+        int inset = vmFullscreen ? 0 : 1;
+        previewDrawX = previewLeft + inset;
+        previewDrawY = previewTop + inset;
+        previewDrawWidth = Math.max(1, previewWidth - inset * 2);
+        previewDrawHeight = Math.max(1, previewHeight - inset * 2);
         if (previewTextureLocation != null) {
-            int availableWidth = previewWidth - 2;
-            int availableHeight = previewHeight - 2;
+            int availableWidth = previewDrawWidth;
+            int availableHeight = previewDrawHeight;
             float scale = Math.min(availableWidth / (float) previewTextureWidth, availableHeight / (float) previewTextureHeight);
             int drawWidth = Math.max(1, Math.round(previewTextureWidth * scale));
             int drawHeight = Math.max(1, Math.round(previewTextureHeight * scale));
-            int drawX = previewLeft + 1 + (availableWidth - drawWidth) / 2;
-            int drawY = previewTop + 1 + (availableHeight - drawHeight) / 2;
+            int drawX = previewLeft + inset + (availableWidth - drawWidth) / 2;
+            int drawY = previewTop + inset + (availableHeight - drawHeight) / 2;
 
             previewDrawX = drawX;
             previewDrawY = drawY;
             previewDrawWidth = drawWidth;
             previewDrawHeight = drawHeight;
-            guiGraphics.blit(previewTextureLocation, drawX, drawY, 0, 0, drawWidth, drawHeight, previewTextureWidth, previewTextureHeight);
+            if (previewTexture != null) {
+                previewTexture.setFilter(true, false);
+            }
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            guiGraphics.blit(previewTextureLocation, drawX, drawY, drawWidth, drawHeight,
+                    0.0F, 0.0F, previewTextureWidth, previewTextureHeight, previewTextureWidth, previewTextureHeight);
         }
     }
 
@@ -185,34 +205,33 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
             return;
         }
 
-        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xE0E0E0, false);
-        guiGraphics.drawString(this.font,
+        IndustrialGuiStyle.drawTruncated(guiGraphics, font, title, titleLabelX, titleLabelY, 180, IndustrialGuiStyle.TITLE_COLOR);
+        IndustrialGuiStyle.drawTruncated(guiGraphics, font,
                 Component.translatable("screen.tech_revised.vm.field.vm_name"),
-                12, 23, 0xC6CBD8, false);
-        guiGraphics.drawString(this.font,
+                12, 23, FIELD_WIDTH, IndustrialGuiStyle.BODY_COLOR);
+        IndustrialGuiStyle.drawTruncated(guiGraphics, font,
                 Component.translatable("screen.tech_revised.vm.field.start_command"),
-                12, 67, 0xC6CBD8, false);
-        guiGraphics.drawString(this.font,
+                12, 67, FIELD_WIDTH, IndustrialGuiStyle.BODY_COLOR);
+        IndustrialGuiStyle.drawTruncated(guiGraphics, font,
                 Component.translatable("screen.tech_revised.vm.field.stop_command"),
-                12, 111, 0xC6CBD8, false);
-        guiGraphics.drawString(this.font,
+                12, 111, FIELD_WIDTH, IndustrialGuiStyle.BODY_COLOR);
+        IndustrialGuiStyle.drawTruncated(guiGraphics, font,
                 Component.translatable("screen.tech_revised.vm.preview"),
-                PREVIEW_X, 23, 0xC6CBD8, false);
-        guiGraphics.drawString(this.font,
-                this.font.plainSubstrByWidth(previewStatus, PREVIEW_WIDTH),
-                PREVIEW_X, 150, 0xAAB2C5, false);
-        guiGraphics.drawString(this.font,
+                PREVIEW_X, 23, PREVIEW_WIDTH, IndustrialGuiStyle.BODY_COLOR);
+        IndustrialGuiStyle.drawTruncated(guiGraphics, font, previewStatus, PREVIEW_X, 150, PREVIEW_WIDTH, IndustrialGuiStyle.MUTED_COLOR);
+        IndustrialGuiStyle.drawTruncated(guiGraphics, font,
                 Component.translatable(previewFocused
                         ? "screen.tech_revised.vm.preview.focused"
                         : "screen.tech_revised.vm.preview.click_to_focus"),
-                PREVIEW_X, 162, 0x8A93A8, false);
-        guiGraphics.drawString(this.font,
-                Component.translatable("screen.tech_revised.vm.preview.f11_hint"),
-                PREVIEW_X, 174, 0x8A93A8, false);
+                PREVIEW_X, 162, PREVIEW_WIDTH, IndustrialGuiStyle.MUTED_COLOR);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (fullscreenButton.visible && fullscreenButton.isMouseOver(mouseX, mouseY)) {
+            return fullscreenButton.mouseClicked(mouseX, mouseY, button);
+        }
+
         if (!vmFullscreen) {
             if (vmNameBox.mouseClicked(mouseX, mouseY, button)
                     || startCommandBox.mouseClicked(mouseX, mouseY, button)
@@ -228,15 +247,13 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
             startCommandBox.setFocused(false);
             stopCommandBox.setFocused(false);
             setFocused(null);
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT
-                    || button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                    || button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                if (sendMouseClickToVm(mouseX, mouseY, button)) {
-                    previewStatus = Component.translatable("screen.tech_revised.vm.preview.mouse_click_sent").getString();
-                } else {
-                    previewStatus = Component.translatable("screen.tech_revised.vm.preview.mouse_click_unavailable").getString();
-                }
+
+            int bit = buttonMaskFor(button);
+            if (bit != 0) {
+                heldMouseButtons |= bit;
+                sendMouseEventToVm(mouseX, mouseY, 0, heldMouseButtons, true);
             }
+            previewStatus = Component.translatable("screen.tech_revised.vm.preview.mouse_click_sent").getString();
             return true;
         }
 
@@ -245,8 +262,52 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
     }
 
     @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (heldMouseButtons != 0) {
+            int bit = buttonMaskFor(button);
+            if (bit != 0) {
+                int mask = heldMouseButtons & ~bit;
+                heldMouseButtons = mask;
+                sendMouseEventToVm(mouseX, mouseY, 0, mask, true);
+            }
+            return true;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (heldMouseButtons != 0) {
+            sendMouseEventToVm(mouseX, mouseY, 0, heldMouseButtons, false);
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (vmFullscreen || isInPreview(mouseX, mouseY)) {
+            int steps = (int) Math.round(scrollY);
+            if (steps == 0) {
+                steps = scrollY > 0 ? 1 : -1;
+            }
+            sendMouseEventToVm(mouseX, mouseY, steps, heldMouseButtons, true);
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
+    public void mouseMoved(double mouseX, double mouseY) {
+        if (previewFocused || vmFullscreen || heldMouseButtons != 0) {
+            sendMouseEventToVm(mouseX, mouseY, 0, heldMouseButtons, false);
+        }
+        super.mouseMoved(mouseX, mouseY);
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_F11) {
+        if (vmFullscreen && keyCode == GLFW.GLFW_KEY_ESCAPE) {
             toggleVmFullscreen();
             return true;
         }
@@ -297,26 +358,22 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         pollScreenshotUpdate();
-        renderBackground(guiGraphics);
-        super.render(guiGraphics, mouseX, mouseY, delta);
+        pollNativePointer();
         if (vmFullscreen) {
-            guiGraphics.drawString(this.font,
-                    Component.translatable("screen.tech_revised.vm.preview.fullscreen_hint"),
-                    8, 8, 0xC6CBD8, false);
-            guiGraphics.drawString(this.font,
-                    this.font.plainSubstrByWidth(previewStatus, Math.max(1, this.width - 16)),
-                    8, this.height - 22, 0xAAB2C5, false);
-            guiGraphics.drawString(this.font,
-                    Component.translatable(previewFocused
-                            ? "screen.tech_revised.vm.preview.focused"
-                            : "screen.tech_revised.vm.preview.click_to_focus"),
-                    8, this.height - 12, 0x8A93A8, false);
+            renderBackground(guiGraphics, 0, 0, 0);
+            renderBg(guiGraphics, delta, mouseX, mouseY);
+            fullscreenButton.render(guiGraphics, mouseX, mouseY, delta);
+        } else {
+            super.render(guiGraphics, mouseX, mouseY, delta);
         }
-        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
     public void removed() {
+        if (heldMouseButtons != 0) {
+            sendMouseEventToVm(previewDrawX, previewDrawY, 0, 0, true);
+            heldMouseButtons = 0;
+        }
         stopLiveStream();
         releasePreviewTexture();
         super.removed();
@@ -362,10 +419,8 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
 
         lastPreviewUpdateId = frameData.updateId();
         previewStatus = frameData.message();
-        if (frameData.success() && frameData.imageBytes().length > 0) {
+        if (frameData.success() && frameData.imageBytes().length > 8) {
             updatePreviewTexture(frameData.imageBytes());
-        } else {
-            releasePreviewTexture();
         }
     }
 
@@ -375,7 +430,6 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
             image = NativeImage.read(stream);
             if (image == null) {
                 previewStatus = Component.translatable("screen.tech_revised.vm.preview.decode_failed").getString();
-                releasePreviewTexture();
                 return;
             }
 
@@ -393,9 +447,9 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
 
             previewPixels.copyFrom(image);
             previewTexture.upload();
+            previewTexture.setFilter(true, false);
         } catch (Exception exception) {
             previewStatus = Component.translatable("screen.tech_revised.vm.preview.decode_failed").getString();
-            releasePreviewTexture();
         } finally {
             if (image != null) {
                 image.close();
@@ -406,7 +460,7 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
     private void rebuildPreviewTexture(NativeImage image, int imageWidth, int imageHeight) {
         Minecraft minecraft = Minecraft.getInstance();
         if (previewTextureLocation == null) {
-            previewTextureLocation = new ResourceLocation(TechRevised.MOD_ID, "vm_preview/" + UUID.randomUUID());
+            previewTextureLocation = ResourceLocation.fromNamespaceAndPath(TechRevised.MOD_ID, "vm_preview/" + UUID.randomUUID());
         } else {
             minecraft.getTextureManager().release(previewTextureLocation);
             if (previewTexture != null) {
@@ -419,6 +473,7 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
         previewTextureWidth = imageWidth;
         previewTextureHeight = imageHeight;
         minecraft.getTextureManager().register(previewTextureLocation, previewTexture);
+        previewTexture.setFilter(true, false);
     }
 
     private void releasePreviewTexture() {
@@ -451,44 +506,106 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
         }
     }
 
-    private boolean sendMouseClickToVm(double mouseX, double mouseY, int button) {
-        if (previewTextureLocation == null || previewTextureWidth <= 0 || previewTextureHeight <= 0) {
-            return false;
+    private void pollNativePointer() {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft == null) {
+            return;
+        }
+        long window = minecraft.getWindow().getWindow();
+        double mouseX = minecraft.mouseHandler.xpos()
+                * (double) minecraft.getWindow().getGuiScaledWidth()
+                / Math.max(1, minecraft.getWindow().getScreenWidth());
+        double mouseY = minecraft.mouseHandler.ypos()
+                * (double) minecraft.getWindow().getGuiScaledHeight()
+                / Math.max(1, minecraft.getWindow().getScreenHeight());
+
+        int mask = 0;
+        if (GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
+            mask |= 1;
+        }
+        if (GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+            mask |= 2;
+        }
+        if (GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS) {
+            mask |= 4;
         }
 
-        if (previewDrawWidth <= 0 || previewDrawHeight <= 0) {
-            return false;
+        if (mask == 0 && heldMouseButtons != 0) {
+            heldMouseButtons = 0;
+            sendMouseEventToVm(mouseX, mouseY, 0, 0, true);
+            return;
         }
 
-        if (mouseX < previewDrawX || mouseX >= previewDrawX + previewDrawWidth
-                || mouseY < previewDrawY || mouseY >= previewDrawY + previewDrawHeight) {
-            return false;
+        if (!previewFocused && !vmFullscreen && heldMouseButtons == 0) {
+            return;
         }
 
-        int buttonMask = switch (button) {
+        boolean overPreview = vmFullscreen || isInPreview(mouseX, mouseY);
+        if (heldMouseButtons == 0 && !overPreview) {
+            return;
+        }
+
+        sendMouseEventToVm(mouseX, mouseY, 0, heldMouseButtons, false);
+    }
+
+    private static int buttonMaskFor(int button) {
+        return switch (button) {
             case GLFW.GLFW_MOUSE_BUTTON_LEFT -> 1;
             case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> 2;
             case GLFW.GLFW_MOUSE_BUTTON_MIDDLE -> 4;
             default -> 0;
         };
-        if (buttonMask == 0) {
+    }
+
+    private boolean sendMouseEventToVm(double mouseX, double mouseY, int wheelDelta, int buttonMask, boolean force) {
+        int[] mapped = mapPointerToVm(mouseX, mouseY, force || heldMouseButtons != 0 || vmFullscreen || wheelDelta != 0);
+        if (mapped == null) {
             return false;
+        }
+
+        boolean contentChanged = wheelDelta != 0 || buttonMask != lastSentMask;
+        boolean positionChanged = !Double.isNaN(lastSentX) && !Double.isNaN(lastSentY)
+                && (Math.abs(mouseX - lastSentX) >= 1.0D || Math.abs(mouseY - lastSentY) >= 1.0D);
+        if (!force && !contentChanged && !positionChanged) {
+            return true;
+        }
+
+        long now = System.currentTimeMillis();
+        long minInterval = heldMouseButtons != 0 ? 16L : 33L;
+        if (!force && now - lastPointerSendMs < minInterval) {
+            return true;
+        }
+        lastPointerSendMs = now;
+        lastSentMask = buttonMask;
+        lastSentX = mouseX;
+        lastSentY = mouseY;
+        ModNetworking.CHANNEL.sendToServer(new VmMouseInputPacket(menu.getBlockPos(), mapped[0], mapped[1], wheelDelta, buttonMask));
+        return true;
+    }
+
+    private int[] mapPointerToVm(double mouseX, double mouseY, boolean clampOutside) {
+        if (previewTextureLocation == null || previewTextureWidth <= 0 || previewTextureHeight <= 0) {
+            return null;
+        }
+        if (previewDrawWidth <= 0 || previewDrawHeight <= 0) {
+            return null;
+        }
+
+        if (!clampOutside && (mouseX < previewDrawX || mouseX >= previewDrawX + previewDrawWidth
+                || mouseY < previewDrawY || mouseY >= previewDrawY + previewDrawHeight)) {
+            return null;
         }
 
         double localX = mouseX - previewDrawX;
         double localY = mouseY - previewDrawY;
-        double normalizedX = previewDrawWidth <= 1 ? 0.0D : localX / (double) (previewDrawWidth - 1);
-        double normalizedY = previewDrawHeight <= 1 ? 0.0D : localY / (double) (previewDrawHeight - 1);
+        double normalizedX = previewDrawWidth <= 1 ? 0.0D : localX / (double) previewDrawWidth;
+        double normalizedY = previewDrawHeight <= 1 ? 0.0D : localY / (double) previewDrawHeight;
         normalizedX = Math.max(0.0D, Math.min(1.0D, normalizedX));
         normalizedY = Math.max(0.0D, Math.min(1.0D, normalizedY));
 
-        int vmX = previewTextureWidth <= 1 ? 0 : (int) Math.round(normalizedX * (previewTextureWidth - 1));
-        int vmY = previewTextureHeight <= 1 ? 0 : (int) Math.round(normalizedY * (previewTextureHeight - 1));
-        vmX = Math.max(0, vmX);
-        vmY = Math.max(0, vmY);
-
-        ModNetworking.CHANNEL.sendToServer(new VmMouseInputPacket(menu.getBlockPos(), vmX, vmY, buttonMask));
-        return true;
+        int vmX = (int) Math.round(normalizedX * 65535.0D);
+        int vmY = (int) Math.round(normalizedY * 65535.0D);
+        return new int[]{Math.max(0, Math.min(65535, vmX)), Math.max(0, Math.min(65535, vmY))};
     }
 
     public Rect2i getJeiExclusionArea() {
@@ -496,6 +613,10 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
     }
 
     private void toggleVmFullscreen() {
+        if (heldMouseButtons != 0) {
+            sendMouseEventToVm(previewDrawX, previewDrawY, 0, 0, true);
+            heldMouseButtons = 0;
+        }
         vmFullscreen = !vmFullscreen;
         setConfigWidgetsVisible(!vmFullscreen);
         updatePreviewArea();
@@ -526,14 +647,29 @@ public class Windows7VmScreen extends AbstractContainerScreen<Windows7VmMenu> {
         refreshButton.active = visible;
         closeButton.visible = visible;
         closeButton.active = visible;
+
+        fullscreenButton.visible = true;
+        fullscreenButton.active = true;
+        fullscreenButton.setMessage(Component.translatable(vmFullscreen
+                ? "screen.tech_revised.vm.button.exit_fullscreen"
+                : "screen.tech_revised.vm.button.fullscreen"));
+        if (vmFullscreen) {
+            fullscreenButton.setX(8);
+            fullscreenButton.setY(8);
+            fullscreenButton.setWidth(90);
+        } else {
+            fullscreenButton.setX(this.leftPos + PREVIEW_X);
+            fullscreenButton.setY(this.topPos + 176);
+            fullscreenButton.setWidth(80);
+        }
     }
 
     private void updatePreviewArea() {
         if (vmFullscreen) {
-            previewAreaX = 4;
-            previewAreaY = 22;
-            previewAreaWidth = Math.max(40, this.width - 8);
-            previewAreaHeight = Math.max(40, this.height - 48);
+            previewAreaX = 0;
+            previewAreaY = 0;
+            previewAreaWidth = Math.max(1, this.width);
+            previewAreaHeight = Math.max(1, this.height);
         } else {
             previewAreaX = this.leftPos + PREVIEW_X;
             previewAreaY = this.topPos + PREVIEW_Y;

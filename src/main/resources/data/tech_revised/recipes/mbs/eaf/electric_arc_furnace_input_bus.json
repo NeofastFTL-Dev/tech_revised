@@ -22,7 +22,7 @@
     "IFI"
   ],
   "result": {
-    "item": "tech_revised:electric_arc_furnace_input_bus"
+    "id": "tech_revised:electric_arc_furnace_input_bus"
   },
   "show_notification": true
 }

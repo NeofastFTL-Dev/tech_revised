@@ -79,7 +79,7 @@ public final class VmCommandIntegration {
     private static final String STOP_COMMAND_PROPERTY = "tech_revised.vm.stopCommand";
     private static final String VBOX_MANAGE_PATH_PROPERTY = "tech_revised.vm.vboxManagePath";
     private static final String VM_MOUSE_MODE_PROPERTY = "tech_revised.vm.mouseMode";
-    private static final String DEFAULT_VM_NAME = "Windows 7";
+    private static final String DEFAULT_VM_NAME = "Windows 10";
     private static final String DEFAULT_VM_MOUSE_MODE = "usbtablet";
     private static final String VBOXMANAGE_PLACEHOLDER = "{vboxmanage}";
     private static final String DEFAULT_START_TEMPLATE = "\"" + VBOXMANAGE_PLACEHOLDER + "\" startvm \"{vmName}\" --type headless";
@@ -188,7 +188,6 @@ public final class VmCommandIntegration {
         if (!osName.contains("win")) {
             return;
         }
-
         if ((buttonMask & 0x07) == 0) {
             return;
         }
@@ -206,6 +205,32 @@ public final class VmCommandIntegration {
                 }
             } catch (Exception exception) {
                 LOGGER.debug("Failed to send mouse click to VM '{}': {}", vmName, exception.getMessage());
+            }
+        });
+    }
+
+    public static void sendMouseEventAsync(String localVmName, String localStartTemplate, String localStopTemplate,
+                                           int absoluteX, int absoluteY, int wheelDelta, int buttonMask) {
+        String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        if (!osName.contains("win")) {
+            return;
+        }
+
+        String vmName = resolveVmName(localVmName);
+        int clampedX = Math.max(0, Math.min(65535, absoluteX));
+        int clampedY = Math.max(0, Math.min(65535, absoluteY));
+        int clampedWheel = Math.max(-1920, Math.min(1920, wheelDelta));
+        int sanitizedMask = buttonMask & 0x07;
+
+        EXECUTOR.submit(() -> {
+            try {
+                CommandResult result = runPowerShell(
+                        mouseEventScript(vmName, clampedX, clampedY, clampedWheel, sanitizedMask), 8);
+                if (result.exitCode() != 0) {
+                    LOGGER.warn("Failed to send mouse event to VM '{}': {}", vmName, result.outputPreview());
+                }
+            } catch (Exception exception) {
+                LOGGER.debug("Failed to send mouse event to VM '{}': {}", vmName, exception.getMessage());
             }
         });
     }
@@ -230,11 +255,47 @@ public final class VmCommandIntegration {
         String vmName = resolveVmName(localVmName);
         String vboxExecutable = resolveVBoxManageExecutable(localStartTemplate, localStopTemplate);
         try {
-            // Live stream path: skip expensive VM state query for lower frame latency.
-            return captureScreenshot(vmName, vboxExecutable, false);
+            VmScreenshotResult result = captureScreenshot(vmName, vboxExecutable, false);
+            if (!result.success() && isDisplayUnavailable(result.message())) {
+                ensureGuestDisplay(vmName, vboxExecutable);
+                result = captureScreenshot(vmName, vboxExecutable, false);
+            }
+            return result;
         } catch (Exception exception) {
             return new VmScreenshotResult(false, "Screenshot error: " + exception.getMessage(), new byte[0]);
         }
+    }
+
+    public static void ensureGuestDisplay(String localVmName, String localStartTemplate, String localStopTemplate) {
+        ensureGuestDisplay(resolveVmName(localVmName), resolveVBoxManageExecutable(localStartTemplate, localStopTemplate));
+    }
+
+    private static void ensureGuestDisplay(String vmName, String vboxExecutable) {
+        try {
+            runVBoxManage(vboxExecutable, List.of("controlvm", vmName, "keyboardputscancode", "1d", "9d"), 8);
+            CommandResult result = runVBoxManage(
+                    vboxExecutable,
+                    List.of("controlvm", vmName, "setvideomodehint", "1280", "720", "32", "0", "yes"),
+                    8
+            );
+            if (result.exitCode() != 0) {
+                LOGGER.debug("Failed to set VM display mode for '{}': {}", vmName, result.outputPreview());
+                return;
+            }
+            Thread.sleep(1000L);
+        } catch (Exception exception) {
+            LOGGER.debug("Failed to prepare VM display for '{}': {}", vmName, exception.getMessage());
+        }
+    }
+
+    private static boolean isDisplayUnavailable(String message) {
+        if (message == null || message.isEmpty()) {
+            return false;
+        }
+        String lower = message.toLowerCase(Locale.ROOT);
+        return lower.contains("0x80004005")
+                || lower.contains("e_fail")
+                || lower.contains("takescreenshottoarray");
     }
 
     public static void executeAction(ServerLevel level, BlockPos pos, ServerPlayer player, VmAction action) {
@@ -388,6 +449,7 @@ public final class VmCommandIntegration {
                                                                 String vboxExecutable) throws Exception {
         String initialState = queryVmState(vmName, vboxExecutable);
         if (isActiveVmState(initialState)) {
+            ensureGuestDisplay(vmName, vboxExecutable);
             return new ActionExecution(true, true, new CommandResult(0, "VMState=" + initialState));
         }
 
@@ -395,6 +457,7 @@ public final class VmCommandIntegration {
 
         CommandResult attempt = runCommand(startCommand, 8);
         if (attempt.exitCode() == 0) {
+            ensureGuestDisplay(vmName, vboxExecutable);
             return new ActionExecution(true, false, attempt);
         }
 
@@ -674,17 +737,39 @@ public final class VmCommandIntegration {
 
     private static String mouseClickScript(String vmName, int absoluteX, int absoluteY, int buttonMask) {
         String escapedVmName = vmName.replace("'", "''");
+        return mouseScriptPreamble(escapedVmName)
+                + "$px=To-Pixel " + absoluteX + " $gw;"
+                + "$py=To-Pixel " + absoluteY + " $gh;"
+                + "$mouse.PutMouseEventAbsolute($px,$py,0,0,0)|Out-Null;"
+                + "$mouse.PutMouseEventAbsolute($px,$py,0,0," + buttonMask + ")|Out-Null;"
+                + "Start-Sleep -Milliseconds 30;"
+                + "$mouse.PutMouseEventAbsolute($px,$py,0,0,0)|Out-Null;"
+                + "}finally{$session.UnlockMachine();}";
+    }
+
+    private static String mouseEventScript(String vmName, int absoluteX, int absoluteY, int wheelDelta, int buttonMask) {
+        String escapedVmName = vmName.replace("'", "''");
+        return mouseScriptPreamble(escapedVmName)
+                + "$px=To-Pixel " + absoluteX + " $gw;"
+                + "$py=To-Pixel " + absoluteY + " $gh;"
+                + "$mouse.PutMouseEventAbsolute($px,$py,0,0,0)|Out-Null;"
+                + "$mouse.PutMouseEventAbsolute($px,$py,0,0," + buttonMask + ")|Out-Null;"
+                + "if(" + wheelDelta + " -ne 0){$mouse.PutMouseEvent(0,0," + wheelDelta + ",0," + buttonMask + ")|Out-Null;}"
+                + "}finally{$session.UnlockMachine();}";
+    }
+
+    private static String mouseScriptPreamble(String escapedVmName) {
         return "$ErrorActionPreference='Stop';"
+                + "function To-Pixel($v,$span){$p=[int][Math]::Round(($v/65535.0)*$span);if($p -lt 1){return 1};if($p -gt $span){return $span};return $p};"
                 + "$vbox=New-Object -ComObject VirtualBox.VirtualBox;"
                 + "$session=New-Object -ComObject VirtualBox.Session;"
                 + "$machine=$vbox.FindMachine('" + escapedVmName + "');"
                 + "$machine.LockMachine($session,1);"
                 + "try{"
                 + "$mouse=$session.Console.Mouse;"
-                + "$mouse.PutMouseEventAbsolute(" + absoluteX + "," + absoluteY + ",0,0," + buttonMask + ")|Out-Null;"
-                + "Start-Sleep -Milliseconds 20;"
-                + "$mouse.PutMouseEventAbsolute(" + absoluteX + "," + absoluteY + ",0,0,0)|Out-Null;"
-                + "}finally{$session.UnlockMachine();}";
+                + "$display=$session.Console.Display;"
+                + "$gw=1280;$gh=720;"
+                + "try{$w=0;$h=0;$b=0;$x=0;$y=0;$display.GetScreenResolution(0,[ref]$w,[ref]$h,[ref]$b,[ref]$x,[ref]$y);if($w -gt 16){$gw=[int]$w};if($h -gt 16){$gh=[int]$h}}catch{};";
     }
 
     private static void setBlockActiveState(ServerLevel level, BlockPos pos, boolean active) {

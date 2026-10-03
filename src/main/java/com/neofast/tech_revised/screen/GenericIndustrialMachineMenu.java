@@ -37,7 +37,7 @@ public class GenericIndustrialMachineMenu extends AbstractContainerMenu {
 
     public GenericIndustrialMachineMenu(int containerId, Inventory inventory, BlockEntity entity) {
         super(ModMenuTypes.GENERIC_INDUSTRIAL_MACHINE_MENU.get(), containerId);
-        this.blockEntity = (GenericIndustrialMachineBlockEntity) entity;
+        this.blockEntity = entity instanceof GenericIndustrialMachineBlockEntity machine ? machine : null;
         this.level = inventory.player.level();
         this.data = new ContainerData() {
             @Override
@@ -50,6 +50,9 @@ public class GenericIndustrialMachineMenu extends AbstractContainerMenu {
                     return syncedData[index];
                 }
 
+                if (blockEntity == null) {
+                    return 0;
+                }
                 return switch (index) {
                     case 0 -> blockEntity.getProgress();
                     case 1 -> blockEntity.getProcessTicks();
@@ -76,15 +79,17 @@ public class GenericIndustrialMachineMenu extends AbstractContainerMenu {
         addPlayerInventory(inventory);
         addPlayerHotbar(inventory);
 
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 56, 35));
-            this.addSlot(new SlotItemHandler(handler, 1, 116, 35) {
-                @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return false;
-                }
+        if (this.blockEntity != null) {
+            this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(handler -> {
+                this.addSlot(new SlotItemHandler(handler, 0, 56, 35));
+                this.addSlot(new SlotItemHandler(handler, 1, 116, 35) {
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return false;
+                    }
+                });
             });
-        });
+        }
     }
 
     @Override
@@ -98,7 +103,7 @@ public class GenericIndustrialMachineMenu extends AbstractContainerMenu {
         ItemStack copyOfSourceStack = sourceStack.copy();
 
         if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-            if (blockEntity.isValidInput(sourceStack)) {
+            if (blockEntity != null && blockEntity.isValidInput(sourceStack)) {
                 if (!moveItemStackTo(sourceStack, INPUT_SLOT_INDEX, INPUT_SLOT_INDEX + 1, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -126,6 +131,9 @@ public class GenericIndustrialMachineMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
+        if (blockEntity == null) {
+            return false;
+        }
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, blockEntity.getBlockState().getBlock());
     }
 

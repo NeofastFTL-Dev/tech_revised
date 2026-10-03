@@ -16,8 +16,8 @@
     "SIS"
   ],
   "result": {
-    "count": 4,
-    "item": "tech_revised:drilling_platform_frame"
+    "count": 8,
+    "id": "tech_revised:drilling_platform_frame"
   },
   "show_notification": true
 }

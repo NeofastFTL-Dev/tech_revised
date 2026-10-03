@@ -3,7 +3,7 @@
   "category": "misc",
   "pattern": [
     "SPS",
-    "SRS",
+    "BRS",
     "SIS"
   ],
   "key": {
@@ -18,9 +18,12 @@
     },
     "I": {
       "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "tech_revised:platinum_alloy_bushing_plate"
     }
   },
   "result": {
-    "item": "tech_revised:pick_and_place_robot"
+    "id": "tech_revised:pick_and_place_robot"
   }
 }

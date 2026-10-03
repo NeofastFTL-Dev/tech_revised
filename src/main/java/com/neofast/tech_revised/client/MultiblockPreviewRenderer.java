@@ -1,187 +1,121 @@
 package com.neofast.tech_revised.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.neofast.tech_revised.integration.jei.MultiblockStructureBlueprint;
+import com.neofast.tech_revised.multiblock.MultiblockStructureBlueprint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-/**
- * Client-side translucent multiblock structure preview, inspired by GregTech's
- * in-world structure hologram when interacting with a controller.
- */
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class MultiblockPreviewRenderer {
-    private static final long PREVIEW_DURATION_MS = 12_000L;
-    private static final float GHOST_ALPHA = 0.45f;
-
+    private static final long PREVIEW_DURATION_MS = 15_000L;
     private static final List<ActivePreview> PREVIEWS = new ArrayList<>();
 
     private MultiblockPreviewRenderer() {
+    }
+
+    public static void register() {
+        net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
+            render(context.matrixStack(), context.camera().getPosition());
+        });
+    }
+
+    public static void previewInFrontOfPlayer(MultiblockStructureBlueprint blueprint) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || blueprint == null) {
+            return;
+        }
+        Direction facing = mc.player.getDirection();
+        BlockPos origin;
+        if (mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit
+                && hit.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) {
+            origin = hit.getBlockPos().relative(hit.getDirection());
+        } else {
+            origin = mc.player.blockPosition().relative(facing, 3).above();
+        }
+        showPreview(origin, facing.getOpposite(), blueprint);
+        mc.player.displayClientMessage(Component.translatable("message.tech_revised.multiblock.hologram"), true);
     }
 
     public static void showPreview(BlockPos controllerPos, Direction front, MultiblockStructureBlueprint blueprint) {
         if (blueprint == null) {
             return;
         }
-
         List<GhostBlock> ghosts = new ArrayList<>();
+        int minY = Integer.MAX_VALUE;
+        int maxY = Integer.MIN_VALUE;
         for (MultiblockStructureBlueprint.Cell cell : blueprint.getCells()) {
             if (cell.x() == 0 && cell.y() == 0 && cell.z() == 0) {
-                continue; // skip controller itself
+                continue;
             }
             BlockPos worldPos = localToWorld(controllerPos, front, cell.x(), cell.y(), cell.z());
             Block block = Block.byItem(cell.stack().getItem());
-            if (block == null) {
-                continue;
-            }
-            ghosts.add(new GhostBlock(worldPos, block.defaultBlockState()));
+            ghosts.add(new GhostBlock(worldPos, block.defaultBlockState(), cell.y()));
+            minY = Math.min(minY, cell.y());
+            maxY = Math.max(maxY, cell.y());
         }
-
-        // Replace any existing preview at the same controller
+        if (ghosts.isEmpty()) {
+            return;
+        }
         PREVIEWS.removeIf(p -> p.controllerPos.equals(controllerPos));
-        PREVIEWS.add(new ActivePreview(controllerPos, ghosts, System.currentTimeMillis() + PREVIEW_DURATION_MS));
+        long now = System.currentTimeMillis();
+        PREVIEWS.add(new ActivePreview(controllerPos, ghosts, minY, maxY, now, now + PREVIEW_DURATION_MS));
     }
 
     public static void clearAll() {
         PREVIEWS.clear();
     }
 
-    @SubscribeEvent
-    public static void onRenderLevel(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-            return;
-        }
+    private static void render(PoseStack poseStack, net.minecraft.world.phys.Vec3 camera) {
         if (PREVIEWS.isEmpty()) {
             return;
         }
-
         long now = System.currentTimeMillis();
-        Iterator<ActivePreview> it = PREVIEWS.iterator();
-        while (it.hasNext()) {
-            if (it.next().expireAtMs <= now) {
-                it.remove();
-            }
-        }
+        PREVIEWS.removeIf(p -> p.expireAtMs <= now);
         if (PREVIEWS.isEmpty()) {
             return;
         }
-
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) {
             return;
         }
-
-        PoseStack poseStack = event.getPoseStack();
-        var camera = event.getCamera().getPosition();
-        BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
-        MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
-        RandomSource random = RandomSource.create();
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.depthMask(false);
-
         poseStack.pushPose();
         poseStack.translate(-camera.x, -camera.y, -camera.z);
-
+        MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
+        BlockRenderDispatcher dispatcher = mc.getBlockRenderer();
         for (ActivePreview preview : PREVIEWS) {
             for (GhostBlock ghost : preview.ghosts) {
-                // Skip positions that already have the correct block
-                if (mc.level.getBlockState(ghost.pos).is(ghost.state.getBlock())) {
-                    continue;
-                }
-
                 poseStack.pushPose();
                 poseStack.translate(ghost.pos.getX(), ghost.pos.getY(), ghost.pos.getZ());
-
-                // Slight scale so ghost doesn't z-fight with existing geometry
-                poseStack.translate(0.5, 0.5, 0.5);
-                poseStack.scale(0.98f, 0.98f, 0.98f);
-                poseStack.translate(-0.5, -0.5, -0.5);
-
-                VertexConsumer consumer = buffers.getBuffer(RenderType.translucent());
                 try {
-                    dispatcher.renderSingleBlock(
-                            ghost.state,
-                            poseStack,
-                            buffers,
-                            0xF000F0,
-                            OverlayTexture.NO_OVERLAY,
-                            ModelData.EMPTY,
-                            RenderType.translucent()
-                    );
+                    dispatcher.renderSingleBlock(ghost.state, poseStack, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
                 } catch (Exception ignored) {
-                    // Some blocks may not like translucent pass; fall back to outline
-                    renderOutlineBox(poseStack, buffers, ghost.state);
                 }
-
                 poseStack.popPose();
             }
         }
-
-        buffers.endBatch(RenderType.translucent());
+        buffers.endBatch();
         poseStack.popPose();
-
-        RenderSystem.depthMask(true);
-        RenderSystem.disableBlend();
     }
 
-    private static void renderOutlineBox(PoseStack poseStack, MultiBufferSource buffers, BlockState state) {
-        VertexConsumer lines = buffers.getBuffer(RenderType.lines());
-        Matrix4f matrix = poseStack.last().pose();
-        float r = 0.2f, g = 0.85f, b = 1.0f, a = 0.8f;
-        // 12 edges of unit cube
-        line(lines, matrix, 0, 0, 0, 1, 0, 0, r, g, b, a);
-        line(lines, matrix, 0, 1, 0, 1, 1, 0, r, g, b, a);
-        line(lines, matrix, 0, 0, 1, 1, 0, 1, r, g, b, a);
-        line(lines, matrix, 0, 1, 1, 1, 1, 1, r, g, b, a);
-        line(lines, matrix, 0, 0, 0, 0, 1, 0, r, g, b, a);
-        line(lines, matrix, 1, 0, 0, 1, 1, 0, r, g, b, a);
-        line(lines, matrix, 0, 0, 1, 0, 1, 1, r, g, b, a);
-        line(lines, matrix, 1, 0, 1, 1, 1, 1, r, g, b, a);
-        line(lines, matrix, 0, 0, 0, 0, 0, 1, r, g, b, a);
-        line(lines, matrix, 1, 0, 0, 1, 0, 1, r, g, b, a);
-        line(lines, matrix, 0, 1, 0, 0, 1, 1, r, g, b, a);
-        line(lines, matrix, 1, 1, 0, 1, 1, 1, r, g, b, a);
-    }
-
-    private static void line(VertexConsumer consumer, Matrix4f matrix,
-                             float x1, float y1, float z1, float x2, float y2, float z2,
-                             float r, float g, float b, float a) {
-        consumer.vertex(matrix, x1, y1, z1).color(r, g, b, a).normal(0, 1, 0).endVertex();
-        consumer.vertex(matrix, x2, y2, z2).color(r, g, b, a).normal(0, 1, 0).endVertex();
-    }
-
-    /** Same coordinate convention as controller blocks / MultiblockStructureBlueprint. */
     public static BlockPos localToWorld(BlockPos origin, Direction front, int localX, int localY, int localZ) {
         Direction right = front.getClockWise();
         Direction back = front.getOpposite();
         return origin.relative(right, localX).relative(back, localZ).offset(0, localY, 0);
     }
 
-    private record GhostBlock(BlockPos pos, BlockState state) {
+    private record GhostBlock(BlockPos pos, BlockState state, int localY) {
     }
 
-    private record ActivePreview(BlockPos controllerPos, List<GhostBlock> ghosts, long expireAtMs) {
+    private record ActivePreview(BlockPos controllerPos, List<GhostBlock> ghosts, int minY, int maxY,
+                                 long startMs, long expireAtMs) {
     }
 }

@@ -36,6 +36,20 @@ public class ModItems {
     public static final RegistryObject<Item> FERROCHROMIUM_NUGGET = registerTintedItem("ferrochromium_nugget", FERROCHROMIUM_TINT);
     public static final RegistryObject<Item> GRAPHITE_DUST = ITEMS.register("graphite_dust",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RAW_TIN = ITEMS.register("raw_tin",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RAW_NICKEL = ITEMS.register("raw_nickel",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TIN_DUST = ITEMS.register("tin_dust",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TIN_INGOT = ITEMS.register("tin_ingot",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TIN_NUGGET = ITEMS.register("tin_nugget",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> NICKEL_INGOT = ITEMS.register("nickel_ingot",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> NICKEL_NUGGET = ITEMS.register("nickel_nugget",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> CHROMIUM_DUST = ITEMS.register("chromium_dust",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> NICKEL_DUST = ITEMS.register("nickel_dust",
@@ -189,39 +203,65 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> CONFIGURATOR = ITEMS.register("configurator",
             () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> PC_SURVIVAL_MANUAL = ITEMS.register("pc_survival_manual",
+            () -> new PcSurvivalManualItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> HEAVY_CRUDE_OIL_BUCKET = ITEMS.register("heavy_crude_oil_bucket",
-            () -> new BucketItem(ModFluids.HEAVY_CRUDE_OIL, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.HEAVY_CRUDE_OIL.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
     public static final RegistryObject<Item> CREOSOTE_BUCKET = ITEMS.register("creosote_bucket",
-            () -> new BucketItem(ModFluids.CREOSOTE, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.CREOSOTE.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
     public static final RegistryObject<Item> OXYGEN_BUCKET = ITEMS.register("oxygen_bucket",
-            () -> new BucketItem(ModFluids.OXYGEN, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.OXYGEN.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
     public static final RegistryObject<Item> HYDROGEN_BUCKET = ITEMS.register("hydrogen_bucket",
-            () -> new BucketItem(ModFluids.HYDROGEN, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.HYDROGEN.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
     public static final RegistryObject<Item> LIQUID_GLASS_BUCKET = ITEMS.register("liquid_glass_bucket",
-            () -> new BucketItem(ModFluids.LIQUID_GLASS, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.LIQUID_GLASS.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
 
     public static final RegistryObject<Item> SODIUM_CARBONATE_SOLUTION_BUCKET = ITEMS.register("sodium_carbonate_solution_bucket",
-            () -> new BucketItem(ModFluids.SODIUM_CARBONATE_SOLUTION, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.SODIUM_CARBONATE_SOLUTION.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
     public static final RegistryObject<Item> CUPRIC_CHLORIDE_SOLUTION_BUCKET = ITEMS.register("cupric_chloride_solution_bucket",
-            () -> new BucketItem(ModFluids.CUPRIC_CHLORIDE_SOLUTION, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.CUPRIC_CHLORIDE_SOLUTION.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
     public static final RegistryObject<Item> SODIUM_HYDROXIDE_SOLUTION_BUCKET = ITEMS.register("sodium_hydroxide_solution_bucket",
-            () -> new BucketItem(ModFluids.SODIUM_HYDROXIDE_SOLUTION, new Item.Properties()
-                    .craftRemainder(Items.BUCKET)
+            () -> new BucketItem(ModFluids.SODIUM_HYDROXIDE_SOLUTION.get(), new Item.Properties()
+                    
                     .stacksTo(1)));
+    public static final RegistryObject<Item> NAPHTHA_BUCKET = ITEMS.register("naphtha_bucket",
+            () -> new BucketItem(ModFluids.NAPHTHA.get(), new Item.Properties()
+                    
+                    .stacksTo(1)));
+    public static final RegistryObject<Item> ETHYLENE_BUCKET = ITEMS.register("ethylene_bucket",
+            () -> new BucketItem(ModFluids.ETHYLENE.get(), new Item.Properties()
+                    
+                    .stacksTo(1)));
+    public static final RegistryObject<Item> CHLORINE_BUCKET = ITEMS.register("chlorine_bucket",
+            () -> new BucketItem(ModFluids.CHLORINE.get(), new Item.Properties()
+                    
+                    .stacksTo(1)));
+    public static final RegistryObject<Item> VINYL_CHLORIDE_BUCKET = ITEMS.register("vinyl_chloride_bucket",
+            () -> new BucketItem(ModFluids.VINYL_CHLORIDE.get(), new Item.Properties()
+                    
+                    .stacksTo(1)));
+
+    public static final Map<String, RegistryObject<Item>> PC_ITEMS = new LinkedHashMap<>();
+
+    static {
+        for (String id : PcCatalog.ITEM_IDS) {
+            PC_ITEMS.put(id, ITEMS.register(id, () -> new Item(new Item.Properties())));
+        }
+    }
 
     private static RegistryObject<Item> registerTintedItem(String name, int color) {
         RegistryObject<Item> item = ITEMS.register(name, () -> new Item(new Item.Properties()));

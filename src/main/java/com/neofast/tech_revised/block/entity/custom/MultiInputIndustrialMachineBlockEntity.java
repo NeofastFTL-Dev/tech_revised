@@ -1,6 +1,9 @@
 package com.neofast.tech_revised.block.entity.custom;
 
 import com.neofast.tech_revised.block.custom.MultiInputIndustrialMachineBlock;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockEnergy;
+import com.neofast.tech_revised.multiblock.MultiblockRender;
 import com.neofast.tech_revised.screen.MultiInputIndustrialMachineMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -87,6 +91,10 @@ public abstract class MultiInputIndustrialMachineBlockEntity extends BlockEntity
         };
     }
 
+        public AABB getRenderBoundingBox() {
+        return MultiblockRender.bounds(this);
+    }
+
     protected abstract ResolvedRecipe findRecipe(SimpleContainer inventory);
 
     protected abstract boolean isIngredientAccepted(ItemStack stack);
@@ -99,43 +107,37 @@ public abstract class MultiInputIndustrialMachineBlockEntity extends BlockEntity
         return outputSlot;
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
         }
         if (cap == ForgeCapabilities.ENERGY) {
             return lazyEnergy.cast();
         }
-        return super.getCapability(cap, side);
+        return net.minecraftforge.common.util.LazyOptional.empty();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+        public void onLoad() {
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
         lazyEnergy = LazyOptional.of(() -> energyStorage);
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
+        public void invalidateCaps() {
         lazyItemHandler.invalidate();
         lazyEnergy.invalidate();
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.put("inventory", itemHandler.serializeNBT());
         tag.put("energy", energyStorage.serializeNBT());
         tag.putInt("progress", progress);
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         itemHandler.deserializeNBT(tag.getCompound("inventory"));
         if (tag.contains("energy")) {
             energyStorage.deserializeNBT(tag.get("energy"));
@@ -147,6 +149,13 @@ public abstract class MultiInputIndustrialMachineBlockEntity extends BlockEntity
         if (level.isClientSide()) {
             return;
         }
+        MultiblockRender.syncFormed(blockEntity);
+        if (!MachineLayouts.isFormed(level, pos, state)) {
+            setActive(level, pos, false);
+            blockEntity.resetProgress();
+            return;
+        }
+        MultiblockEnergy.pullFromHatches(level, pos, state, blockEntity.energyStorage, MAX_ENERGY_RECEIVE);
 
         ResolvedRecipe recipe = blockEntity.getCurrentRecipe();
         boolean canProcess = recipe != null && blockEntity.canProcess(recipe);
@@ -204,7 +213,7 @@ public abstract class MultiInputIndustrialMachineBlockEntity extends BlockEntity
         if (output.isEmpty()) {
             return true;
         }
-        if (!ItemStack.isSameItemSameTags(output, recipe.result())) {
+        if (!ItemStack.isSameItemSameComponents(output, recipe.result())) {
             return false;
         }
         return output.getCount() + recipe.result().getCount() <= output.getMaxStackSize();
@@ -232,7 +241,7 @@ public abstract class MultiInputIndustrialMachineBlockEntity extends BlockEntity
             if (stack.isEmpty()) {
                 continue;
             }
-            ItemStack remainder = stack.hasCraftingRemainingItem() ? stack.getCraftingRemainingItem() : ItemStack.EMPTY;
+            ItemStack remainder = stack.getItem() instanceof net.minecraft.world.item.BucketItem ? new ItemStack(net.minecraft.world.item.Items.BUCKET) : ItemStack.EMPTY;
             itemHandler.extractItem(i, 1, false);
             if (!remainder.isEmpty()) {
                 ItemStack leftover = itemHandler.insertItem(i, remainder, false);
@@ -255,7 +264,7 @@ public abstract class MultiInputIndustrialMachineBlockEntity extends BlockEntity
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        Component text = Component.literal("Process failed: " + message);
+        Component text = Component.translatable("message.tech_revised.process_failed", message);
         serverLevel.getServer().getPlayerList().getPlayers().stream()
                 .filter(player -> player.level() == serverLevel)
                 .filter(player -> player.distanceToSqr(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5) <= 64)

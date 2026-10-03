@@ -74,10 +74,10 @@ public class GenericIndustrialJeiCategory implements IRecipeCategory<GenericIndu
         int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
         var font = Minecraft.getInstance().font;
         guiGraphics.drawString(font,
-                Component.literal("Time: " + recipe.getProcessTicks() + " t"),
+                Component.translatable("jei.tech_revised.time", recipe.getProcessTicks()),
                 8, 2, 0x8B8B8B, false);
         guiGraphics.drawString(font,
-                Component.literal("Energy: " + recipe.getEnergyPerTick() + " FE/t (" + totalEnergy + " FE)"),
+                Component.translatable("jei.tech_revised.energy_rate", recipe.getEnergyPerTick(), totalEnergy),
                 8, 42, 0x8B8B8B, false);
     }
 }

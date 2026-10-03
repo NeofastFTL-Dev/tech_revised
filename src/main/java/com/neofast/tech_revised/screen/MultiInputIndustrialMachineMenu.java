@@ -35,9 +35,9 @@ public class MultiInputIndustrialMachineMenu extends AbstractContainerMenu {
 
     public MultiInputIndustrialMachineMenu(int containerId, Inventory inventory, BlockEntity entity) {
         super(ModMenuTypes.MULTI_INPUT_INDUSTRIAL_MACHINE_MENU.get(), containerId);
-        this.blockEntity = (MultiInputIndustrialMachineBlockEntity) entity;
+        this.blockEntity = entity instanceof MultiInputIndustrialMachineBlockEntity machine ? machine : null;
         this.level = inventory.player.level();
-        this.inputSlotCount = blockEntity.getInputSlotCount();
+        this.inputSlotCount = this.blockEntity == null ? 0 : this.blockEntity.getInputSlotCount();
         this.teInventorySlotCount = inputSlotCount + 1;
 
         this.data = new ContainerData() {
@@ -48,6 +48,9 @@ public class MultiInputIndustrialMachineMenu extends AbstractContainerMenu {
                 }
                 if (level.isClientSide()) {
                     return syncedData[index];
+                }
+                if (blockEntity == null) {
+                    return 0;
                 }
                 return switch (index) {
                     case 0 -> blockEntity.getProgress();
@@ -75,17 +78,18 @@ public class MultiInputIndustrialMachineMenu extends AbstractContainerMenu {
         addPlayerInventory(inventory);
         addPlayerHotbar(inventory);
 
-        // Input slots centered left of the output
-        int inputStartX = 44 - ((inputSlotCount - 1) * 9);
-        for (int i = 0; i < inputSlotCount; i++) {
-            this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), i, inputStartX + (i * 18), 35));
-        }
-        this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), blockEntity.getOutputSlot(), 116, 35) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return false;
+        if (this.blockEntity != null) {
+            int inputStartX = 44 - ((inputSlotCount - 1) * 9);
+            for (int i = 0; i < inputSlotCount; i++) {
+                this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), i, inputStartX + (i * 18), 35));
             }
-        });
+            this.addSlot(new SlotItemHandler(blockEntity.getItemHandler(), blockEntity.getOutputSlot(), 116, 35) {
+                @Override
+                public boolean mayPlace(ItemStack stack) {
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
@@ -103,7 +107,7 @@ public class MultiInputIndustrialMachineMenu extends AbstractContainerMenu {
         int inputLast = teFirst + inputSlotCount;
 
         if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-            if (blockEntity.isValidInput(sourceStack)) {
+            if (blockEntity != null && blockEntity.isValidInput(sourceStack)) {
                 if (!moveItemStackTo(sourceStack, teFirst, inputLast, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -131,6 +135,9 @@ public class MultiInputIndustrialMachineMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
+        if (blockEntity == null) {
+            return false;
+        }
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 player, blockEntity.getBlockState().getBlock());
     }

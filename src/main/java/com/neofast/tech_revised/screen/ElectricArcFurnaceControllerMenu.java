@@ -25,7 +25,7 @@ public class ElectricArcFurnaceControllerMenu extends AbstractContainerMenu {
 
     public ElectricArcFurnaceControllerMenu(int containerId, Inventory inventory, BlockEntity entity) {
         super(ModMenuTypes.ELECTRIC_ARC_FURNACE_CONTROLLER_MENU.get(), containerId);
-        this.blockEntity = (ElectricArcFurnaceControllerBlockEntity) entity;
+        this.blockEntity = entity instanceof ElectricArcFurnaceControllerBlockEntity controller ? controller : null;
         this.level = inventory.player.level();
 
         this.data = new ContainerData() {
@@ -39,6 +39,9 @@ public class ElectricArcFurnaceControllerMenu extends AbstractContainerMenu {
                     return syncedData[index];
                 }
 
+                if (blockEntity == null) {
+                    return 0;
+                }
                 return switch (index) {
                     case 0 -> blockEntity.getProgress();
                     case 1 -> blockEntity.getProcessTicks();
@@ -101,6 +104,9 @@ public class ElectricArcFurnaceControllerMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
+        if (blockEntity == null) {
+            return false;
+        }
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 player, ModBlocks.ELECTRIC_ARC_FURNACE_CONTROLLER.get());
     }

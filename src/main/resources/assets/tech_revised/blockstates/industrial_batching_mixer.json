@@ -1,8 +1,34 @@
-﻿{
+{
   "variants": {
-    "facing=north": { "model": "tech_revised:block/industrial_batching_mixer" },
-    "facing=east": { "model": "tech_revised:block/industrial_batching_mixer", "y": 90 },
-    "facing=south": { "model": "tech_revised:block/industrial_batching_mixer", "y": 180 },
-    "facing=west": { "model": "tech_revised:block/industrial_batching_mixer", "y": 270 }
+    "facing=north,formed=false": {
+      "model": "tech_revised:block/industrial_batching_mixer"
+    },
+    "facing=north,formed=true": {
+      "model": "tech_revised:block/industrial_batching_mixer_formed"
+    },
+    "facing=east,formed=false": {
+      "model": "tech_revised:block/industrial_batching_mixer",
+      "y": 90
+    },
+    "facing=east,formed=true": {
+      "model": "tech_revised:block/industrial_batching_mixer_formed",
+      "y": 90
+    },
+    "facing=south,formed=false": {
+      "model": "tech_revised:block/industrial_batching_mixer",
+      "y": 180
+    },
+    "facing=south,formed=true": {
+      "model": "tech_revised:block/industrial_batching_mixer_formed",
+      "y": 180
+    },
+    "facing=west,formed=false": {
+      "model": "tech_revised:block/industrial_batching_mixer",
+      "y": 270
+    },
+    "facing=west,formed=true": {
+      "model": "tech_revised:block/industrial_batching_mixer_formed",
+      "y": 270
+    }
   }
 }

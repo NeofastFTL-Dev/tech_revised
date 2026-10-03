@@ -1,6 +1,9 @@
 package com.neofast.tech_revised.block.entity.custom;
 
 import com.neofast.tech_revised.block.custom.GenericIndustrialMachineBlock;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockEnergy;
+import com.neofast.tech_revised.multiblock.MultiblockRender;
 import com.neofast.tech_revised.recipe.GenericIndustrialRecipe;
 import com.neofast.tech_revised.screen.GenericIndustrialMachineMenu;
 import net.minecraft.core.BlockPos;
@@ -20,6 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -81,43 +85,41 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
         this.displayName = Component.translatable(displayNameKey);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        public AABB getRenderBoundingBox() {
+        return MultiblockRender.bounds(this);
+    }
+
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
         }
         if (cap == ForgeCapabilities.ENERGY) {
             return lazyEnergy.cast();
         }
-        return super.getCapability(cap, side);
+        return net.minecraftforge.common.util.LazyOptional.empty();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+        public void onLoad() {
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
         lazyEnergy = LazyOptional.of(() -> energyStorage);
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
+        public void invalidateCaps() {
         lazyItemHandler.invalidate();
         lazyEnergy.invalidate();
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.put("inventory", itemHandler.serializeNBT());
         tag.put("energy", energyStorage.serializeNBT());
         tag.putInt("progress", progress);
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         itemHandler.deserializeNBT(tag.getCompound("inventory"));
         if (tag.contains("energy")) {
             energyStorage.deserializeNBT(tag.get("energy"));
@@ -129,6 +131,13 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
         if (level.isClientSide()) {
             return;
         }
+        MultiblockRender.syncFormed(blockEntity);
+        if (!MachineLayouts.isFormed(level, pos, state)) {
+            setActive(level, pos, false);
+            blockEntity.resetProgress();
+            return;
+        }
+        MultiblockEnergy.pullFromHatches(level, pos, state, blockEntity.energyStorage, MAX_ENERGY_RECEIVE);
 
         GenericIndustrialRecipe recipe = blockEntity.getCurrentRecipe();
         boolean canProcess = recipe != null && blockEntity.canProcess(recipe);
@@ -191,7 +200,7 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
             return true;
         }
 
-        if (!ItemStack.isSameItemSameTags(output, recipeOutput)) {
+        if (!ItemStack.isSameItemSameComponents(output, recipeOutput)) {
             return false;
         }
 
@@ -270,7 +279,7 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
 
         SimpleContainer inventory = new SimpleContainer(1);
         inventory.setItem(0, itemHandler.getStackInSlot(INPUT_SLOT).copy());
-        Optional<GenericIndustrialRecipe> recipe = level.getRecipeManager().getRecipeFor(recipeType, inventory, level);
+        Optional<GenericIndustrialRecipe> recipe = level.getRecipeManager().getRecipeFor(recipeType, new com.neofast.tech_revised.recipe.ContainerInput(inventory), level).map(net.minecraft.world.item.crafting.RecipeHolder::value);
         return recipe.orElse(null);
     }
 
@@ -278,7 +287,8 @@ public class GenericIndustrialMachineBlockEntity extends BlockEntity implements 
         if (level == null || stack.isEmpty()) {
             return true;
         }
-        for (GenericIndustrialRecipe recipe : level.getRecipeManager().getAllRecipesFor(recipeType)) {
+        for (var holder : level.getRecipeManager().getAllRecipesFor(recipeType)) {
+            GenericIndustrialRecipe recipe = holder.value();
             if (recipe.getInput().test(stack)) {
                 return true;
             }

@@ -3,13 +3,19 @@
   "category": "misc",
   "group": "pcb_materials",
   "ingredients": [
-    { "item": "minecraft:slime_ball" },
-    { "item": "minecraft:green_dye" },
-    { "item": "minecraft:glowstone_dust" }
+    {
+      "item": "minecraft:slime_ball"
+    },
+    {
+      "item": "minecraft:green_dye"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
   ],
   "result": {
-    "item": "tech_revised:soldermask_resin",
-    "count": 4
+    "count": 4,
+    "id": "tech_revised:soldermask_resin"
   },
   "show_notification": true
 }

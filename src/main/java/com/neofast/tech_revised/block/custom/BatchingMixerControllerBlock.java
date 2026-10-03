@@ -3,6 +3,7 @@ package com.neofast.tech_revised.block.custom;
 import com.neofast.tech_revised.block.ModBlocks;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.block.entity.custom.BatchingMixerControllerBlockEntity;
+import com.neofast.tech_revised.multiblock.MachineMultiblockHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -21,17 +22,19 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class BatchingMixerControllerBlock extends BaseEntityBlock {
+public class BatchingMixerControllerBlock extends ModBaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
     public BatchingMixerControllerBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        super(properties.noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FORMED, false));
     }
 
     @Nullable
@@ -52,17 +55,17 @@ public class BatchingMixerControllerBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, FORMED);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.isClientSide()) return net.minecraft.world.ItemInteractionResult.SUCCESS;
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof BatchingMixerControllerBlockEntity controller) {
-            NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player, controller, pos);
+            return com.neofast.tech_revised.recipe.RecipeHelper.mapUse(MachineMultiblockHelper.handleUse(level, pos, player, hand, state.getValue(FACING), controller));
         }
-        return InteractionResult.CONSUME;
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     @Nullable
@@ -78,5 +81,7 @@ public class BatchingMixerControllerBlock extends BaseEntityBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+    public RenderShape getRenderShape(BlockState state) {
+        return com.neofast.tech_revised.multiblock.MultiblockRender.renderShape(state);
+    }
 }

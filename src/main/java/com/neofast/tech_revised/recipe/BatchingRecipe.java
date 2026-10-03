@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public class BatchingRecipe implements Recipe<Container> {
+public class BatchingRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final NonNullList<Ingredient> inputs;
     private final ItemStack result;
@@ -28,7 +28,7 @@ public class BatchingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         if (level.isClientSide()) return false;
         
         java.util.List<ItemStack> containerItems = new java.util.ArrayList<>();
@@ -58,7 +58,7 @@ public class BatchingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
@@ -68,12 +68,11 @@ public class BatchingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -114,10 +113,9 @@ public class BatchingRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<BatchingRecipe> {
-        @Override
-        public BatchingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<BatchingRecipe> {
+                public BatchingRecipe fromJson(JsonObject json) {
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 200);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 40);
 
@@ -125,33 +123,31 @@ public class BatchingRecipe implements Recipe<Container> {
             if (json.has("ingredients")) {
                 var jsonArray = GsonHelper.getAsJsonArray(json, "ingredients");
                 for (int i = 0; i < jsonArray.size(); i++) {
-                    inputs.add(Ingredient.fromJson(jsonArray.get(i)));
+                    inputs.add(com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(jsonArray.get(i)));
                 }
             }
 
-            return new BatchingRecipe(recipeId, inputs, result, processTicks, energyPerTick);
+            return new BatchingRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputs, result, processTicks, energyPerTick);
         }
 
-        @Override
-        public BatchingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+                public BatchingRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
             int size = buffer.readVarInt();
             NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
             for (int i = 0; i < size; i++) {
-                inputs.set(i, Ingredient.fromNetwork(buffer));
+                inputs.set(i, com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer));
             }
-            ItemStack result = buffer.readItem();
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.readItem(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new BatchingRecipe(recipeId, inputs, result, processTicks, energyPerTick);
+            return new BatchingRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputs, result, processTicks, energyPerTick);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, BatchingRecipe recipe) {
             buffer.writeVarInt(recipe.inputs.size());
             for (Ingredient ingredient : recipe.inputs) {
-                ingredient.toNetwork(buffer);
+                com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(ingredient, buffer);
             }
-            buffer.writeItem(recipe.result);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeItem(buffer, recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
         }

@@ -17,6 +17,9 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<ElectricArcFurnaceControllerMenu>> ELECTRIC_ARC_FURNACE_CONTROLLER_MENU =
             registerMenuType(ElectricArcFurnaceControllerMenu::new, "electric_arc_furnace_controller_menu");
 
+    public static final RegistryObject<MenuType<MultiblockControllerMenu>> MULTIBLOCK_CONTROLLER_MENU =
+            registerMenuType(MultiblockControllerMenu::new, "multiblock_controller_menu");
+
     public static final RegistryObject<MenuType<ElectricArcFurnaceInputBusMenu>> ELECTRIC_ARC_FURNACE_INPUT_BUS_MENU =
             registerMenuType(ElectricArcFurnaceInputBusMenu::new, "electric_arc_furnace_input_bus_menu");
 

@@ -22,7 +22,7 @@
     "III"
   ],
   "result": {
-    "item": "tech_revised:windows_7_vm_block"
+    "id": "tech_revised:windows_7_vm_block"
   },
   "show_notification": true
 }

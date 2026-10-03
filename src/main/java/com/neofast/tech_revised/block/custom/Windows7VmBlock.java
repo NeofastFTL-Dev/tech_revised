@@ -1,11 +1,15 @@
 package com.neofast.tech_revised.block.custom;
 
+import com.neofast.tech_revised.TechRevised;
 import com.neofast.tech_revised.block.entity.custom.Windows7VmBlockEntity;
 import com.neofast.tech_revised.integration.vm.VmCommandIntegration;
 import com.neofast.tech_revised.item.ModItems;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +33,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class Windows7VmBlock extends BaseEntityBlock {
+public class Windows7VmBlock extends ModBaseEntityBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -62,23 +66,23 @@ public class Windows7VmBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         if (!(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) {
-            return InteractionResult.CONSUME;
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof Windows7VmBlockEntity vmBlockEntity)) {
-            return InteractionResult.PASS;
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (!serverPlayer.hasPermissions(2)) {
             serverPlayer.displayClientMessage(Component.translatable("message.tech_revised.vm.permission_denied"), true);
-            return InteractionResult.CONSUME;
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
 
         ItemStack heldStack = player.getItemInHand(hand);
@@ -86,7 +90,7 @@ public class Windows7VmBlock extends BaseEntityBlock {
         if (hand == InteractionHand.MAIN_HAND
                 && !heldStack.is(ModItems.CONFIGURATOR.get())
                 && player.getItemInHand(InteractionHand.OFF_HAND).is(ModItems.CONFIGURATOR.get())) {
-            return InteractionResult.PASS;
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (heldStack.is(ModItems.CONFIGURATOR.get())) {
@@ -96,7 +100,7 @@ public class Windows7VmBlock extends BaseEntityBlock {
                 buffer.writeUtf(vmBlockEntity.getStartCommand(), Windows7VmBlockEntity.MAX_COMMAND_LENGTH);
                 buffer.writeUtf(vmBlockEntity.getStopCommand(), Windows7VmBlockEntity.MAX_COMMAND_LENGTH);
             });
-            return InteractionResult.CONSUME;
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
 
         VmCommandIntegration.VmAction action = player.isShiftKeyDown()
@@ -118,7 +122,22 @@ public class Windows7VmBlock extends BaseEntityBlock {
                 vmBlockEntity.getStopCommand()
         );
 
-        return InteractionResult.CONSUME;
+        if (action == VmCommandIntegration.VmAction.START) {
+            grantAdvancement(serverPlayer, "vm_booted", "booted");
+        }
+
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
+    }
+
+    private static void grantAdvancement(ServerPlayer player, String advancementId, String criterion) {
+        net.minecraft.advancements.AdvancementHolder advancement = player.getServer().getAdvancements().get(ResourceLocation.fromNamespaceAndPath(TechRevised.MOD_ID, advancementId));
+        if (advancement == null) {
+            return;
+        }
+        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+        if (!progress.isDone()) {
+            player.getAdvancements().award(advancement, criterion);
+        }
     }
 
     @Nullable

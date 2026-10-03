@@ -2,6 +2,7 @@ package com.neofast.tech_revised.block.custom;
 
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.block.entity.custom.CrusherBlockEntity;
+import com.neofast.tech_revised.multiblock.MachineMultiblockHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,20 +28,22 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class CrusherBlock extends BaseEntityBlock {
+public class CrusherBlock extends ModBaseEntityBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+    public static final BooleanProperty FORMED = BooleanProperty.create("formed");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public CrusherBlock(Properties properties) {
-        super(properties);
+        super(properties.noOcclusion());
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(ACTIVE, false)
+                .setValue(FORMED, false)
                 .setValue(FACING, Direction.NORTH));
     }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return com.neofast.tech_revised.multiblock.MultiblockRender.renderShape(state);
     }
 
     @Nullable
@@ -61,20 +64,17 @@ public class CrusherBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof CrusherBlockEntity crusher)) {
-            return InteractionResult.PASS;
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        if (player instanceof ServerPlayer serverPlayer) {
-            NetworkHooks.openScreen(serverPlayer, crusher, pos);
-        }
-        return InteractionResult.CONSUME;
+        return com.neofast.tech_revised.recipe.RecipeHelper.mapUse(MachineMultiblockHelper.handleUse(level, pos, player, hand, state.getValue(FACING), crusher));
     }
 
     @Override
@@ -102,6 +102,6 @@ public class CrusherBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(ACTIVE, FACING);
+        builder.add(ACTIVE, FORMED, FACING);
     }
 }

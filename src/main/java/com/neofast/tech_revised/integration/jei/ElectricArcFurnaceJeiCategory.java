@@ -84,10 +84,10 @@ public class ElectricArcFurnaceJeiCategory implements IRecipeCategory<ElectricAr
 
         int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
         guiGraphics.drawString(Minecraft.getInstance().font,
-                Component.literal("Time: " + recipe.getProcessTicks() + " t"),
+                Component.translatable("jei.tech_revised.time", recipe.getProcessTicks()),
                 6, 4, 0x8B8B8B, false);
         guiGraphics.drawString(Minecraft.getInstance().font,
-                Component.literal("Energy: " + recipe.getEnergyPerTick() + " FE/t (" + totalEnergy + " FE)"),
+                Component.translatable("jei.tech_revised.energy_rate", recipe.getEnergyPerTick(), totalEnergy),
                 6, 54, 0x8B8B8B, false);
     }
 }

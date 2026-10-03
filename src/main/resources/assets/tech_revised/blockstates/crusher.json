@@ -1,12 +1,64 @@
-﻿{
+{
   "variants": {
-    "facing=north,active=false": { "model": "tech_revised:block/crusher_idle" },
-    "facing=north,active=true": { "model": "tech_revised:block/crusher" },
-    "facing=east,active=false": { "model": "tech_revised:block/crusher_idle", "y": 90 },
-    "facing=east,active=true": { "model": "tech_revised:block/crusher", "y": 90 },
-    "facing=south,active=false": { "model": "tech_revised:block/crusher_idle", "y": 180 },
-    "facing=south,active=true": { "model": "tech_revised:block/crusher", "y": 180 },
-    "facing=west,active=false": { "model": "tech_revised:block/crusher_idle", "y": 270 },
-    "facing=west,active=true": { "model": "tech_revised:block/crusher", "y": 270 }
+    "active=false,facing=north,formed=false": {
+      "model": "tech_revised:block/crusher_idle"
+    },
+    "active=true,facing=north,formed=false": {
+      "model": "tech_revised:block/crusher"
+    },
+    "active=false,facing=north,formed=true": {
+      "model": "tech_revised:block/crusher_formed"
+    },
+    "active=true,facing=north,formed=true": {
+      "model": "tech_revised:block/crusher_formed_on"
+    },
+    "active=false,facing=east,formed=false": {
+      "model": "tech_revised:block/crusher_idle",
+      "y": 90
+    },
+    "active=true,facing=east,formed=false": {
+      "model": "tech_revised:block/crusher",
+      "y": 90
+    },
+    "active=false,facing=east,formed=true": {
+      "model": "tech_revised:block/crusher_formed",
+      "y": 90
+    },
+    "active=true,facing=east,formed=true": {
+      "model": "tech_revised:block/crusher_formed_on",
+      "y": 90
+    },
+    "active=false,facing=south,formed=false": {
+      "model": "tech_revised:block/crusher_idle",
+      "y": 180
+    },
+    "active=true,facing=south,formed=false": {
+      "model": "tech_revised:block/crusher",
+      "y": 180
+    },
+    "active=false,facing=south,formed=true": {
+      "model": "tech_revised:block/crusher_formed",
+      "y": 180
+    },
+    "active=true,facing=south,formed=true": {
+      "model": "tech_revised:block/crusher_formed_on",
+      "y": 180
+    },
+    "active=false,facing=west,formed=false": {
+      "model": "tech_revised:block/crusher_idle",
+      "y": 270
+    },
+    "active=true,facing=west,formed=false": {
+      "model": "tech_revised:block/crusher",
+      "y": 270
+    },
+    "active=false,facing=west,formed=true": {
+      "model": "tech_revised:block/crusher_formed",
+      "y": 270
+    },
+    "active=true,facing=west,formed=true": {
+      "model": "tech_revised:block/crusher_formed_on",
+      "y": 270
+    }
   }
 }

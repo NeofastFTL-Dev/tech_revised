@@ -10,7 +10,7 @@
     }
   ],
   "result": {
-    "item": "tech_revised:dolomite_dust",
-    "count": 4
+    "count": 4,
+    "id": "tech_revised:dolomite_dust"
   }
 }

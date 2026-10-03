@@ -4,14 +4,16 @@ import com.neofast.tech_revised.block.ModBlocks;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.block.entity.custom.BlastFurnaceControllerBlockEntity;
 import com.neofast.tech_revised.item.ModItems;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockAutoBuilder;
+import com.neofast.tech_revised.multiblock.MultiblockPreviewHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -25,20 +27,21 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class BlastFurnaceControllerBlock extends BaseEntityBlock {
+public class BlastFurnaceControllerBlock extends ModBaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
     public BlastFurnaceControllerBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        super(properties.noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FORMED, false));
     }
 
     @Override
@@ -58,13 +61,13 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, FORMED);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         Direction front = state.getValue(FACING);
@@ -75,8 +78,9 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
         }
 
         if (player.isShiftKeyDown()) {
+            MultiblockPreviewHelper.showPreview(player, pos, front, "blast_furnace");
             player.displayClientMessage(Component.translatable("message.tech_revised.blast_furnace.hologram"), true);
-            return InteractionResult.CONSUME;
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
@@ -84,14 +88,11 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
             String validationKey = validateMultiblock(level, pos, front);
             boolean formed = "message.tech_revised.blast_furnace.formed".equals(validationKey);
 
-            if (formed) {
-                NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player, controller, pos);
-            } else {
-                player.displayClientMessage(Component.translatable(validationKey), true);
-            }
+            player.displayClientMessage(Component.translatable(validationKey), true);
+            MultiblockAutoBuilder.openScreen(player, controller);
         }
 
-        return InteractionResult.CONSUME;
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     public static boolean isStructureValid(Level level, BlockPos controllerPos, Direction front) {
@@ -99,20 +100,8 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
     }
 
     public static String validateMultiblock(Level level, BlockPos controllerPos, Direction front) {
-        for (int y = 0; y < 4; y++) {
-            for (int x = -1; x <= 1; x++) {
-                for (int z = 0; z < 3; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue;
-
-                    Block expected = getExpectedBlock(x, y, z);
-                    BlockPos target = localToWorld(controllerPos, front, x, y, z);
-                    if (!level.getBlockState(target).is(expected)) {
-                        return "message.tech_revised.blast_furnace.incomplete";
-                    }
-                }
-            }
-        }
-        return "message.tech_revised.blast_furnace.formed";
+        MachineLayout layout = MachineLayouts.get(ModBlocks.BLAST_FURNACE_CORE.get());
+        return layout == null ? "message.tech_revised.blast_furnace.incomplete" : layout.validate(level, controllerPos, front);
     }
 
     private static Block getExpectedBlock(int x, int y, int z) {
@@ -122,8 +111,19 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
         return ModBlocks.ELECTRIC_ARC_FURNACE_FRAME.get();
     }
 
-    private InteractionResult tryAutoBuildWithConfigurator(Level level, BlockPos controllerPos, Direction front, Player player) {
-        return InteractionResult.SUCCESS;
+    private net.minecraft.world.ItemInteractionResult tryAutoBuildWithConfigurator(Level level, BlockPos controllerPos, Direction front, Player player) {
+        MachineLayout layout = MachineLayouts.get(ModBlocks.BLAST_FURNACE_CORE.get());
+        if (layout == null || !MultiblockAutoBuilder.tryBuild(level, player, layout.placements(controllerPos, front))) {
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
+        }
+
+        boolean formed = isStructureValid(level, controllerPos, front);
+        player.displayClientMessage(Component.translatable(
+                formed
+                        ? "message.tech_revised.multiblock.autoconfig_success"
+                        : "message.tech_revised.multiblock.autoconfig_incomplete"), true);
+        MultiblockAutoBuilder.openScreen(player, level.getBlockEntity(controllerPos));
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     private static BlockPos localToWorld(BlockPos origin, Direction front, int localX, int localY, int localZ) {
@@ -134,7 +134,7 @@ public class BlastFurnaceControllerBlock extends BaseEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return com.neofast.tech_revised.multiblock.MultiblockRender.renderShape(state);
     }
 
     @Nullable

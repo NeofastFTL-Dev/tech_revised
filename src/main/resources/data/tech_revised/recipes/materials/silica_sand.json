@@ -13,7 +13,7 @@
     }
   ],
   "result": {
-    "item": "tech_revised:silica_sand",
-    "count": 4
+    "count": 4,
+    "id": "tech_revised:silica_sand"
   }
 }

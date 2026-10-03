@@ -3,13 +3,24 @@ package com.neofast.tech_revised.block.entity.custom;
 import com.neofast.tech_revised.block.custom.OxygenConverterControllerBlock;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.fluid.ModFluids;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockControllerAccess;
+import com.neofast.tech_revised.multiblock.MultiblockRender;
 import com.neofast.tech_revised.recipe.OxygenConverterRecipe;
+import com.neofast.tech_revised.screen.MultiblockControllerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -20,9 +31,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Optional;
 
-public class OxygenConverterControllerBlockEntity extends BlockEntity {
+public class OxygenConverterControllerBlockEntity extends BlockEntity implements MenuProvider, MultiblockControllerAccess {
     private static final int DEFAULT_PROCESS_TICKS = 100;
     private static final int ENERGY_CAPACITY = 50000;
     private static final int ENERGY_TRANSFER_PER_TICK = 1000;
@@ -56,37 +68,35 @@ public class OxygenConverterControllerBlockEntity extends BlockEntity {
         super(ModBlockEntities.OXYGEN_CONVERTER_CONTROLLER.get(), worldPosition, blockState);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        public AABB getRenderBoundingBox() {
+        return MultiblockRender.bounds(this);
+    }
+
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ENERGY) {
             return lazyEnergy.cast();
         }
-        return super.getCapability(cap, side);
+        return net.minecraftforge.common.util.LazyOptional.empty();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+        public void onLoad() {
         lazyEnergy = LazyOptional.of(() -> energyStorage);
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
+        public void invalidateCaps() {
         lazyEnergy.invalidate();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.putInt("oxygen_converter_progress", progress);
         tag.put("oxygen_converter_energy", energyStorage.serializeNBT());
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         progress = tag.getInt("oxygen_converter_progress");
         if (tag.contains("oxygen_converter_energy")) {
             energyStorage.deserializeNBT(tag.get("oxygen_converter_energy"));
@@ -106,18 +116,21 @@ public class OxygenConverterControllerBlockEntity extends BlockEntity {
             return;
         }
 
-        BlockEntity inputEntity = level.getBlockEntity(OxygenConverterControllerBlock.getFluidInputBusPos(pos, front));
-        BlockEntity oxygenOutputEntity = level.getBlockEntity(OxygenConverterControllerBlock.getOxygenOutputBusPos(pos, front));
-        BlockEntity hydrogenOutputEntity = level.getBlockEntity(OxygenConverterControllerBlock.getHydrogenOutputBusPos(pos, front));
-        BlockEntity energyEntity = level.getBlockEntity(OxygenConverterControllerBlock.getEnergyInputHatchPos(pos, front));
+        MachineLayout layout = MachineLayouts.get(state.getBlock());
+        ElectricArcFurnaceFluidInputBusBlockEntity inputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceFluidInputBusBlockEntity.class);
+        List<ElectricArcFurnaceFluidOutputBusBlockEntity> outputBuses = layout == null
+                ? List.of()
+                : layout.findBlockEntities(level, pos, front, ElectricArcFurnaceFluidOutputBusBlockEntity.class);
+        ElectricArcFurnaceEnergyInputHatchBlockEntity energyInputHatch = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceEnergyInputHatchBlockEntity.class);
 
-        if (!(inputEntity instanceof ElectricArcFurnaceFluidInputBusBlockEntity inputBus)
-                || !(oxygenOutputEntity instanceof ElectricArcFurnaceFluidOutputBusBlockEntity oxygenOutputBus)
-                || !(hydrogenOutputEntity instanceof ElectricArcFurnaceFluidOutputBusBlockEntity hydrogenOutputBus)
-                || !(energyEntity instanceof ElectricArcFurnaceEnergyInputHatchBlockEntity energyInputHatch)) {
+        if (inputBus == null || outputBuses.size() < 2 || energyInputHatch == null) {
             blockEntity.resetProgress();
             return;
         }
+        ElectricArcFurnaceFluidOutputBusBlockEntity oxygenOutputBus = outputBuses.get(0);
+        ElectricArcFurnaceFluidOutputBusBlockEntity hydrogenOutputBus = outputBuses.get(1);
 
         blockEntity.pullEnergyFromHatch(energyInputHatch);
 
@@ -171,6 +184,7 @@ public class OxygenConverterControllerBlockEntity extends BlockEntity {
     private static Optional<OxygenConverterRecipe> getRecipe(Level level, FluidStack input) {
         if (input.isEmpty()) return Optional.empty();
         return level.getRecipeManager().getAllRecipesFor(OxygenConverterRecipe.Type.INSTANCE).stream()
+                .map(net.minecraft.world.item.crafting.RecipeHolder::value)
                 .filter(r -> r.getInputFluid().getFluid() == input.getFluid())
                 .findFirst();
     }
@@ -214,5 +228,28 @@ public class OxygenConverterControllerBlockEntity extends BlockEntity {
 
     public int getMaxEnergyStored() {
         return energyStorage.getMaxEnergyStored();
+    }
+
+    @Override
+    public boolean isStructureFormed() {
+        if (level == null) {
+            return false;
+        }
+        BlockState state = getBlockState();
+        if (!state.hasProperty(OxygenConverterControllerBlock.FACING)) {
+            return false;
+        }
+        return OxygenConverterControllerBlock.isStructureValid(level, worldPosition, state.getValue(OxygenConverterControllerBlock.FACING));
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.tech_revised.oxygen_converter_controller");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new MultiblockControllerMenu(containerId, inventory, this);
     }
 }

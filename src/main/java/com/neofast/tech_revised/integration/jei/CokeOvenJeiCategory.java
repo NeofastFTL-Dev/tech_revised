@@ -74,10 +74,10 @@ public class CokeOvenJeiCategory implements IRecipeCategory<CokeOvenJeiRecipe> {
         arrow.draw(guiGraphics, 58, 22);
 
         guiGraphics.drawString(Minecraft.getInstance().font,
-                Component.literal("Time: " + recipe.getProcessTicks() + " t"),
+                Component.translatable("jei.tech_revised.time", recipe.getProcessTicks()),
                 8, 4, 0x8B8B8B, false);
         guiGraphics.drawString(Minecraft.getInstance().font,
-                Component.literal("Creosote: " + recipe.getOutputFluid().getAmount() + " mB"),
+                Component.translatable("jei.tech_revised.creosote_mb", recipe.getOutputFluid().getAmount()),
                 8, 54, 0x8B8B8B, false);
     }
 }

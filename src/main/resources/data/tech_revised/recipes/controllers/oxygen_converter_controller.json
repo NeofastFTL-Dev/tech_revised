@@ -28,7 +28,7 @@
     "ROR"
   ],
   "result": {
-    "item": "tech_revised:oxygen_converter_controller"
+    "id": "tech_revised:oxygen_converter_controller"
   },
   "show_notification": true
 }

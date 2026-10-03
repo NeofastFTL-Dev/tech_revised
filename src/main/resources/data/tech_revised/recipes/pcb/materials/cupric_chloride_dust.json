@@ -3,13 +3,19 @@
   "category": "misc",
   "group": "pcb_chemicals",
   "ingredients": [
-    { "item": "minecraft:copper_ingot" },
-    { "item": "minecraft:green_dye" },
-    { "item": "minecraft:redstone" }
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:green_dye"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
   ],
   "result": {
-    "item": "tech_revised:cupric_chloride_dust",
-    "count": 2
+    "count": 2,
+    "id": "tech_revised:cupric_chloride_dust"
   },
   "show_notification": true
 }

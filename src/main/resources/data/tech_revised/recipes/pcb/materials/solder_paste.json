@@ -3,15 +3,25 @@
   "category": "misc",
   "group": "pcb_materials",
   "ingredients": [
-    { "item": "minecraft:iron_nugget" },
-    { "item": "minecraft:iron_nugget" },
-    { "item": "minecraft:iron_nugget" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:slime_ball" }
+    {
+      "item": "tech_revised:tin_nugget"
+    },
+    {
+      "item": "tech_revised:tin_nugget"
+    },
+    {
+      "item": "tech_revised:tin_nugget"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "minecraft:slime_ball"
+    }
   ],
   "result": {
-    "item": "tech_revised:solder_paste",
-    "count": 4
+    "count": 4,
+    "id": "tech_revised:solder_paste"
   },
   "show_notification": true
 }

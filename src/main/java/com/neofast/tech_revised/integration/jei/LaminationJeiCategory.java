@@ -74,10 +74,10 @@ public class LaminationJeiCategory implements IRecipeCategory<LaminationRecipe> 
                      double mouseY) {
         arrow.draw(guiGraphics, 80, 28);
         var font = Minecraft.getInstance().font;
-        guiGraphics.drawString(font, Component.literal("Layers (top -> bottom)"), 30, 4, 0x8B8B8B, false);
+        guiGraphics.drawString(font, Component.translatable("jei.tech_revised.layers"), 30, 4, 0x8B8B8B, false);
         int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
         guiGraphics.drawString(font,
-                Component.literal(recipe.getProcessTicks() + "t / " + totalEnergy + " FE"),
+                Component.translatable("jei.tech_revised.ticks_energy", recipe.getProcessTicks(), totalEnergy),
                 30, 64, 0x8B8B8B, false);
     }
 }

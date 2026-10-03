@@ -32,36 +32,30 @@ public class ElectricArcFurnaceFluidOutputBusBlockEntity extends BlockEntity {
         super(ModBlockEntities.ELECTRIC_ARC_FURNACE_FLUID_OUTPUT_BUS.get(), worldPosition, blockState);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.FLUID_HANDLER) {
             return lazyFluidHandler.cast();
         }
-        return super.getCapability(cap, side);
+        return net.minecraftforge.common.util.LazyOptional.empty();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+        public void onLoad() {
         lazyFluidHandler = LazyOptional.of(() -> fluidTank);
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
+        public void invalidateCaps() {
         lazyFluidHandler.invalidate();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.put("tank", fluidTank.writeToNBT(new CompoundTag()));
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (tag.contains("tank")) {
             fluidTank.readFromNBT(tag.getCompound("tank"));
         }

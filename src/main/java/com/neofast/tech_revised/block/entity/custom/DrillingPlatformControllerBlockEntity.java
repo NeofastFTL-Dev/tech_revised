@@ -2,13 +2,24 @@ package com.neofast.tech_revised.block.entity.custom;
 
 import com.neofast.tech_revised.block.custom.DrillingPlatformControllerBlock;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockControllerAccess;
+import com.neofast.tech_revised.multiblock.MultiblockRender;
 import com.neofast.tech_revised.recipe.DrillingPlatformRecipe;
+import com.neofast.tech_revised.screen.MultiblockControllerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -21,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public class DrillingPlatformControllerBlockEntity extends BlockEntity {
+public class DrillingPlatformControllerBlockEntity extends BlockEntity implements MenuProvider, MultiblockControllerAccess {
     private static final int DEFAULT_PROCESS_TICKS = 80;
     private static final int ENERGY_CAPACITY = 50000;
     private static final int ENERGY_TRANSFER_PER_TICK = 1000;
@@ -54,37 +65,35 @@ public class DrillingPlatformControllerBlockEntity extends BlockEntity {
         super(ModBlockEntities.DRILLING_PLATFORM_CONTROLLER.get(), worldPosition, blockState);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        public AABB getRenderBoundingBox() {
+        return MultiblockRender.bounds(this);
+    }
+
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ENERGY) {
             return lazyEnergy.cast();
         }
-        return super.getCapability(cap, side);
+        return net.minecraftforge.common.util.LazyOptional.empty();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+        public void onLoad() {
         lazyEnergy = LazyOptional.of(() -> energyStorage);
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
+        public void invalidateCaps() {
         lazyEnergy.invalidate();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.putInt("drilling_progress", progress);
         tag.put("drilling_energy", energyStorage.serializeNBT());
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         progress = tag.getInt("drilling_progress");
         if (tag.contains("drilling_energy")) {
             energyStorage.deserializeNBT(tag.get("drilling_energy"));
@@ -104,11 +113,13 @@ public class DrillingPlatformControllerBlockEntity extends BlockEntity {
             return;
         }
 
-        BlockEntity energyInputEntity = level.getBlockEntity(DrillingPlatformControllerBlock.getEnergyInputHatchPos(pos, front));
-        BlockEntity fluidOutputEntity = level.getBlockEntity(DrillingPlatformControllerBlock.getFluidOutputBusPos(pos, front));
+        MachineLayout layout = MachineLayouts.get(state.getBlock());
+        ElectricArcFurnaceEnergyInputHatchBlockEntity energyInputHatch = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceEnergyInputHatchBlockEntity.class);
+        ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceFluidOutputBusBlockEntity.class);
 
-        if (!(energyInputEntity instanceof ElectricArcFurnaceEnergyInputHatchBlockEntity energyInputHatch) ||
-                !(fluidOutputEntity instanceof ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus)) {
+        if (energyInputHatch == null || fluidOutputBus == null) {
             blockEntity.resetProgress();
             return;
         }
@@ -169,7 +180,7 @@ public class DrillingPlatformControllerBlockEntity extends BlockEntity {
     }
 
     private static Optional<DrillingPlatformRecipe> getRecipe(Level level) {
-        return level.getRecipeManager().getAllRecipesFor(DrillingPlatformRecipe.Type.INSTANCE).stream().findFirst();
+        return level.getRecipeManager().getAllRecipesFor(DrillingPlatformRecipe.Type.INSTANCE).stream().map(net.minecraft.world.item.crafting.RecipeHolder::value).findFirst();
     }
 
     private void resetProgress() {
@@ -193,5 +204,28 @@ public class DrillingPlatformControllerBlockEntity extends BlockEntity {
 
     public int getMaxEnergyStored() {
         return energyStorage.getMaxEnergyStored();
+    }
+
+    @Override
+    public boolean isStructureFormed() {
+        if (level == null) {
+            return false;
+        }
+        BlockState state = getBlockState();
+        if (!state.hasProperty(DrillingPlatformControllerBlock.FACING)) {
+            return false;
+        }
+        return DrillingPlatformControllerBlock.isStructureValid(level, worldPosition, state.getValue(DrillingPlatformControllerBlock.FACING));
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.tech_revised.drilling_platform_controller");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new MultiblockControllerMenu(containerId, inventory, this);
     }
 }

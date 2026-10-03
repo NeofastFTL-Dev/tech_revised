@@ -3,13 +3,19 @@
   "category": "misc",
   "group": "pcb_materials",
   "ingredients": [
-    { "item": "tech_revised:copper_clad_laminate" },
-    { "item": "tech_revised:prepreg_fabric" },
-    { "item": "tech_revised:stripped_inner_layer_board" }
+    {
+      "item": "tech_revised:copper_clad_laminate"
+    },
+    {
+      "item": "tech_revised:prepreg_fabric"
+    },
+    {
+      "item": "tech_revised:stripped_inner_layer_board"
+    }
   ],
   "result": {
-    "item": "tech_revised:multi_layer_stackup",
-    "count": 1
+    "count": 1,
+    "id": "tech_revised:multi_layer_stackup"
   },
   "show_notification": true
 }

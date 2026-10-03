@@ -1,7 +1,11 @@
 package com.neofast.tech_revised.recipe;
 
 import com.neofast.tech_revised.TechRevised;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -72,6 +76,28 @@ public class ModRecipes {
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);
         INDUSTRIAL_STEEL_SERIALIZERS.register(eventBus);
+        registerType("crusher", CrusherRecipe.Type.INSTANCE);
+        registerType("electric_arc_furnace", ElectricArcFurnaceRecipe.Type.INSTANCE);
+        registerType("argon_oxygen_decarburization_converter", ArgonOxygenDecarburizationConverterRecipe.Type.INSTANCE);
+        registerType("coke_oven", CokeOvenRecipe.Type.INSTANCE);
+        registerType("drilling_platform", DrillingPlatformRecipe.Type.INSTANCE);
+        registerType("oxygen_converter", OxygenConverterRecipe.Type.INSTANCE);
+        registerType("batching", BatchingRecipe.Type.INSTANCE);
+        registerType("melting", MeltingRecipe.Type.INSTANCE);
+        registerType("extrusion", FluidToItemRecipe.Type.INSTANCE);
+        registerType("sizing", ItemFluidToItemRecipe.Type.INSTANCE);
+        registerType("drying", DryingRecipeType.INSTANCE);
+        registerType("winding", WindingRecipeType.INSTANCE);
+        registerType("bundling", BundlingRecipeType.INSTANCE);
+        registerType("weaving", WeavingRecipeType.INSTANCE);
+        registerType("chopping", ChoppingRecipeType.INSTANCE);
+        registerType("pcb", PcbRecipeType.INSTANCE);
+        registerType("lamination", LaminationRecipeType.INSTANCE);
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, ResourceLocation.fromNamespaceAndPath("industrialsteel", "alloying"), AlloyingRecipe.Type.INSTANCE);
+    }
+
+    private static void registerType(String name, RecipeType<?> type) {
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, ResourceLocation.fromNamespaceAndPath(TechRevised.MOD_ID, name), type);
     }
 
     public static class DryingRecipeType implements net.minecraft.world.item.crafting.RecipeType<GenericIndustrialRecipe> {

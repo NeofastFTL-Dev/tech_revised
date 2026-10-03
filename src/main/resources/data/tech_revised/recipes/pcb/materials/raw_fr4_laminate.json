@@ -8,13 +8,19 @@
     "FFF"
   ],
   "key": {
-    "F": { "item": "tech_revised:fiberglass_fabric" },
-    "S": { "item": "tech_revised:chemical_lubricant" },
-    "R": { "item": "minecraft:slime_ball" }
+    "F": {
+      "item": "tech_revised:fiberglass_fabric"
+    },
+    "S": {
+      "item": "tech_revised:chemical_lubricant"
+    },
+    "R": {
+      "item": "minecraft:slime_ball"
+    }
   },
   "result": {
-    "item": "tech_revised:raw_fr4_laminate",
-    "count": 2
+    "count": 2,
+    "id": "tech_revised:raw_fr4_laminate"
   },
   "show_notification": true
 }

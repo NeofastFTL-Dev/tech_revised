@@ -72,7 +72,7 @@ public class MeltingJeiCategory implements IRecipeCategory<MeltingRecipe> {
         arrow.draw(guiGraphics, 58, 18);
         int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
         var font = Minecraft.getInstance().font;
-        guiGraphics.drawString(font, Component.literal("Time: " + recipe.getProcessTicks() + " t"), 8, 2, 0x8B8B8B, false);
-        guiGraphics.drawString(font, Component.literal("Energy: " + totalEnergy + " FE"), 8, 42, 0x8B8B8B, false);
+        guiGraphics.drawString(font, Component.translatable("jei.tech_revised.time", recipe.getProcessTicks()), 8, 2, 0x8B8B8B, false);
+        guiGraphics.drawString(font, Component.translatable("jei.tech_revised.energy_total", totalEnergy), 8, 42, 0x8B8B8B, false);
     }
 }

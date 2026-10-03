@@ -13,7 +13,7 @@
     }
   ],
   "result": {
-    "item": "tech_revised:chemical_lubricant",
-    "count": 2
+    "count": 2,
+    "id": "tech_revised:chemical_lubricant"
   }
 }

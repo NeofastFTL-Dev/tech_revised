@@ -1,6 +1,9 @@
 {
   "variants": {
-    "": {
+    "formed=false": {
+      "model": "tech_revised:block/drilling_platform_frame"
+    },
+    "formed=true": {
       "model": "tech_revised:block/drilling_platform_frame"
     }
   }

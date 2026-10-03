@@ -22,7 +22,7 @@
     "IGI"
   ],
   "result": {
-    "item": "tech_revised:electric_arc_furnace_energy_input_hatch"
+    "id": "tech_revised:electric_arc_furnace_energy_input_hatch"
   },
   "show_notification": true
 }

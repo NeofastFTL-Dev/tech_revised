@@ -25,7 +25,7 @@
     "R R"
   ],
   "result": {
-    "item": "tech_revised:argon_oxygen_decarburization_converter_controller"
+    "id": "tech_revised:argon_oxygen_decarburization_converter_controller"
   },
   "show_notification": true
 }

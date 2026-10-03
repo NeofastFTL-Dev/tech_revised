@@ -18,7 +18,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class OxygenConverterRecipe implements Recipe<Container> {
+public class OxygenConverterRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final FluidStack inputFluid;
     private final FluidStack outputFluid1;
@@ -36,12 +36,12 @@ public class OxygenConverterRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         return true;
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 
@@ -51,12 +51,11 @@ public class OxygenConverterRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -105,32 +104,29 @@ public class OxygenConverterRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<OxygenConverterRecipe> {
-        @Override
-        public OxygenConverterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<OxygenConverterRecipe> {
+                public OxygenConverterRecipe fromJson(JsonObject json) {
             FluidStack inputFluid = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "input_fluid"));
             FluidStack outputFluid1 = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "output_fluid1"));
             FluidStack outputFluid2 = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "output_fluid2"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 100);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 60);
-            return new OxygenConverterRecipe(recipeId, inputFluid, outputFluid1, outputFluid2, processTicks, energyPerTick);
+            return new OxygenConverterRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputFluid, outputFluid1, outputFluid2, processTicks, energyPerTick);
         }
 
-        @Override
-        public OxygenConverterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            FluidStack inputFluid = buffer.readFluidStack();
-            FluidStack outputFluid1 = buffer.readFluidStack();
-            FluidStack outputFluid2 = buffer.readFluidStack();
+                public OxygenConverterRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
+            FluidStack inputFluid = com.neofast.tech_revised.recipe.RecipeHelper.readFluidStack(buffer);
+            FluidStack outputFluid1 = com.neofast.tech_revised.recipe.RecipeHelper.readFluidStack(buffer);
+            FluidStack outputFluid2 = com.neofast.tech_revised.recipe.RecipeHelper.readFluidStack(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new OxygenConverterRecipe(recipeId, inputFluid, outputFluid1, outputFluid2, processTicks, energyPerTick);
+            return new OxygenConverterRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputFluid, outputFluid1, outputFluid2, processTicks, energyPerTick);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, OxygenConverterRecipe recipe) {
-            buffer.writeFluidStack(recipe.inputFluid);
-            buffer.writeFluidStack(recipe.outputFluid1);
-            buffer.writeFluidStack(recipe.outputFluid2);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeFluidStack(buffer, recipe.inputFluid);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeFluidStack(buffer, recipe.outputFluid1);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeFluidStack(buffer, recipe.outputFluid2);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
         }
@@ -138,7 +134,7 @@ public class OxygenConverterRecipe implements Recipe<Container> {
         private static FluidStack fluidStackFromJson(JsonObject json) {
             String fluidId = GsonHelper.getAsString(json, "fluid");
             int amount = GsonHelper.getAsInt(json, "amount");
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidId));
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(fluidId));
             if (fluid == null || fluid == Fluids.EMPTY) {
                 throw new JsonSyntaxException("Unknown fluid '" + fluidId + "'");
             }

@@ -72,7 +72,7 @@ public class AlloyingJeiCategory implements IRecipeCategory<AlloyingRecipe> {
                      double mouseY) {
         arrow.draw(guiGraphics, 90, 18);
         guiGraphics.drawString(Minecraft.getInstance().font,
-                Component.literal("Any order"),
+                Component.translatable("jei.tech_revised.any_order"),
                 8, 4, 0x8B8B8B, false);
     }
 }

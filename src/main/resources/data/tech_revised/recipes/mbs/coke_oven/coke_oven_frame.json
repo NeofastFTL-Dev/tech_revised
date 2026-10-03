@@ -13,8 +13,8 @@
     "III"
   ],
   "result": {
-    "count": 4,
-    "item": "tech_revised:coke_oven_frame"
+    "count": 8,
+    "id": "tech_revised:coke_oven_frame"
   },
   "show_notification": true
 }

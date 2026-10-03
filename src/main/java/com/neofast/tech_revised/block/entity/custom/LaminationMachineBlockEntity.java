@@ -25,13 +25,13 @@ public class LaminationMachineBlockEntity extends MultiInputIndustrialMachineBlo
             return null;
         }
         Optional<LaminationRecipe> recipe = level.getRecipeManager()
-                .getRecipeFor(ModRecipes.LaminationRecipeType.INSTANCE, inventory, level);
+                .getRecipeFor(ModRecipes.LaminationRecipeType.INSTANCE, new com.neofast.tech_revised.recipe.ContainerInput(inventory), level).map(net.minecraft.world.item.crafting.RecipeHolder::value);
         return recipe.map(r -> ResolvedRecipe.of(
                 r.getProcessTicks(),
                 r.getEnergyPerTick(),
                 r.getResultItem(level.registryAccess()),
                 r.getLayers(),
-                inv -> r.assemble(inv, level.registryAccess())
+                inv -> r.assemble(new com.neofast.tech_revised.recipe.ContainerInput(inv), level.registryAccess())
         )).orElse(null);
     }
 
@@ -40,7 +40,8 @@ public class LaminationMachineBlockEntity extends MultiInputIndustrialMachineBlo
         if (level == null) {
             return true;
         }
-        for (LaminationRecipe recipe : level.getRecipeManager().getAllRecipesFor(ModRecipes.LaminationRecipeType.INSTANCE)) {
+        for (var holder : level.getRecipeManager().getAllRecipesFor(ModRecipes.LaminationRecipeType.INSTANCE)) {
+            LaminationRecipe recipe = holder.value();
             for (Ingredient ingredient : recipe.getLayers()) {
                 if (ingredient.test(stack)) {
                     return true;

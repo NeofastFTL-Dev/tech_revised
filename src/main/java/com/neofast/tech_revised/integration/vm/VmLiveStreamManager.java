@@ -55,13 +55,19 @@ public final class VmLiveStreamManager {
 
             StreamSession created = new StreamSession(player.server, k, vmName, startCommand, stopCommand);
             created.addViewer(viewerId);
-            created.start();
+            STREAM_EXECUTOR.execute(created::start);
             return created;
         });
 
         if (session != null) {
             LOGGER.debug("Started VM live stream watch: viewer={}, key={}", viewerId, key);
         }
+    }
+
+    public static boolean injectMouse(ServerPlayer player, BlockPos blockPos, int x, int y, int wheel, int buttons, boolean click) {
+        StreamKey key = new StreamKey(player.level().dimension().location(), blockPos.immutable());
+        StreamSession session = SESSIONS.get(key);
+        return session != null && session.sendMouse(x, y, wheel, buttons, click);
     }
 
     public static void stopWatching(ServerPlayer player, BlockPos blockPos) {
@@ -91,6 +97,11 @@ public final class VmLiveStreamManager {
         private volatile String startCommand;
         private volatile String stopCommand;
         private volatile ScheduledFuture<?> task;
+        private volatile VmComFramePump.Handle captureHandle;
+        private volatile Thread captureThread;
+        private final AtomicBoolean receivedComFrame = new AtomicBoolean(false);
+        private volatile long lastErrorBroadcastMs = 0L;
+        private volatile int lastMouseButtons = 0;
 
         private StreamSession(MinecraftServer server, StreamKey key, String vmName,
                               String startCommand, String stopCommand) {
@@ -99,6 +110,26 @@ public final class VmLiveStreamManager {
             this.vmName = vmName;
             this.startCommand = startCommand;
             this.stopCommand = stopCommand;
+        }
+
+        private boolean sendMouse(int x, int y, int wheel, int buttons, boolean click) {
+            boolean maskChanged = buttons != lastMouseButtons;
+            lastMouseButtons = buttons;
+            boolean discrete = click || wheel != 0 || maskChanged;
+
+            // Prefer the live COM pump: it shares the already-held session lock, so injecting
+            // through it never contends with the capture session. The PowerShell fallback
+            // locks the VM itself and must not run while the pump is active.
+            VmComFramePump.Handle handle = captureHandle;
+            if (handle != null && handle.isAlive()) {
+                VmComFramePump.sendMouse(handle, x, y, wheel, buttons, click);
+                return true;
+            }
+
+            if (discrete) {
+                VmCommandIntegration.sendMouseEventAsync(vmName, startCommand, stopCommand, x, y, wheel, buttons);
+            }
+            return discrete;
         }
 
         private void addViewer(UUID viewerId) {
@@ -120,6 +151,24 @@ public final class VmLiveStreamManager {
         }
 
         private void start() {
+            VmCommandIntegration.ensureGuestDisplay(vmName, startCommand, stopCommand);
+            if (VmComFramePump.isSupported()) {
+                try {
+                    VmComFramePump.Handle handle = VmComFramePump.start(vmName);
+                    captureHandle = handle;
+                    Thread thread = new Thread(() -> VmComFramePump.readLoop(handle, result -> {
+                        receivedComFrame.set(true);
+                        broadcast(result);
+                    }), "tech-revised-vm-com-stream");
+                    thread.setDaemon(true);
+                    captureThread = thread;
+                    thread.start();
+                    STREAM_EXECUTOR.schedule(this::fallbackIfComSilent, 3000, TimeUnit.MILLISECONDS);
+                    return;
+                } catch (Exception exception) {
+                    LOGGER.debug("COM 60fps capture failed, falling back to VBoxManage: {}", exception.getMessage());
+                }
+            }
             task = STREAM_EXECUTOR.scheduleAtFixedRate(this::captureAndBroadcast, 0, STREAM_INTERVAL_MS, TimeUnit.MILLISECONDS);
         }
 
@@ -127,6 +176,35 @@ public final class VmLiveStreamManager {
             ScheduledFuture<?> localTask = task;
             if (localTask != null) {
                 localTask.cancel(false);
+            }
+            VmComFramePump.stop(captureHandle);
+            captureHandle = null;
+            captureThread = null;
+        }
+
+        private void fallbackIfComSilent() {
+            if (receivedComFrame.get() || !hasViewers()) {
+                return;
+            }
+            VmComFramePump.Handle handle = captureHandle;
+            if (handle != null && handle.isAlive()) {
+                LOGGER.warn("COM session is alive; keeping it for mouse and capture. stderr={}", handle.stderrPreview());
+                return;
+            }
+            String stderr = handle == null ? "" : handle.stderrPreview();
+            LOGGER.warn("COM capture exited, falling back to VBoxManage. stderr={}", stderr);
+            VmComFramePump.stop(handle);
+            captureHandle = null;
+            try {
+                Thread.sleep(400L);
+            } catch (InterruptedException interruptedException) {
+                Thread.currentThread().interrupt();
+            }
+            if (!stderr.isBlank()) {
+                broadcast(new VmCommandIntegration.VmScreenshotResult(false, stderr, new byte[0]));
+            }
+            if (task == null) {
+                task = STREAM_EXECUTOR.scheduleAtFixedRate(this::captureAndBroadcast, 0, STREAM_INTERVAL_MS, TimeUnit.MILLISECONDS);
             }
         }
 
@@ -138,7 +216,15 @@ public final class VmLiveStreamManager {
             try {
                 VmCommandIntegration.VmScreenshotResult result =
                         VmCommandIntegration.captureScreenshotNow(vmName, startCommand, stopCommand);
-                server.execute(() -> broadcast(result));
+                if (result.success()) {
+                    broadcast(result);
+                } else {
+                    long now = System.currentTimeMillis();
+                    if (now - lastErrorBroadcastMs >= 1000L) {
+                        lastErrorBroadcastMs = now;
+                        broadcast(result);
+                    }
+                }
             } catch (Exception exception) {
                 LOGGER.debug("Failed VM live stream frame capture for {}: {}", key, exception.getMessage());
                 server.execute(() -> broadcast(new VmCommandIntegration.VmScreenshotResult(
@@ -169,9 +255,14 @@ public final class VmLiveStreamManager {
                     return true;
                 }
 
+                byte[] imageBytes = result.imageBytes();
+                if (imageBytes != null && imageBytes.length > VmComFramePump.MAX_FRAME_BYTES) {
+                    return false;
+                }
                 ModNetworking.CHANNEL.send(
                         net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> viewer),
-                        new VmScreenshotPacket(key.blockPos(), result.success(), result.message(), result.imageBytes()));
+                        new VmScreenshotPacket(key.blockPos(), result.success(), result.message(),
+                                imageBytes == null ? new byte[0] : imageBytes));
                 return false;
             });
 

@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
-public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<Container> {
+public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final Ingredient primaryInput;
     private final Ingredient secondaryInput;
@@ -41,7 +41,7 @@ public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<Contain
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         if (container.getContainerSize() < 2) {
             return false;
         }
@@ -58,7 +58,7 @@ public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<Contain
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
@@ -68,12 +68,11 @@ public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<Contain
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -126,20 +125,19 @@ public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<Contain
         }
     }
 
-    public static class Serializer implements RecipeSerializer<ArgonOxygenDecarburizationConverterRecipe> {
-        @Override
-        public ArgonOxygenDecarburizationConverterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Ingredient primaryInput = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "primary_input"));
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<ArgonOxygenDecarburizationConverterRecipe> {
+                public ArgonOxygenDecarburizationConverterRecipe fromJson(JsonObject json) {
+            Ingredient primaryInput = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(GsonHelper.getAsJsonObject(json, "primary_input"));
             Ingredient secondaryInput = json.has("secondary_input")
-                    ? Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "secondary_input"))
+                    ? com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(GsonHelper.getAsJsonObject(json, "secondary_input"))
                     : Ingredient.EMPTY;
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 120);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 80);
             int oxygenAmount = GsonHelper.getAsInt(json, "oxygen_amount", 500);
 
             return new ArgonOxygenDecarburizationConverterRecipe(
-                    recipeId,
+                    ResourceLocation.parse("tech_revised:recipe"),
                     primaryInput,
                     secondaryInput,
                     result,
@@ -149,17 +147,16 @@ public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<Contain
             );
         }
 
-        @Override
-        public ArgonOxygenDecarburizationConverterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            Ingredient primaryInput = Ingredient.fromNetwork(buffer);
-            Ingredient secondaryInput = Ingredient.fromNetwork(buffer);
-            ItemStack result = buffer.readItem();
+                public ArgonOxygenDecarburizationConverterRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
+            Ingredient primaryInput = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer);
+            Ingredient secondaryInput = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer);
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.readItem(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
             int oxygenAmount = buffer.readVarInt();
 
             return new ArgonOxygenDecarburizationConverterRecipe(
-                    recipeId,
+                    ResourceLocation.parse("tech_revised:recipe"),
                     primaryInput,
                     secondaryInput,
                     result,
@@ -169,11 +166,10 @@ public class ArgonOxygenDecarburizationConverterRecipe implements Recipe<Contain
             );
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, ArgonOxygenDecarburizationConverterRecipe recipe) {
-            recipe.primaryInput.toNetwork(buffer);
-            recipe.secondaryInput.toNetwork(buffer);
-            buffer.writeItem(recipe.result);
+            com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(recipe.primaryInput, buffer);
+            com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(recipe.secondaryInput, buffer);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeItem(buffer, recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
             buffer.writeVarInt(recipe.oxygenAmount);

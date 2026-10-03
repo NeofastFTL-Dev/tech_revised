@@ -5,15 +5,16 @@ import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.block.entity.custom.CokeOvenControllerBlockEntity;
 import com.neofast.tech_revised.block.entity.custom.ElectricArcFurnaceFluidOutputBusBlockEntity;
 import com.neofast.tech_revised.item.ModItems;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockAutoBuilder;
 import com.neofast.tech_revised.multiblock.MultiblockPreviewHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -27,15 +28,17 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CokeOvenControllerBlock extends BaseEntityBlock {
+public class CokeOvenControllerBlock extends ModBaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty FORMED = BooleanProperty.create("formed");
     private static final int MIN_X = -1;
     private static final int MAX_X = 1;
     private static final int MIN_Y = 0;
@@ -45,7 +48,7 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
 
     public CokeOvenControllerBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FORMED, false));
     }
 
     @Override
@@ -65,13 +68,13 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, FORMED);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         Direction front = state.getValue(FACING);
@@ -80,7 +83,7 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
         if (hand == InteractionHand.MAIN_HAND
                 && !heldStack.is(ModItems.CONFIGURATOR.get())
                 && player.getItemInHand(InteractionHand.OFF_HAND).is(ModItems.CONFIGURATOR.get())) {
-            return InteractionResult.PASS;
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         if (heldStack.is(ModItems.CONFIGURATOR.get())) {
@@ -90,7 +93,7 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
         if (player.isShiftKeyDown()) {
             MultiblockPreviewHelper.showPreview(player, pos, front, "coke_oven");
             player.displayClientMessage(Component.translatable("message.tech_revised.coke_oven.hologram"), true);
-            return InteractionResult.CONSUME;
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
 
         String validationKey = validateMultiblock(level, pos, front);
@@ -98,26 +101,8 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
         updateFrameFormedStates(level, pos, front, formed);
         player.displayClientMessage(Component.translatable(validationKey), true);
 
-        if (formed) {
-            BlockEntity controllerEntity = level.getBlockEntity(pos);
-            if (controllerEntity instanceof CokeOvenControllerBlockEntity controller) {
-                int progressPercent = controller.getProgress() * 100 / Math.max(1, controller.getProcessTicks());
-                player.displayClientMessage(Component.literal(
-                        "Coking Progress: " + progressPercent + "%"), false);
-            }
-
-            BlockEntity fluidEntity = level.getBlockEntity(getFluidOutputBusPos(pos, front));
-            if (fluidEntity instanceof ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus) {
-                String fluidName = fluidOutputBus.getStoredFluid().isEmpty()
-                        ? "Empty"
-                        : fluidOutputBus.getStoredFluid().getDisplayName().getString();
-                player.displayClientMessage(Component.literal(
-                        "Fluid Output: " + fluidName + " (" + fluidOutputBus.getFluidAmount() + " / " +
-                                fluidOutputBus.getCapacity() + " mB)"), false);
-            }
-        }
-
-        return InteractionResult.CONSUME;
+        MultiblockAutoBuilder.openScreen(player, level.getBlockEntity(pos));
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     public static boolean isStructureValid(Level level, BlockPos controllerPos, Direction front) {
@@ -125,28 +110,9 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
     }
 
     public static void updateFrameFormedStates(Level level, BlockPos controllerPos, Direction front, boolean formed) {
-        if (level.isClientSide()) {
-            return;
-        }
-
-        for (int y = MIN_Y; y <= MAX_Y; y++) {
-            for (int z = MIN_Z; z <= MAX_Z; z++) {
-                for (int x = MIN_X; x <= MAX_X; x++) {
-                    if (isControllerPosition(x, y, z)) {
-                        continue;
-                    }
-
-                    BlockPos checkPos = localToWorld(controllerPos, front, x, y, z);
-                    BlockState checkState = level.getBlockState(checkPos);
-                    if (!checkState.hasProperty(CokeOvenFrameBlock.FORMED)) {
-                        continue;
-                    }
-
-                    if (checkState.getValue(CokeOvenFrameBlock.FORMED) != formed) {
-                        level.setBlock(checkPos, checkState.setValue(CokeOvenFrameBlock.FORMED, formed), Block.UPDATE_CLIENTS);
-                    }
-                }
-            }
+        MachineLayout layout = MachineLayouts.get(ModBlocks.COKE_OVEN_CONTROLLER.get());
+        if (layout != null) {
+            layout.updateFormedStates(level, controllerPos, front, formed);
         }
     }
 
@@ -163,85 +129,14 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
     }
 
     public static String validateMultiblock(Level level, BlockPos controllerPos, Direction front) {
-        for (int y = MIN_Y; y <= MAX_Y; y++) {
-            for (int z = MIN_Z; z <= MAX_Z; z++) {
-                for (int x = MIN_X; x <= MAX_X; x++) {
-                    if (isControllerPosition(x, y, z)) {
-                        continue;
-                    }
-
-                    Block expectedBlock = getExpectedBlock(x, y, z);
-                    if (!matches(level, controllerPos, front, x, y, z, expectedBlock)) {
-                        return getMissingMessageForExpectedBlock(expectedBlock);
-                    }
-                }
-            }
-        }
-
-        return "message.tech_revised.coke_oven.formed";
+        MachineLayout layout = MachineLayouts.get(ModBlocks.COKE_OVEN_CONTROLLER.get());
+        return layout == null ? "message.tech_revised.coke_oven.incomplete" : layout.validate(level, controllerPos, front);
     }
 
-    private static InteractionResult tryAutoBuildWithConfigurator(Level level, BlockPos controllerPos, Direction front, Player player) {
-        Map<Item, Integer> requiredItems = new LinkedHashMap<>();
-
-        for (int y = MIN_Y; y <= MAX_Y; y++) {
-            for (int z = MIN_Z; z <= MAX_Z; z++) {
-                for (int x = MIN_X; x <= MAX_X; x++) {
-                    if (isControllerPosition(x, y, z)) {
-                        continue;
-                    }
-
-                    Block expectedBlock = getExpectedBlock(x, y, z);
-                    BlockPos targetPos = localToWorld(controllerPos, front, x, y, z);
-                    BlockState currentState = level.getBlockState(targetPos);
-
-                    if (currentState.is(expectedBlock)) {
-                        continue;
-                    }
-                    if (!currentState.canBeReplaced()) {
-                        player.displayClientMessage(Component.translatable(
-                                "message.tech_revised.multiblock.autoconfig_blocked",
-                                targetPos.getX(), targetPos.getY(), targetPos.getZ()), true);
-                        return InteractionResult.CONSUME;
-                    }
-
-                    requiredItems.merge(expectedBlock.asItem(), 1, Integer::sum);
-                }
-            }
-        }
-
-        if (!player.getAbilities().instabuild) {
-            for (Map.Entry<Item, Integer> entry : requiredItems.entrySet()) {
-                int available = countItemInInventory(player, entry.getKey());
-                if (available < entry.getValue()) {
-                    player.displayClientMessage(Component.translatable(
-                            "message.tech_revised.multiblock.autoconfig_missing",
-                            entry.getValue() - available,
-                            entry.getKey().getDescription()), true);
-                    return InteractionResult.CONSUME;
-                }
-            }
-
-            for (Map.Entry<Item, Integer> entry : requiredItems.entrySet()) {
-                consumeItemFromInventory(player, entry.getKey(), entry.getValue());
-            }
-        }
-
-        for (int y = MIN_Y; y <= MAX_Y; y++) {
-            for (int z = MIN_Z; z <= MAX_Z; z++) {
-                for (int x = MIN_X; x <= MAX_X; x++) {
-                    if (isControllerPosition(x, y, z)) {
-                        continue;
-                    }
-
-                    Block expectedBlock = getExpectedBlock(x, y, z);
-                    BlockPos targetPos = localToWorld(controllerPos, front, x, y, z);
-                    BlockState currentState = level.getBlockState(targetPos);
-                    if (!currentState.is(expectedBlock) && currentState.canBeReplaced()) {
-                        level.setBlock(targetPos, expectedBlock.defaultBlockState(), Block.UPDATE_ALL);
-                    }
-                }
-            }
+    private static net.minecraft.world.ItemInteractionResult tryAutoBuildWithConfigurator(Level level, BlockPos controllerPos, Direction front, Player player) {
+        MachineLayout layout = MachineLayouts.get(ModBlocks.COKE_OVEN_CONTROLLER.get());
+        if (layout == null || !MultiblockAutoBuilder.tryBuild(level, player, layout.placements(controllerPos, front))) {
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
 
         boolean formed = isStructureValid(level, controllerPos, front);
@@ -250,38 +145,8 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
                 formed
                         ? "message.tech_revised.multiblock.autoconfig_success"
                         : "message.tech_revised.multiblock.autoconfig_incomplete"), true);
-        return InteractionResult.CONSUME;
-    }
-
-    private static int countItemInInventory(Player player, Item item) {
-        int count = 0;
-        Inventory inventory = player.getInventory();
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            ItemStack stack = inventory.getItem(i);
-            if (stack.is(item)) {
-                count += stack.getCount();
-            }
-        }
-        return count;
-    }
-
-    private static void consumeItemFromInventory(Player player, Item item, int amount) {
-        Inventory inventory = player.getInventory();
-        int remaining = amount;
-        for (int i = 0; i < inventory.getContainerSize() && remaining > 0; i++) {
-            ItemStack stack = inventory.getItem(i);
-            if (!stack.is(item)) {
-                continue;
-            }
-
-            int extracted = Math.min(remaining, stack.getCount());
-            stack.shrink(extracted);
-            remaining -= extracted;
-            if (stack.isEmpty()) {
-                inventory.setItem(i, ItemStack.EMPTY);
-            }
-        }
-        inventory.setChanged();
+        MultiblockAutoBuilder.openScreen(player, level.getBlockEntity(controllerPos));
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     private static boolean matches(Level level, BlockPos controllerPos, Direction front,
@@ -328,7 +193,7 @@ public class CokeOvenControllerBlock extends BaseEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return com.neofast.tech_revised.multiblock.MultiblockRender.renderShape(state);
     }
 
     @Nullable

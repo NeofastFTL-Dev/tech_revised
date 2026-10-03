@@ -2,7 +2,18 @@
 import json
 import os
 import struct
+import sys
 import zlib
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from industrial_style import (  # noqa: E402
+    CYAN,
+    MAGENTA,
+    machine_front,
+    machine_front_on,
+    machine_side,
+    machine_top,
+)
 
 ROOT = os.path.join("src", "main", "resources", "assets", "tech_revised")
 ITEM_TEX = os.path.join(ROOT, "textures", "item")
@@ -234,23 +245,25 @@ def coke():
 
 def electrode():
     p = solid(px(0, 0, 0, 0))
-    # angled graphite rod
     for i in range(12):
         x, y = 3 + i // 2, 2 + i
         setp(p, x, y, px(40, 40, 45))
         setp(p, x + 1, y, px(70, 70, 78))
         setp(p, x + 2, y, px(35, 35, 40))
     rect(p, 2, 1, 5, 3, px(90, 90, 100))
+    setp(p, 4, 2, CYAN)
+    setp(p, 13, 13, MAGENTA)
     return p
 
 
 def configurator():
     p = solid(px(0, 0, 0, 0))
-    rect(p, 3, 2, 12, 13, px(50, 55, 65))
-    rect(p, 4, 3, 11, 9, px(30, 120, 180))
-    hline(p, 4, 11, 5, px(80, 200, 255))
-    rect(p, 5, 10, 7, 12, px(40, 200, 80))
-    rect(p, 9, 10, 11, 12, px(200, 60, 60))
+    rect(p, 3, 2, 12, 13, px(70, 42, 28))
+    rect(p, 4, 3, 11, 9, px(20, 30, 40))
+    hline(p, 4, 11, 5, CYAN)
+    hline(p, 4, 11, 7, MAGENTA)
+    rect(p, 5, 10, 7, 12, CYAN)
+    rect(p, 9, 10, 11, 12, MAGENTA)
     return p
 
 
@@ -312,125 +325,6 @@ for name in ("steel_nugget", "stainless_steel_nugget", "chromite_nugget", "ferro
         f.write("\n")
 
 print(f"Items: {len(ITEMS)}")
-
-# ---------- Shared machine steel ----------
-STEEL = px(96, 96, 104)
-STEEL_DK = px(70, 70, 78)
-STEEL_LT = px(130, 130, 140)
-
-
-def machine_side():
-    p = solid(STEEL)
-    for y in range(16):
-        for x in range(16):
-            if x in (0, 15) or y in (0, 15):
-                p[y * 16 + x] = STEEL_DK
-            elif (x + y) % 4 == 0:
-                p[y * 16 + x] = STEEL_LT
-    for cx, cy in ((2, 2), (13, 2), (2, 13), (13, 13)):
-        setp(p, cx, cy, STEEL_LT)
-    return p
-
-
-def machine_top():
-    p = solid(STEEL_DK)
-    rect(p, 2, 2, 13, 13, STEEL)
-    rect(p, 5, 5, 10, 10, px(40, 40, 48))
-    return p
-
-
-def machine_front(accent, symbol="default"):
-    p = machine_side()
-    rect(p, 3, 3, 12, 12, px(40, 44, 52))
-    rect(p, 4, 4, 11, 11, accent)
-    setp(p, 12, 3, px(40, 220, 80))
-    setp(p, 13, 3, px(40, 220, 80))
-    if symbol == "screen":
-        rect(p, 5, 5, 10, 9, px(30, 80, 120))
-        hline(p, 5, 10, 6, px(80, 200, 255))
-    elif symbol == "nozzle":
-        rect(p, 7, 8, 8, 12, STEEL_LT)
-        rect(p, 6, 12, 9, 13, accent)
-    elif symbol == "tank":
-        rect(p, 5, 5, 10, 11, px(accent[0] // 2, accent[1] // 2, accent[2] // 2))
-        hline(p, 5, 10, 8, px(200, 200, 220, 120))
-    elif symbol == "drill":
-        rect(p, 7, 4, 8, 11, STEEL_LT)
-        setp(p, 7, 12, px(20, 20, 20))
-        setp(p, 8, 12, px(20, 20, 20))
-    elif symbol == "oven":
-        rect(p, 5, 6, 10, 11, px(20, 20, 24))
-        for x in range(5, 11):
-            setp(p, x, 8, px(255, 120, 40))
-    elif symbol == "mixer":
-        rect(p, 5, 5, 10, 10, shade(accent, -40))
-        for a in range(4, 12):
-            setp(p, a, a, STEEL_LT)
-            setp(p, a, 15 - a, STEEL_LT)
-    elif symbol == "loom":
-        for x in range(4, 12, 2):
-            vline(p, x, 4, 11, STEEL_LT)
-        hline(p, 4, 11, 7, accent)
-    elif symbol == "winder":
-        rect(p, 5, 5, 10, 10, STEEL_DK)
-        for y in range(6, 10):
-            hline(p, 6, 9, y, accent)
-    elif symbol == "controller":
-        rect(p, 5, 4, 10, 8, px(20, 30, 40))
-        hline(p, 5, 10, 5, px(80, 220, 255))
-        setp(p, 6, 10, px(40, 220, 80))
-        setp(p, 8, 10, px(220, 60, 60))
-        setp(p, 10, 10, px(220, 180, 40))
-    elif symbol == "heater":
-        rect(p, 5, 5, 10, 11, px(30, 20, 15))
-        for y in range(6, 11):
-            hline(p, 6, 9, y, px(255, 80 + y * 10, 20))
-    elif symbol == "hatch":
-        rect(p, 4, 4, 11, 11, STEEL_DK)
-        rect(p, 6, 6, 9, 9, accent)
-    elif symbol == "bus_in":
-        rect(p, 5, 5, 10, 10, px(40, 80, 40))
-        hline(p, 6, 9, 7, px(80, 220, 80))
-        hline(p, 6, 9, 8, px(80, 220, 80))
-    elif symbol == "bus_out":
-        rect(p, 5, 5, 10, 10, px(80, 40, 40))
-        hline(p, 6, 9, 7, px(220, 80, 80))
-        hline(p, 6, 9, 8, px(220, 80, 80))
-    elif symbol == "fluid":
-        rect(p, 5, 5, 10, 11, px(30, 60, 100))
-        hline(p, 5, 10, 9, px(80, 160, 220))
-    elif symbol == "energy":
-        rect(p, 5, 5, 10, 10, px(40, 30, 10))
-        vline(p, 7, 6, 9, px(255, 220, 40))
-        vline(p, 8, 6, 9, px(255, 220, 40))
-    elif symbol == "frame":
-        rect(p, 2, 2, 13, 13, STEEL_DK)
-        rect(p, 4, 4, 11, 11, px(0, 0, 0, 0))
-        for y in range(4, 12):
-            for x in range(4, 12):
-                p[y * 16 + x] = px(0, 0, 0, 0) if (x + y) % 2 == 0 else STEEL
-    elif symbol == "vm":
-        rect(p, 3, 3, 12, 10, px(20, 30, 50))
-        rect(p, 4, 4, 11, 9, px(40, 90, 160))
-        hline(p, 4, 11, 6, px(100, 200, 255))
-        rect(p, 5, 11, 10, 13, STEEL)
-    elif symbol == "chopper":
-        rect(p, 4, 6, 11, 9, STEEL_LT)
-        for x in range(4, 12, 2):
-            setp(p, x, 7, accent)
-    return p
-
-
-def machine_front_on(accent, symbol="default"):
-    p = machine_front(accent, symbol)
-    setp(p, 12, 3, px(180, 255, 180))
-    setp(p, 13, 3, px(180, 255, 180))
-    setp(p, 12, 4, px(80, 255, 120))
-    for i in range(3, 13):
-        r, g, b, a = p[3 * 16 + i]
-        p[3 * 16 + i] = px(min(255, r + 30), min(255, g + 40), min(255, b + 20))
-    return p
-
 
 write_png(os.path.join(BLOCK_TEX, "machine_side.png"), machine_side())
 write_png(os.path.join(BLOCK_TEX, "machine_top.png"), machine_top())

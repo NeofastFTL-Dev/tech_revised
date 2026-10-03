@@ -64,6 +64,7 @@ public class Windows7VmMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(ContainerLevelAccess.create(level, blockPos), player, ModBlocks.WINDOWS_7_VM_BLOCK.get());
+        return stillValid(ContainerLevelAccess.create(level, blockPos), player, ModBlocks.WINDOWS_7_VM_BLOCK.get())
+                || stillValid(ContainerLevelAccess.create(level, blockPos), player, ModBlocks.TESTED_MONITOR.get());
     }
 }

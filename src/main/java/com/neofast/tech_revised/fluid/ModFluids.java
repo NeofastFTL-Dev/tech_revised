@@ -21,37 +21,41 @@ public class ModFluids {
             DeferredRegister.create(ForgeRegistries.FLUIDS, TechRevised.MOD_ID);
 
     private static final ResourceLocation HEAVY_CRUDE_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation HEAVY_CRUDE_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     private static final ResourceLocation CREOSOTE_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation CREOSOTE_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     private static final ResourceLocation OXYGEN_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation OXYGEN_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     private static final ResourceLocation HYDROGEN_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation HYDROGEN_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     private static final ResourceLocation LIQUID_GLASS_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation LIQUID_GLASS_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     private static final ResourceLocation SODIUM_CARBONATE_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation SODIUM_CARBONATE_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     private static final ResourceLocation CUPRIC_CHLORIDE_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation CUPRIC_CHLORIDE_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
     private static final ResourceLocation SODIUM_HYDROXIDE_STILL_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_still");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
     private static final ResourceLocation SODIUM_HYDROXIDE_FLOWING_TEXTURE =
-            new ResourceLocation("minecraft", "block/water_flow");
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
+    private static final ResourceLocation WATER_STILL =
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_still");
+    private static final ResourceLocation WATER_FLOW =
+            ResourceLocation.fromNamespaceAndPath("minecraft", "block/water_flow");
 
     public static final RegistryObject<FluidType> HEAVY_CRUDE_OIL_TYPE = FLUID_TYPES.register("heavy_crude_oil_type",
             () -> new BaseFluidType(HEAVY_CRUDE_STILL_TEXTURE, HEAVY_CRUDE_FLOWING_TEXTURE, 0xFF2C1F17,
@@ -162,6 +166,50 @@ public class ModFluids {
     public static final RegistryObject<FlowingFluid> FLOWING_SODIUM_HYDROXIDE_SOLUTION = FLUIDS.register("flowing_sodium_hydroxide_solution",
             () -> new ForgeFlowingFluid.Flowing(SodiumHydroxidePropertiesHolder.PROPERTIES));
 
+    public static final RegistryObject<FluidType> NAPHTHA_TYPE = FLUID_TYPES.register("naphtha_type",
+            () -> new BaseFluidType(WATER_STILL, WATER_FLOW, 0xFFD2B46A,
+                    FluidType.Properties.create()
+                            .density(750)
+                            .viscosity(1200)
+                            .descriptionId("fluid.tech_revised.naphtha")));
+    public static final RegistryObject<FlowingFluid> NAPHTHA = FLUIDS.register("naphtha",
+            () -> new ForgeFlowingFluid.Source(NaphthaPropertiesHolder.PROPERTIES));
+    public static final RegistryObject<FlowingFluid> FLOWING_NAPHTHA = FLUIDS.register("flowing_naphtha",
+            () -> new ForgeFlowingFluid.Flowing(NaphthaPropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FluidType> ETHYLENE_TYPE = FLUID_TYPES.register("ethylene_type",
+            () -> new BaseFluidType(WATER_STILL, WATER_FLOW, 0xFFE8F4FF,
+                    FluidType.Properties.create()
+                            .density(200)
+                            .viscosity(400)
+                            .descriptionId("fluid.tech_revised.ethylene")));
+    public static final RegistryObject<FlowingFluid> ETHYLENE = FLUIDS.register("ethylene",
+            () -> new ForgeFlowingFluid.Source(EthylenePropertiesHolder.PROPERTIES));
+    public static final RegistryObject<FlowingFluid> FLOWING_ETHYLENE = FLUIDS.register("flowing_ethylene",
+            () -> new ForgeFlowingFluid.Flowing(EthylenePropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FluidType> CHLORINE_TYPE = FLUID_TYPES.register("chlorine_type",
+            () -> new BaseFluidType(WATER_STILL, WATER_FLOW, 0xFFC8F060,
+                    FluidType.Properties.create()
+                            .density(400)
+                            .viscosity(500)
+                            .descriptionId("fluid.tech_revised.chlorine")));
+    public static final RegistryObject<FlowingFluid> CHLORINE = FLUIDS.register("chlorine",
+            () -> new ForgeFlowingFluid.Source(ChlorinePropertiesHolder.PROPERTIES));
+    public static final RegistryObject<FlowingFluid> FLOWING_CHLORINE = FLUIDS.register("flowing_chlorine",
+            () -> new ForgeFlowingFluid.Flowing(ChlorinePropertiesHolder.PROPERTIES));
+
+    public static final RegistryObject<FluidType> VINYL_CHLORIDE_TYPE = FLUID_TYPES.register("vinyl_chloride_type",
+            () -> new BaseFluidType(WATER_STILL, WATER_FLOW, 0xFFB8DCC8,
+                    FluidType.Properties.create()
+                            .density(900)
+                            .viscosity(800)
+                            .descriptionId("fluid.tech_revised.vinyl_chloride")));
+    public static final RegistryObject<FlowingFluid> VINYL_CHLORIDE = FLUIDS.register("vinyl_chloride",
+            () -> new ForgeFlowingFluid.Source(VinylChloridePropertiesHolder.PROPERTIES));
+    public static final RegistryObject<FlowingFluid> FLOWING_VINYL_CHLORIDE = FLUIDS.register("flowing_vinyl_chloride",
+            () -> new ForgeFlowingFluid.Flowing(VinylChloridePropertiesHolder.PROPERTIES));
+
     private static final class HeavyCrudeOilPropertiesHolder {
         private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
                 HEAVY_CRUDE_OIL_TYPE, HEAVY_CRUDE_OIL, FLOWING_HEAVY_CRUDE_OIL)
@@ -237,6 +285,46 @@ public class ModFluids {
                 SODIUM_HYDROXIDE_SOLUTION_TYPE, SODIUM_HYDROXIDE_SOLUTION, FLOWING_SODIUM_HYDROXIDE_SOLUTION)
                 .bucket(ModItems.SODIUM_HYDROXIDE_SOLUTION_BUCKET)
                 .block(ModBlocks.SODIUM_HYDROXIDE_SOLUTION_BLOCK)
+                .slopeFindDistance(4)
+                .levelDecreasePerBlock(1)
+                .tickRate(10);
+    }
+
+    private static final class NaphthaPropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                NAPHTHA_TYPE, NAPHTHA, FLOWING_NAPHTHA)
+                .bucket(ModItems.NAPHTHA_BUCKET)
+                .block(ModBlocks.NAPHTHA_BLOCK)
+                .slopeFindDistance(4)
+                .levelDecreasePerBlock(1)
+                .tickRate(10);
+    }
+
+    private static final class EthylenePropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                ETHYLENE_TYPE, ETHYLENE, FLOWING_ETHYLENE)
+                .bucket(ModItems.ETHYLENE_BUCKET)
+                .block(ModBlocks.ETHYLENE_BLOCK)
+                .slopeFindDistance(4)
+                .levelDecreasePerBlock(1)
+                .tickRate(8);
+    }
+
+    private static final class ChlorinePropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                CHLORINE_TYPE, CHLORINE, FLOWING_CHLORINE)
+                .bucket(ModItems.CHLORINE_BUCKET)
+                .block(ModBlocks.CHLORINE_BLOCK)
+                .slopeFindDistance(4)
+                .levelDecreasePerBlock(1)
+                .tickRate(8);
+    }
+
+    private static final class VinylChloridePropertiesHolder {
+        private static final ForgeFlowingFluid.Properties PROPERTIES = new ForgeFlowingFluid.Properties(
+                VINYL_CHLORIDE_TYPE, VINYL_CHLORIDE, FLOWING_VINYL_CHLORIDE)
+                .bucket(ModItems.VINYL_CHLORIDE_BUCKET)
+                .block(ModBlocks.VINYL_CHLORIDE_BLOCK)
                 .slopeFindDistance(4)
                 .levelDecreasePerBlock(1)
                 .tickRate(10);

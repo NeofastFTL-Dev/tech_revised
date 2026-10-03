@@ -2,8 +2,12 @@ package com.neofast.tech_revised.block.entity.custom;
 
 import com.neofast.tech_revised.block.custom.ElectricArcFurnaceControllerBlock;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockControllerAccess;
+import com.neofast.tech_revised.multiblock.MultiblockRender;
 import com.neofast.tech_revised.recipe.ElectricArcFurnaceRecipe;
-import com.neofast.tech_revised.screen.ElectricArcFurnaceControllerMenu;
+import com.neofast.tech_revised.screen.MultiblockControllerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +25,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -35,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity implements MenuProvider {
+public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity implements MenuProvider, MultiblockControllerAccess {
     private static final int PROCESS_TICKS = 100;
     private static final int ENERGY_CAPACITY = 30000;
     private static final int ENERGY_PER_TICK = 40;
@@ -80,43 +85,41 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
         super(ModBlockEntities.ELECTRIC_ARC_FURNACE_CONTROLLER.get(), worldPosition, blockState);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        public AABB getRenderBoundingBox() {
+        return MultiblockRender.bounds(this);
+    }
+
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ENERGY) {
             return lazyEnergy.cast();
         }
         if (cap == ForgeCapabilities.FLUID_HANDLER) {
             return lazyWaterHandler.cast();
         }
-        return super.getCapability(cap, side);
+        return net.minecraftforge.common.util.LazyOptional.empty();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+        public void onLoad() {
         lazyEnergy = LazyOptional.of(() -> energyStorage);
         lazyWaterHandler = LazyOptional.of(() -> waterTank);
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
+        public void invalidateCaps() {
         lazyEnergy.invalidate();
         lazyWaterHandler.invalidate();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.putInt("eaf_progress", progress);
         tag.put("eaf_energy", energyStorage.serializeNBT());
         tag.put("eaf_water", waterTank.writeToNBT(new CompoundTag()));
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         progress = tag.getInt("eaf_progress");
         if (tag.contains("eaf_energy")) {
             energyStorage.deserializeNBT(tag.get("eaf_energy"));
@@ -139,17 +142,19 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
             return;
         }
 
-        BlockEntity inputEntity = level.getBlockEntity(ElectricArcFurnaceControllerBlock.getInputBusPos(pos, front));
-        BlockEntity outputEntity = level.getBlockEntity(ElectricArcFurnaceControllerBlock.getOutputBusPos(pos, front));
-        BlockEntity fluidInputEntity = level.getBlockEntity(ElectricArcFurnaceControllerBlock.getFluidInputBusPos(pos, front));
-        BlockEntity fluidOutputEntity = level.getBlockEntity(ElectricArcFurnaceControllerBlock.getFluidOutputBusPos(pos, front));
-        BlockEntity energyInputEntity = level.getBlockEntity(ElectricArcFurnaceControllerBlock.getEnergyInputHatchPos(pos, front));
+        MachineLayout layout = MachineLayouts.get(state.getBlock());
+        ElectricArcFurnaceInputBusBlockEntity inputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceInputBusBlockEntity.class);
+        ElectricArcFurnaceOutputBusBlockEntity outputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceOutputBusBlockEntity.class);
+        ElectricArcFurnaceFluidInputBusBlockEntity fluidInputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceFluidInputBusBlockEntity.class);
+        ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceFluidOutputBusBlockEntity.class);
+        ElectricArcFurnaceEnergyInputHatchBlockEntity energyInputHatch = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceEnergyInputHatchBlockEntity.class);
 
-        if (!(inputEntity instanceof ElectricArcFurnaceInputBusBlockEntity inputBus) ||
-                !(outputEntity instanceof ElectricArcFurnaceOutputBusBlockEntity outputBus) ||
-                !(fluidInputEntity instanceof ElectricArcFurnaceFluidInputBusBlockEntity fluidInputBus) ||
-                !(fluidOutputEntity instanceof ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus) ||
-                !(energyInputEntity instanceof ElectricArcFurnaceEnergyInputHatchBlockEntity energyInputHatch)) {
+        if (inputBus == null || outputBus == null || fluidInputBus == null || fluidOutputBus == null || energyInputHatch == null) {
             blockEntity.resetProgress();
             return;
         }
@@ -271,14 +276,14 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
     private static Optional<SmeltingRecipe> getSmeltingRecipe(Level level, ItemStack inputStack) {
         SimpleContainer inventory = new SimpleContainer(1);
         inventory.setItem(0, inputStack.copy());
-        return level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, inventory, level);
+        return level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new net.minecraft.world.item.crafting.SingleRecipeInput(inventory.getItem(0)), level).map(net.minecraft.world.item.crafting.RecipeHolder::value);
     }
 
     private static Optional<ElectricArcFurnaceRecipe> getElectricArcFurnaceRecipe(Level level, ItemStack primaryInput, ItemStack secondaryInput) {
         SimpleContainer inventory = new SimpleContainer(2);
         inventory.setItem(0, primaryInput.copy());
         inventory.setItem(1, secondaryInput.copy());
-        return level.getRecipeManager().getRecipeFor(ElectricArcFurnaceRecipe.Type.INSTANCE, inventory, level);
+        return level.getRecipeManager().getRecipeFor(ElectricArcFurnaceRecipe.Type.INSTANCE, new com.neofast.tech_revised.recipe.ContainerInput(inventory), level).map(net.minecraft.world.item.crafting.RecipeHolder::value);
     }
 
     private boolean hasRequiredCoolingWater(int waterPerOperation) {
@@ -333,6 +338,21 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
         return total;
     }
 
+    @Override
+    public int getAuxiliaryAmount() {
+        return getCoolingWaterAmount();
+    }
+
+    @Override
+    public int getAuxiliaryCapacity() {
+        return getCoolingWaterCapacity();
+    }
+
+    @Override
+    public String getAuxiliaryLabel() {
+        return "Cooling Water";
+    }
+
     public int getCoolingWaterCapacity() {
         int total = waterTank.getCapacity();
         ElectricArcFurnaceFluidInputBusBlockEntity fluidInputBus = getConnectedFluidInputBus();
@@ -354,12 +374,9 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
         }
 
         Direction front = state.getValue(ElectricArcFurnaceControllerBlock.FACING);
-        BlockEntity fluidInputEntity = level.getBlockEntity(
-                ElectricArcFurnaceControllerBlock.getFluidInputBusPos(worldPosition, front));
-        if (fluidInputEntity instanceof ElectricArcFurnaceFluidInputBusBlockEntity fluidInputBus) {
-            return fluidInputBus;
-        }
-        return null;
+        MachineLayout layout = MachineLayouts.get(state.getBlock());
+        return layout == null ? null
+                : layout.findBlockEntity(level, worldPosition, front, ElectricArcFurnaceFluidInputBusBlockEntity.class);
     }
 
     public boolean tryInsertWaterBucket(Player player, InteractionHand hand) {
@@ -403,6 +420,6 @@ public class ElectricArcFurnaceControllerBlockEntity extends BlockEntity impleme
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new ElectricArcFurnaceControllerMenu(containerId, inventory, this);
+        return new MultiblockControllerMenu(containerId, inventory, this);
     }
 }

@@ -18,21 +18,23 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class ElectricArcFurnaceEnergyInputHatchBlock extends BaseEntityBlock {
+public class ElectricArcFurnaceEnergyInputHatchBlock extends ModBaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
     public ElectricArcFurnaceEnergyInputHatchBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        super(properties.noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FORMED, false));
     }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return state.getValue(FORMED) ? RenderShape.INVISIBLE : RenderShape.MODEL;
     }
 
     @Nullable
@@ -52,17 +54,17 @@ public class ElectricArcFurnaceEnergyInputHatchBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof ElectricArcFurnaceEnergyInputHatchBlockEntity energyHatch) {
-            player.displayClientMessage(Component.literal("Energy: " + energyHatch.getEnergyStored() + " / " +
-                    energyHatch.getMaxEnergyStored() + " FE"), true);
+            player.displayClientMessage(Component.translatable("gui.tech_revised.energy",
+                    energyHatch.getEnergyStored(), energyHatch.getMaxEnergyStored()), true);
         }
-        return InteractionResult.CONSUME;
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     @Nullable
@@ -73,6 +75,6 @@ public class ElectricArcFurnaceEnergyInputHatchBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, FORMED);
     }
 }

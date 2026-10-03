@@ -2,21 +2,33 @@ package com.neofast.tech_revised.block.entity.custom;
 
 import com.neofast.tech_revised.block.custom.CokeOvenControllerBlock;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
+import com.neofast.tech_revised.multiblock.MultiblockControllerAccess;
+import com.neofast.tech_revised.multiblock.MultiblockRender;
 import com.neofast.tech_revised.recipe.CokeOvenRecipe;
+import com.neofast.tech_revised.screen.MultiblockControllerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.Optional;
 
-public class CokeOvenControllerBlockEntity extends BlockEntity {
+public class CokeOvenControllerBlockEntity extends BlockEntity implements MenuProvider, MultiblockControllerAccess {
     private static final int DEFAULT_PROCESS_TICKS = 200;
 
     private int progress = 0;
@@ -25,15 +37,19 @@ public class CokeOvenControllerBlockEntity extends BlockEntity {
         super(ModBlockEntities.COKE_OVEN_CONTROLLER.get(), worldPosition, blockState);
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag tag) {
-        tag.putInt("coke_oven_progress", progress);
-        super.saveAdditional(tag);
+        public AABB getRenderBoundingBox() {
+        return MultiblockRender.bounds(this);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        tag.putInt("coke_oven_progress", progress);
+        super.saveAdditional(tag, registries);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         progress = tag.getInt("coke_oven_progress");
     }
 
@@ -50,13 +66,15 @@ public class CokeOvenControllerBlockEntity extends BlockEntity {
             return;
         }
 
-        BlockEntity inputEntity = level.getBlockEntity(CokeOvenControllerBlock.getInputBusPos(pos, front));
-        BlockEntity outputEntity = level.getBlockEntity(CokeOvenControllerBlock.getOutputBusPos(pos, front));
-        BlockEntity fluidOutputEntity = level.getBlockEntity(CokeOvenControllerBlock.getFluidOutputBusPos(pos, front));
+        MachineLayout layout = MachineLayouts.get(state.getBlock());
+        ElectricArcFurnaceInputBusBlockEntity inputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceInputBusBlockEntity.class);
+        ElectricArcFurnaceOutputBusBlockEntity outputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceOutputBusBlockEntity.class);
+        ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus = layout == null ? null
+                : layout.findBlockEntity(level, pos, front, ElectricArcFurnaceFluidOutputBusBlockEntity.class);
 
-        if (!(inputEntity instanceof ElectricArcFurnaceInputBusBlockEntity inputBus) ||
-                !(outputEntity instanceof ElectricArcFurnaceOutputBusBlockEntity outputBus) ||
-                !(fluidOutputEntity instanceof ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus)) {
+        if (inputBus == null || outputBus == null || fluidOutputBus == null) {
             blockEntity.resetProgress();
             return;
         }
@@ -109,7 +127,7 @@ public class CokeOvenControllerBlockEntity extends BlockEntity {
         SimpleContainer inventory = new SimpleContainer(2);
         inventory.setItem(0, inputBus.getPrimaryInputStack().copy());
         inventory.setItem(1, inputBus.getSecondaryInputStack().copy());
-        return level.getRecipeManager().getRecipeFor(CokeOvenRecipe.Type.INSTANCE, inventory, level);
+        return level.getRecipeManager().getRecipeFor(CokeOvenRecipe.Type.INSTANCE, new com.neofast.tech_revised.recipe.ContainerInput(inventory), level).map(net.minecraft.world.item.crafting.RecipeHolder::value);
     }
 
     private void resetProgress() {
@@ -125,5 +143,28 @@ public class CokeOvenControllerBlockEntity extends BlockEntity {
 
     public int getProcessTicks() {
         return DEFAULT_PROCESS_TICKS;
+    }
+
+    @Override
+    public boolean isStructureFormed() {
+        if (level == null) {
+            return false;
+        }
+        BlockState state = getBlockState();
+        if (!state.hasProperty(CokeOvenControllerBlock.FACING)) {
+            return false;
+        }
+        return CokeOvenControllerBlock.isStructureValid(level, worldPosition, state.getValue(CokeOvenControllerBlock.FACING));
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.tech_revised.coke_oven_controller");
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new MultiblockControllerMenu(containerId, inventory, this);
     }
 }

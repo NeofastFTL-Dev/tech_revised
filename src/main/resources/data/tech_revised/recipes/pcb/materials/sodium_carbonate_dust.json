@@ -3,12 +3,16 @@
   "category": "misc",
   "group": "pcb_chemicals",
   "ingredients": [
-    { "item": "tech_revised:soda_ash" },
-    { "item": "minecraft:sand" }
+    {
+      "item": "tech_revised:soda_ash"
+    },
+    {
+      "item": "minecraft:sand"
+    }
   ],
   "result": {
-    "item": "tech_revised:sodium_carbonate_dust",
-    "count": 2
+    "count": 2,
+    "id": "tech_revised:sodium_carbonate_dust"
   },
   "show_notification": true
 }

@@ -3,7 +3,7 @@
   "category": "misc",
   "pattern": [
     "SDS",
-    "SRS",
+    "BRS",
     "SPS"
   ],
   "key": {
@@ -18,9 +18,12 @@
     },
     "P": {
       "item": "minecraft:piston"
+    },
+    "B": {
+      "item": "tech_revised:platinum_alloy_bushing_plate"
     }
   },
   "result": {
-    "item": "tech_revised:xray_alignment_drill"
+    "id": "tech_revised:xray_alignment_drill"
   }
 }

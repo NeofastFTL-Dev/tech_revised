@@ -1,6 +1,7 @@
 package com.neofast.tech_revised.block.custom;
 
 import com.neofast.tech_revised.block.entity.custom.MultiInputIndustrialMachineBlockEntity;
+import com.neofast.tech_revised.multiblock.MachineMultiblockHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,23 +29,25 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class MultiInputIndustrialMachineBlock extends BaseEntityBlock {
+public class MultiInputIndustrialMachineBlock extends ModBaseEntityBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+    public static final BooleanProperty FORMED = BooleanProperty.create("formed");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private final Supplier<? extends BlockEntityType<?>> blockEntityType;
 
     public MultiInputIndustrialMachineBlock(Properties properties, Supplier<? extends BlockEntityType<?>> blockEntityType) {
-        super(properties);
+        super(properties.noOcclusion());
         this.blockEntityType = blockEntityType;
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(ACTIVE, false)
+                .setValue(FORMED, false)
                 .setValue(FACING, Direction.NORTH));
     }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return com.neofast.tech_revised.multiblock.MultiblockRender.renderShape(state);
     }
 
     @Nullable
@@ -64,20 +67,17 @@ public class MultiInputIndustrialMachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof MultiInputIndustrialMachineBlockEntity machine)) {
-            return InteractionResult.PASS;
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        if (player instanceof ServerPlayer serverPlayer) {
-            NetworkHooks.openScreen(serverPlayer, machine, pos);
-        }
-        return InteractionResult.CONSUME;
+        return com.neofast.tech_revised.recipe.RecipeHelper.mapUse(MachineMultiblockHelper.handleUse(level, pos, player, hand, state.getValue(FACING), machine));
     }
 
     @Override
@@ -108,6 +108,6 @@ public class MultiInputIndustrialMachineBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(ACTIVE, FACING);
+        builder.add(ACTIVE, FORMED, FACING);
     }
 }

@@ -18,7 +18,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class DrillingPlatformRecipe implements Recipe<Container> {
+public class DrillingPlatformRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final FluidStack outputFluid;
     private final int processTicks;
@@ -32,12 +32,12 @@ public class DrillingPlatformRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         return true;
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 
@@ -47,12 +47,11 @@ public class DrillingPlatformRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -93,26 +92,23 @@ public class DrillingPlatformRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<DrillingPlatformRecipe> {
-        @Override
-        public DrillingPlatformRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<DrillingPlatformRecipe> {
+                public DrillingPlatformRecipe fromJson(JsonObject json) {
             FluidStack outputFluid = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "result_fluid"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 80);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 70);
-            return new DrillingPlatformRecipe(recipeId, outputFluid, processTicks, energyPerTick);
+            return new DrillingPlatformRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), outputFluid, processTicks, energyPerTick);
         }
 
-        @Override
-        public DrillingPlatformRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            FluidStack outputFluid = buffer.readFluidStack();
+                public DrillingPlatformRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
+            FluidStack outputFluid = com.neofast.tech_revised.recipe.RecipeHelper.readFluidStack(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new DrillingPlatformRecipe(recipeId, outputFluid, processTicks, energyPerTick);
+            return new DrillingPlatformRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), outputFluid, processTicks, energyPerTick);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, DrillingPlatformRecipe recipe) {
-            buffer.writeFluidStack(recipe.outputFluid);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeFluidStack(buffer, recipe.outputFluid);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
         }
@@ -120,7 +116,7 @@ public class DrillingPlatformRecipe implements Recipe<Container> {
         private static FluidStack fluidStackFromJson(JsonObject json) {
             String fluidId = GsonHelper.getAsString(json, "fluid");
             int amount = GsonHelper.getAsInt(json, "amount");
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidId));
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(fluidId));
             if (fluid == null || fluid == Fluids.EMPTY) {
                 throw new JsonSyntaxException("Unknown fluid '" + fluidId + "'");
             }

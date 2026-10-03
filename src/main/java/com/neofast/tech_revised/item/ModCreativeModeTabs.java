@@ -15,17 +15,33 @@ public class ModCreativeModeTabs {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TechRevised.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> TECH_REVISED_TAB = CREATIVE_MODE_TABS.register("tech_revised_tab",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.STEEL_INGOT.get()))
+            () -> net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.STEEL_INGOT.get()))
                     .title(Component.translatable("creativetab.tech_revised_tab"))
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.GRAPHITE_DUST.get());
                         output.accept(ModBlocks.GRAPHITE_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_GRAPHITE_ORE.get());
+                        output.accept(ModBlocks.TIN_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_TIN_ORE.get());
+                        output.accept(ModItems.RAW_TIN.get());
+                        output.accept(ModItems.TIN_DUST.get());
+                        output.accept(ModItems.TIN_INGOT.get());
+                        output.accept(ModItems.TIN_NUGGET.get());
+                        output.accept(ModBlocks.TIN_BLOCK.get());
+                        output.accept(ModBlocks.NICKEL_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_NICKEL_ORE.get());
+                        output.accept(ModItems.RAW_NICKEL.get());
                         output.accept(ModItems.CHROMIUM_DUST.get());
                         output.accept(ModItems.NICKEL_DUST.get());
+                        output.accept(ModItems.NICKEL_INGOT.get());
+                        output.accept(ModItems.NICKEL_NUGGET.get());
+                        output.accept(ModBlocks.NICKEL_BLOCK.get());
                         output.accept(ModBlocks.CHROMITE_ORE.get());
+                        output.accept(ModBlocks.DEEPSLATE_CHROMITE_ORE.get());
+                        output.accept(ModBlocks.SOLID_FUEL_GENERATOR.get());
                         output.accept(ModItems.CARBON_CHUNK.get());
                         output.accept(ModBlocks.CRUSHER.get());
-                        output.accept(ModBlocks.WINDOWS_7_VM_BLOCK.get());
+                        output.accept(ModBlocks.TESTED_MONITOR.get());
                         output.accept(ModBlocks.STEEL_BLOCK.get());
                         output.accept(ModItems.STEEL_INGOT.get());
                         output.accept(ModItems.STEEL_NUGGET.get());
@@ -39,6 +55,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.FERROCHROMIUM_INGOT.get());
                         output.accept(ModItems.FERROCHROMIUM_NUGGET.get());
                         output.accept(ModItems.CONFIGURATOR.get());
+                        output.accept(ModItems.PC_SURVIVAL_MANUAL.get());
                         output.accept(ModBlocks.ELECTRIC_ARC_FURNACE_CONTROLLER.get());
                         output.accept(ModBlocks.TRANSPORT_FRAME.get());
                         output.accept(ModBlocks.ELECTRIC_ARC_FURNACE_INPUT_BUS.get());
@@ -158,6 +175,25 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.SPD_EEPROM.get());
                         output.accept(ModItems.UNPROGRAMMED_RAM_MODULE.get());
                         output.accept(ModItems.RAM_STICK.get());
+                        output.accept(ModItems.NAPHTHA_BUCKET.get());
+                        output.accept(ModItems.ETHYLENE_BUCKET.get());
+                        output.accept(ModItems.CHLORINE_BUCKET.get());
+                        output.accept(ModItems.VINYL_CHLORIDE_BUCKET.get());
+                        for (var item : ModItems.PC_ITEMS.values()) {
+                            output.accept(item.get());
+                        }
+                        for (var machine : ModBlocks.PC_PRODUCTION_MACHINES) {
+                            output.accept(machine.get());
+                        }
+                        output.accept(ModBlocks.TESTED_DESKTOP_TOWER.get());
+                        output.accept(ModBlocks.TESTED_KEYBOARD.get());
+                        output.accept(ModBlocks.TESTED_MOUSE.get());
+                        output.accept(ModBlocks.TESTED_HDMI_CABLE.get());
+                        output.accept(ModBlocks.TESTED_POWER_CABLE.get());
+                        output.accept(ModBlocks.TESTED_SPEAKER.get());
+                        output.accept(ModBlocks.TESTED_DESK.get());
+                        output.accept(ModBlocks.TESTED_CHAIR_SEAT.get());
+                        output.accept(ModBlocks.TESTED_CHAIR_BACKREST.get());
                     })
                     .build());
 

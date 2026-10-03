@@ -28,11 +28,12 @@ public class PcbMachineBlockEntity extends MultiInputIndustrialMachineBlockEntit
         }
 
         Block machine = hostBlock();
-        for (PcbRecipe recipe : level.getRecipeManager().getAllRecipesFor(ModRecipes.PcbRecipeType.INSTANCE)) {
+        for (var holder : level.getRecipeManager().getAllRecipesFor(ModRecipes.PcbRecipeType.INSTANCE)) {
+            PcbRecipe recipe = holder.value();
             if (!recipe.isAllowedOn(machine)) {
                 continue;
             }
-            if (!recipe.matches(inventory, level)) {
+            if (!recipe.matches(new com.neofast.tech_revised.recipe.ContainerInput(inventory), level)) {
                 continue;
             }
             return ResolvedRecipe.of(
@@ -40,7 +41,7 @@ public class PcbMachineBlockEntity extends MultiInputIndustrialMachineBlockEntit
                     recipe.getEnergyPerTick(),
                     recipe.getResultItem(level.registryAccess()),
                     recipe.getInputs(),
-                    inv -> recipe.assemble(inv, level.registryAccess())
+                    inv -> recipe.assemble(new com.neofast.tech_revised.recipe.ContainerInput(inv), level.registryAccess())
             );
         }
         return null;
@@ -53,7 +54,8 @@ public class PcbMachineBlockEntity extends MultiInputIndustrialMachineBlockEntit
         }
 
         Block machine = hostBlock();
-        for (PcbRecipe recipe : level.getRecipeManager().getAllRecipesFor(ModRecipes.PcbRecipeType.INSTANCE)) {
+        for (var holder : level.getRecipeManager().getAllRecipesFor(ModRecipes.PcbRecipeType.INSTANCE)) {
+            PcbRecipe recipe = holder.value();
             if (!recipe.isAllowedOn(machine)) {
                 continue;
             }

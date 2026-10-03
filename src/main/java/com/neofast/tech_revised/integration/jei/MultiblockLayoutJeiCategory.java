@@ -2,6 +2,7 @@ package com.neofast.tech_revised.integration.jei;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.neofast.tech_revised.TechRevised;
+import com.neofast.tech_revised.client.MultiblockPreviewRenderer;
 import com.neofast.tech_revised.item.ModItems;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -54,6 +55,8 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
     private static final int BTN_ALL_X = 150;
     private static final int BTN_W = 16;
     private static final int BTN_H = 12;
+    private static final int BTN_HOLO_X = 6;
+    private static final int BTN_HOLO_W = 40;
 
     // Zoom buttons sit on the preview panel (top-right)
     private static final int BTN_ZOOM_OUT_X = PREVIEW_X + PREVIEW_W - 34;
@@ -143,6 +146,7 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
             drawIsometric(guiGraphics, bp, layer, zoom, hovered);
             drawLayerControls(guiGraphics, font, bp, layer);
             drawZoomControls(guiGraphics, font, zoom);
+            drawHoloButton(guiGraphics);
 
             if (hovered != null) {
                 Component name = hovered.stack().getHoverName();
@@ -176,6 +180,12 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
                     && mouseY >= PREVIEW_Y && mouseY < PREVIEW_Y + PREVIEW_H;
 
             if (value == 0) { // left click
+                if (mouseX >= BTN_HOLO_X && mouseX < BTN_HOLO_X + BTN_HOLO_W
+                        && mouseY >= BTN_Y && mouseY < BTN_Y + BTN_H) {
+                    Minecraft.getInstance().setScreen(null);
+                    MultiblockPreviewRenderer.previewInFrontOfPlayer(bp);
+                    return true;
+                }
                 if (inBtn(mouseX, mouseY, BTN_PREV_X, BTN_Y)) {
                     cycleLayer(bp, -1);
                     return true;
@@ -244,6 +254,10 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
         if (bp == null) {
             tips.addAll(recipe.getNotes());
             return tips;
+        }
+        if (mouseX >= BTN_HOLO_X && mouseX < BTN_HOLO_X + BTN_HOLO_W
+                && mouseY >= BTN_Y && mouseY < BTN_Y + BTN_H) {
+            return List.of(Component.translatable("jei.tech_revised.layout.world_preview"));
         }
         if (inBtn(mouseX, mouseY, BTN_PREV_X, BTN_Y)) {
             return List.of(Component.translatable("jei.tech_revised.layout.layer_prev"));
@@ -339,6 +353,15 @@ public class MultiblockLayoutJeiCategory implements IRecipeCategory<MultiblockLa
 
     private static boolean inBtn(double mx, double my, int x, int y) {
         return mx >= x && mx < x + BTN_W && my >= y && my < y + BTN_H;
+    }
+
+    private void drawHoloButton(GuiGraphics g) {
+        fillRect(g, BTN_HOLO_X, BTN_Y, BTN_HOLO_X + BTN_HOLO_W, BTN_Y + BTN_H, 0xFF2A2A38);
+        fillRect(g, BTN_HOLO_X + 1, BTN_Y + 1, BTN_HOLO_X + BTN_HOLO_W - 1, BTN_Y + BTN_H - 1, 0xFF286878);
+        Font font = Minecraft.getInstance().font;
+        String text = Component.translatable("jei.tech_revised.layout.holo").getString();
+        int tw = font.width(text);
+        g.drawString(font, text, BTN_HOLO_X + (BTN_HOLO_W - tw) / 2, BTN_Y + 2, 0x28DCFF, false);
     }
 
     private void drawLayerControls(GuiGraphics g, Font font, MultiblockStructureBlueprint bp, int layer) {

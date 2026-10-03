@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class PcbRecipe implements Recipe<Container> {
+public class PcbRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final NonNullList<Ingredient> inputs;
     private final FluidStack inputFluid;
@@ -57,7 +57,7 @@ public class PcbRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         if (container.getContainerSize() < inputs.size()) return false;
         for (int i = 0; i < inputs.size(); i++) {
             if (!inputs.get(i).test(container.getItem(i))) return false;
@@ -92,12 +92,12 @@ public class PcbRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         validate(container);
         return result.copy();
     }
 
-    private void validate(Container container) {
+    private void validate(ContainerInput container) {
         if (id.getPath().contains("cladding")) {
             for (int i = 0; i < container.getContainerSize(); i++) {
                 ItemStack stack = container.getItem(i);
@@ -122,12 +122,11 @@ public class PcbRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -162,7 +161,7 @@ public class PcbRecipe implements Recipe<Container> {
         return energyPerTick;
     }
 
-    public static class Serializer implements RecipeSerializer<PcbRecipe> {
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<PcbRecipe> {
         private final Supplier<RecipeSerializer<?>> serializerSupplier;
         private final RecipeType<?> type;
 
@@ -171,16 +170,15 @@ public class PcbRecipe implements Recipe<Container> {
             this.type = type;
         }
 
-        @Override
-        public PcbRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+                public PcbRecipe fromJson(JsonObject json) {
             NonNullList<Ingredient> inputs = NonNullList.create();
             if (json.has("ingredients")) {
                 JsonArray jsonArray = GsonHelper.getAsJsonArray(json, "ingredients");
                 for (int i = 0; i < jsonArray.size(); i++) {
-                    inputs.add(Ingredient.fromJson(jsonArray.get(i)));
+                    inputs.add(com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(jsonArray.get(i)));
                 }
             } else if (json.has("ingredient")) {
-                inputs.add(Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient")));
+                inputs.add(com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(GsonHelper.getAsJsonObject(json, "ingredient")));
             }
 
             FluidStack inputFluid = FluidStack.EMPTY;
@@ -188,23 +186,22 @@ public class PcbRecipe implements Recipe<Container> {
                 inputFluid = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "fluid"));
             }
 
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 100);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 20);
             List<ResourceLocation> machines = parseMachines(json);
 
-            return new PcbRecipe(recipeId, inputs, inputFluid, result, processTicks, energyPerTick, machines, serializerSupplier, type);
+            return new PcbRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputs, inputFluid, result, processTicks, energyPerTick, machines, serializerSupplier, type);
         }
 
-        @Override
-        public PcbRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+                public PcbRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
             int inputCount = buffer.readVarInt();
             NonNullList<Ingredient> inputs = NonNullList.withSize(inputCount, Ingredient.EMPTY);
             for (int i = 0; i < inputCount; i++) {
-                inputs.set(i, Ingredient.fromNetwork(buffer));
+                inputs.set(i, com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer));
             }
-            FluidStack inputFluid = buffer.readFluidStack();
-            ItemStack result = buffer.readItem();
+            FluidStack inputFluid = com.neofast.tech_revised.recipe.RecipeHelper.readFluidStack(buffer);
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.readItem(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
             int machineCount = buffer.readVarInt();
@@ -212,17 +209,16 @@ public class PcbRecipe implements Recipe<Container> {
             for (int i = 0; i < machineCount; i++) {
                 machines.add(buffer.readResourceLocation());
             }
-            return new PcbRecipe(recipeId, inputs, inputFluid, result, processTicks, energyPerTick, machines, serializerSupplier, type);
+            return new PcbRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputs, inputFluid, result, processTicks, energyPerTick, machines, serializerSupplier, type);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, PcbRecipe recipe) {
             buffer.writeVarInt(recipe.inputs.size());
             for (Ingredient ingredient : recipe.inputs) {
-                ingredient.toNetwork(buffer);
+                com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(ingredient, buffer);
             }
-            buffer.writeFluidStack(recipe.inputFluid);
-            buffer.writeItem(recipe.result);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeFluidStack(buffer, recipe.inputFluid);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeItem(buffer, recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
             buffer.writeVarInt(recipe.machines.size());
@@ -236,10 +232,10 @@ public class PcbRecipe implements Recipe<Container> {
             if (json.has("machines")) {
                 JsonArray array = GsonHelper.getAsJsonArray(json, "machines");
                 for (JsonElement element : array) {
-                    machines.add(new ResourceLocation(element.getAsString()));
+                    machines.add(ResourceLocation.parse(element.getAsString()));
                 }
             } else if (json.has("machine")) {
-                machines.add(new ResourceLocation(GsonHelper.getAsString(json, "machine")));
+                machines.add(ResourceLocation.parse(GsonHelper.getAsString(json, "machine")));
             }
             return machines;
         }
@@ -247,7 +243,7 @@ public class PcbRecipe implements Recipe<Container> {
         private static FluidStack fluidStackFromJson(JsonObject json) {
             String fluidId = GsonHelper.getAsString(json, "fluid");
             int amount = GsonHelper.getAsInt(json, "amount");
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidId));
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(fluidId));
             if (fluid == null || fluid == Fluids.EMPTY) {
                 throw new JsonSyntaxException("Unknown fluid '" + fluidId + "'");
             }

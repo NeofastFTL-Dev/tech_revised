@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
-public class GenericIndustrialRecipe implements Recipe<Container> {
+public class GenericIndustrialRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final Ingredient input;
     private final int inputCount;
@@ -38,7 +38,7 @@ public class GenericIndustrialRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         if (container.getContainerSize() < 1) {
             return false;
         }
@@ -47,7 +47,7 @@ public class GenericIndustrialRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
@@ -57,12 +57,11 @@ public class GenericIndustrialRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -100,7 +99,7 @@ public class GenericIndustrialRecipe implements Recipe<Container> {
         return energyPerTick;
     }
 
-    public static class Serializer implements RecipeSerializer<GenericIndustrialRecipe> {
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<GenericIndustrialRecipe> {
         private final Supplier<RecipeSerializer<?>> serializerSupplier;
         private final RecipeType<?> type;
 
@@ -109,47 +108,44 @@ public class GenericIndustrialRecipe implements Recipe<Container> {
             this.type = type;
         }
 
-        @Override
-        public GenericIndustrialRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+        public GenericIndustrialRecipe fromJson(JsonObject json) {
             Ingredient input;
             int inputCount = 1;
 
             if (json.has("ingredient")) {
-                input = Ingredient.fromJson(json.get("ingredient"));
+                input = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(json.get("ingredient"));
                 inputCount = GsonHelper.getAsInt(json, "input_count", 1);
             } else if (json.has("ingredients")) {
                 JsonArray array = GsonHelper.getAsJsonArray(json, "ingredients");
                 if (array.isEmpty()) {
-                    throw new IllegalArgumentException("Recipe " + recipeId + " has empty ingredients");
+                    throw new IllegalArgumentException("Recipe " + "unknown" + " has empty ingredients");
                 }
-                input = Ingredient.fromJson(array.get(0));
+                input = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(array.get(0));
                 // If multiple entries, treat as required count of the first ingredient type
                 inputCount = GsonHelper.getAsInt(json, "input_count", array.size());
             } else {
-                throw new IllegalArgumentException("Recipe " + recipeId + " missing ingredient/ingredients");
+                throw new IllegalArgumentException("Recipe " + "unknown" + " missing ingredient/ingredients");
             }
 
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 100);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 20);
-            return new GenericIndustrialRecipe(recipeId, input, inputCount, result, processTicks, energyPerTick, serializerSupplier, type);
+            return new GenericIndustrialRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), input, inputCount, result, processTicks, energyPerTick, serializerSupplier, type);
         }
 
-        @Override
-        public GenericIndustrialRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            Ingredient input = Ingredient.fromNetwork(buffer);
+        public GenericIndustrialRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
+            Ingredient input = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer);
             int inputCount = buffer.readVarInt();
-            ItemStack result = buffer.readItem();
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.readItem(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new GenericIndustrialRecipe(recipeId, input, inputCount, result, processTicks, energyPerTick, serializerSupplier, type);
+            return new GenericIndustrialRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), input, inputCount, result, processTicks, energyPerTick, serializerSupplier, type);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, GenericIndustrialRecipe recipe) {
-            recipe.input.toNetwork(buffer);
+            com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(recipe.input, buffer);
             buffer.writeVarInt(recipe.inputCount);
-            buffer.writeItem(recipe.result);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeItem(buffer, recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
         }

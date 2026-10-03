@@ -16,7 +16,7 @@
     }
   ],
   "result": {
-    "item": "tech_revised:carbon_chunk",
-    "count": 2
+    "count": 2,
+    "id": "tech_revised:carbon_chunk"
   }
 }

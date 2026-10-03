@@ -18,23 +18,25 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class ElectricArcFurnaceFluidOutputBusBlock extends BaseEntityBlock {
+public class ElectricArcFurnaceFluidOutputBusBlock extends ModBaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
     public ElectricArcFurnaceFluidOutputBusBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        super(properties.noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FORMED, false));
     }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return state.getValue(FORMED) ? RenderShape.INVISIBLE : RenderShape.MODEL;
     }
 
     @Nullable
@@ -54,23 +56,25 @@ public class ElectricArcFurnaceFluidOutputBusBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
+            return net.minecraft.world.ItemInteractionResult.SUCCESS;
         }
 
         if (FluidUtil.interactWithFluidHandler(player, hand, level, pos, hit.getDirection())) {
-            return InteractionResult.CONSUME;
+            return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof ElectricArcFurnaceFluidOutputBusBlockEntity fluidOutputBus) {
             FluidStack storedFluid = fluidOutputBus.getStoredFluid();
-            String fluidName = storedFluid.isEmpty() ? "Empty" : storedFluid.getDisplayName().getString();
-            player.displayClientMessage(Component.literal("Stored Fluid: " + fluidName + " (" +
-                    fluidOutputBus.getFluidAmount() + " / " + fluidOutputBus.getCapacity() + " mB)"), true);
+            Component fluidName = storedFluid.isEmpty()
+                    ? Component.translatable("gui.tech_revised.fluid_empty")
+                    : storedFluid.getDisplayName();
+            player.displayClientMessage(Component.translatable("gui.tech_revised.stored_fluid",
+                    fluidName, fluidOutputBus.getFluidAmount(), fluidOutputBus.getCapacity()), true);
         }
-        return InteractionResult.CONSUME;
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 
     @Nullable
@@ -81,6 +85,6 @@ public class ElectricArcFurnaceFluidOutputBusBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, FORMED);
     }
 }

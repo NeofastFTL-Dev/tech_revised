@@ -89,10 +89,10 @@ public class PcbJeiCategory implements IRecipeCategory<PcbRecipe> {
         var font = Minecraft.getInstance().font;
         int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
         guiGraphics.drawString(font,
-                Component.literal(recipe.getProcessTicks() + "t / " + recipe.getEnergyPerTick() + " FE/t (" + totalEnergy + " FE)"),
+                Component.translatable("jei.tech_revised.ticks_energy_rate", recipe.getProcessTicks(), recipe.getEnergyPerTick(), totalEnergy),
                 8, 4, 0x8B8B8B, false);
         if (!recipe.getMachines().isEmpty()) {
-            guiGraphics.drawString(font, Component.literal("Machine"), 8, 36, 0x8B8B8B, false);
+            guiGraphics.drawString(font, Component.translatable("jei.tech_revised.machine"), 8, 36, 0x8B8B8B, false);
         }
     }
 }

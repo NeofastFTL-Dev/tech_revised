@@ -33,17 +33,19 @@ public class ElectricArcFurnaceInputBusMenu extends AbstractContainerMenu {
 
     public ElectricArcFurnaceInputBusMenu(int containerId, Inventory inventory, BlockEntity entity) {
         super(ModMenuTypes.ELECTRIC_ARC_FURNACE_INPUT_BUS_MENU.get(), containerId);
-        this.blockEntity = (ElectricArcFurnaceInputBusBlockEntity) entity;
+        this.blockEntity = entity instanceof ElectricArcFurnaceInputBusBlockEntity bus ? bus : null;
         this.level = inventory.player.level();
 
         addPlayerInventory(inventory);
         addPlayerHotbar(inventory);
 
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 71, 35));
-            this.addSlot(new SlotItemHandler(handler, 1, 89, 35));
-            this.addSlot(new SlotItemHandler(handler, 2, 107, 35));
-        });
+        if (this.blockEntity != null) {
+            this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(handler -> {
+                this.addSlot(new SlotItemHandler(handler, 0, 71, 35));
+                this.addSlot(new SlotItemHandler(handler, 1, 89, 35));
+                this.addSlot(new SlotItemHandler(handler, 2, 107, 35));
+            });
+        }
     }
 
     @Override
@@ -82,6 +84,9 @@ public class ElectricArcFurnaceInputBusMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
+        if (blockEntity == null) {
+            return false;
+        }
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 player, ModBlocks.ELECTRIC_ARC_FURNACE_INPUT_BUS.get());
     }

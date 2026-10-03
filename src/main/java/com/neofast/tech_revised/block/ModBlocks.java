@@ -5,6 +5,7 @@ import com.neofast.tech_revised.block.custom.*;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.fluid.ModFluids;
 import com.neofast.tech_revised.item.ModItems;
+import com.neofast.tech_revised.item.PcCatalog;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -18,8 +19,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -30,98 +33,126 @@ public class ModBlocks {
     private static final Map<RegistryObject<? extends Block>, Integer> TINTED_BLOCK_COLORS = new LinkedHashMap<>();
 
     public static final RegistryObject<Block> STEEL_BLOCK = registerTintedBlock("steel_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
             ModItems.STEEL_TINT);
 
     public static final RegistryObject<Block> STAINLESS_STEEL_BLOCK = registerTintedBlock("stainless_steel_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
             ModItems.STAINLESS_STEEL_TINT);
 
     public static final RegistryObject<Block> CHROMITE_BLOCK = registerTintedBlock("chromite_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
             ModItems.CHROMITE_TINT);
 
     public static final RegistryObject<Block> FERROCHROMIUM_BLOCK = registerTintedBlock("ferrochromium_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()),
             ModItems.FERROCHROMIUM_TINT);
 
     public static final RegistryObject<Block> GRAPHITE_ORE = registerBlock("graphite_ore",
-            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.COAL_ORE).strength(3f).requiresCorrectToolForDrops(),
-                    UniformInt.of(1, 3)));
+            () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.ofFullCopy(Blocks.COAL_ORE).strength(3f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> CHROMITE_ORE = registerBlock("chromite_ore",
-            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).strength(3.5f).requiresCorrectToolForDrops(),
-                    UniformInt.of(1, 4)));
+            () -> new DropExperienceBlock(UniformInt.of(1, 4), BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_ORE).strength(3.5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> TIN_ORE = registerBlock("tin_ore",
+            () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_ORE).strength(3.5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> NICKEL_ORE = registerBlock("nickel_ore",
+            () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_ORE).strength(4f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> TIN_BLOCK = registerBlock("tin_block",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> NICKEL_BLOCK = registerBlock("nickel_block",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> DEEPSLATE_GRAPHITE_ORE = registerBlock("deepslate_graphite_ore",
+            () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).strength(4.5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> DEEPSLATE_CHROMITE_ORE = registerBlock("deepslate_chromite_ore",
+            () -> new DropExperienceBlock(UniformInt.of(1, 4), BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).strength(5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> DEEPSLATE_TIN_ORE = registerBlock("deepslate_tin_ore",
+            () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).strength(4.5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> DEEPSLATE_NICKEL_ORE = registerBlock("deepslate_nickel_ore",
+            () -> new DropExperienceBlock(UniformInt.of(1, 3), BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).strength(5f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> SOLID_FUEL_GENERATOR = registerBlock("solid_fuel_generator",
+            () -> new SolidFuelGeneratorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
+                    .strength(4f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(SolidFuelGeneratorBlock.LIT) ? 10 : 0)));
 
     public static final RegistryObject<Block> CRUSHER = registerBlock("crusher",
-            () -> new CrusherBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(6f).requiresCorrectToolForDrops()));
+            () -> new CrusherBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(6f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> WINDOWS_7_VM_BLOCK = registerBlock("windows_7_vm_block",
-            () -> new Windows7VmBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            () -> new Windows7VmBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .strength(8f)
                     .requiresCorrectToolForDrops()
                     .lightLevel(state -> state.getValue(Windows7VmBlock.ACTIVE) ? 12 : 0)));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_CONTROLLER = registerBlock("electric_arc_furnace_controller",
-            () -> new ElectricArcFurnaceControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
+            () -> new ElectricArcFurnaceControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_INPUT_BUS = registerBlock("electric_arc_furnace_input_bus",
-            () -> new ElectricArcFurnaceInputBusBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new ElectricArcFurnaceInputBusBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_OUTPUT_BUS = registerBlock("electric_arc_furnace_output_bus",
-            () -> new ElectricArcFurnaceOutputBusBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new ElectricArcFurnaceOutputBusBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_FLUID_INPUT_BUS = registerBlock("electric_arc_furnace_fluid_input_bus",
-            () -> new ElectricArcFurnaceFluidInputBusBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new ElectricArcFurnaceFluidInputBusBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_FLUID_OUTPUT_BUS = registerBlock("electric_arc_furnace_fluid_output_bus",
-            () -> new ElectricArcFurnaceFluidOutputBusBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new ElectricArcFurnaceFluidOutputBusBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_ENERGY_INPUT_HATCH = registerBlock("electric_arc_furnace_energy_input_hatch",
-            () -> new ElectricArcFurnaceEnergyInputHatchBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new ElectricArcFurnaceEnergyInputHatchBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     /** Shared chassis used to craft item/fluid buses and energy hatches for all multiblocks. */
     public static final RegistryObject<Block> TRANSPORT_FRAME = registerBlock("transport_frame",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new FormedCasingBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_HEATER = registerBlock("electric_arc_furnace_heater",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 12)));
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 12)));
 
     public static final RegistryObject<Block> BLAST_FURNACE_CORE = registerBlock("blast_furnace_core",
-            () -> new BlastFurnaceControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new BlastFurnaceControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> INDUSTRIAL_BATCHING_MIXER = registerBlock("industrial_batching_mixer",
-            () -> new BatchingMixerControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new BatchingMixerControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> REFRACTORY_MELTING_FURNACE = registerBlock("refractory_melting_furnace",
-            () -> new MeltingFurnaceControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 13)));
+            () -> new MeltingFurnaceControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 13)));
 
     public static final RegistryObject<Block> CHEMICAL_SIZING_APPLICATOR = registerBlock("chemical_sizing_applicator",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> HIGH_SPEED_GATHERING_WINDER = registerBlock("high_speed_gathering_winder",
-            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
                     ModBlockEntities.GATHERING_WINDER));
 
     public static final RegistryObject<Block> INDUSTRIAL_DRYING_OVEN = registerBlock("industrial_drying_oven",
-            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 10),
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops().lightLevel(state -> 10),
                     ModBlockEntities.DRYING_OVEN));
 
     public static final RegistryObject<Block> ROVING_CREEL_CONVERTER = registerBlock("roving_creel_converter",
-            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
                     ModBlockEntities.CREEL_CONVERTER));
 
     public static final RegistryObject<Block> INDUSTRIAL_TEXTILE_WEAVING_LOOM = registerBlock("industrial_textile_weaving_loom",
-            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
                     ModBlockEntities.TEXTILE_LOOM));
 
     public static final RegistryObject<Block> STRAND_CHOPPING_MACHINERY = registerBlock("strand_chopping_machinery",
-            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
+            () -> new GenericIndustrialMachineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops(),
                     ModBlockEntities.STRAND_CHOPPER));
 
     // PCB Machines (multi-input processing; vacuum lamination uses a dedicated recipe type)
     private static BlockBehaviour.Properties pcbMachineProperties() {
-        return BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops();
+        return BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(8f).requiresCorrectToolForDrops();
     }
 
     public static final RegistryObject<Block> DESIGN_ENGINEERING_STATION = registerBlock("design_engineering_station",
@@ -173,61 +204,114 @@ public class ModBlocks {
     public static final RegistryObject<Block> AOI_VERIFICATION_STATION = registerBlock("aoi_verification_station",
             () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE));
 
+    public static final List<RegistryObject<Block>> PC_PRODUCTION_MACHINES = new ArrayList<>();
+
+    static {
+        for (String id : PcCatalog.MACHINE_IDS) {
+            PC_PRODUCTION_MACHINES.add(registerBlock(id,
+                    () -> new MultiInputIndustrialMachineBlock(pcbMachineProperties(), ModBlockEntities.PCB_MACHINE)));
+        }
+    }
+
+    private static BlockBehaviour.Properties workstationKitProperties() {
+        return BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
+                .strength(8f)
+                .requiresCorrectToolForDrops()
+                .noOcclusion();
+    }
+
+    public static final RegistryObject<Block> TESTED_MONITOR = registerBlock("tested_monitor",
+            () -> new WorkstationMonitorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
+                    .strength(8f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()
+                    .lightLevel(state -> state.getValue(WorkstationMonitorBlock.ACTIVE) ? 12 : 0)));
+    public static final RegistryObject<Block> TESTED_DESKTOP_TOWER = registerBlock("tested_desktop_tower",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_TOWER));
+    public static final RegistryObject<Block> TESTED_KEYBOARD = registerBlock("tested_keyboard",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_KEYBOARD));
+    public static final RegistryObject<Block> TESTED_MOUSE = registerBlock("tested_mouse",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_MOUSE));
+    public static final RegistryObject<Block> TESTED_HDMI_CABLE = registerBlock("tested_hdmi_cable",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_HDMI));
+    public static final RegistryObject<Block> TESTED_POWER_CABLE = registerBlock("tested_power_cable",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_POWER));
+    public static final RegistryObject<Block> TESTED_SPEAKER = registerBlock("tested_speaker",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_SPEAKER));
+    public static final RegistryObject<Block> TESTED_DESK = registerBlock("tested_desk",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_DESK));
+    public static final RegistryObject<Block> TESTED_CHAIR_SEAT = registerBlock("tested_chair_seat",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_CHAIR_SEAT));
+    public static final RegistryObject<Block> TESTED_CHAIR_BACKREST = registerBlock("tested_chair_backrest",
+            () -> new WorkstationKitBlock(workstationKitProperties(), WorkstationKitBlock.SHAPE_CHAIR_BACK));
+
+    public static Block[] pcProductionMachineBlocks() {
+        return PC_PRODUCTION_MACHINES.stream().map(RegistryObject::get).toArray(Block[]::new);
+    }
+
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_FRAME = registerBlock("electric_arc_furnace_frame",
-            () -> new ElectricArcFurnaceFrameBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
+            () -> new ElectricArcFurnaceFrameBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> DRILLING_PLATFORM_CONTROLLER = registerBlock("drilling_platform_controller",
-            () -> new DrillingPlatformControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
+            () -> new DrillingPlatformControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
 
     public static final RegistryObject<Block> DRILLING_PLATFORM_DRILL_HEAD = registerBlock("drilling_platform_drill_head",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops().lightLevel(state -> 8)));
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops().lightLevel(state -> 8)));
 
     public static final RegistryObject<Block> DRILLING_PLATFORM_FRAME = registerBlock("drilling_platform_frame",
-            () -> new DrillingPlatformFrameBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
+            () -> new DrillingPlatformFrameBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> COKE_OVEN_CONTROLLER = registerBlock("coke_oven_controller",
-            () -> new CokeOvenControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
+            () -> new CokeOvenControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
 
     public static final RegistryObject<Block> COKE_OVEN_FRAME = registerBlock("coke_oven_frame",
-            () -> new CokeOvenFrameBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
+            () -> new CokeOvenFrameBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> ARGON_OXYGEN_DECARBURIZATION_CONVERTER_CONTROLLER = registerBlock(
             "argon_oxygen_decarburization_converter_controller",
-            () -> new ArgonOxygenDecarburizationConverterControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
+            () -> new ArgonOxygenDecarburizationConverterControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
 
     public static final RegistryObject<Block> ARGON_OXYGEN_DECARBURIZATION_CONVERTER_FRAME = registerBlock(
             "argon_oxygen_decarburization_converter_frame",
-            () -> new ArgonOxygenDecarburizationConverterFrameBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
+            () -> new ArgonOxygenDecarburizationConverterFrameBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<Block> OXYGEN_CONVERTER_CONTROLLER = registerBlock("oxygen_converter_controller",
-            () -> new OxygenConverterControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
+            () -> new OxygenConverterControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
 
     public static final RegistryObject<Block> OXYGEN_CONVERTER_FRAME = registerBlock("oxygen_converter_frame",
-            () -> new OxygenConverterFrameBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
+            () -> new OxygenConverterFrameBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(9f).requiresCorrectToolForDrops()));
 
     public static final RegistryObject<LiquidBlock> HEAVY_CRUDE_OIL_BLOCK = registerBlockWithoutItem("heavy_crude_oil_block",
-            () -> new LiquidBlock(ModFluids.HEAVY_CRUDE_OIL, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.HEAVY_CRUDE_OIL.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final RegistryObject<LiquidBlock> CREOSOTE_BLOCK = registerBlockWithoutItem("creosote_block",
-            () -> new LiquidBlock(ModFluids.CREOSOTE, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.CREOSOTE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final RegistryObject<LiquidBlock> OXYGEN_BLOCK = registerBlockWithoutItem("oxygen_block",
-            () -> new LiquidBlock(ModFluids.OXYGEN, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.OXYGEN.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final RegistryObject<LiquidBlock> HYDROGEN_BLOCK = registerBlockWithoutItem("hydrogen_block",
-            () -> new LiquidBlock(ModFluids.HYDROGEN, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.HYDROGEN.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final RegistryObject<LiquidBlock> LIQUID_GLASS_BLOCK = registerBlockWithoutItem("liquid_glass_block",
-            () -> new LiquidBlock(ModFluids.LIQUID_GLASS, BlockBehaviour.Properties.copy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.LIQUID_GLASS.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final RegistryObject<LiquidBlock> SODIUM_CARBONATE_SOLUTION_BLOCK = registerBlockWithoutItem("sodium_carbonate_solution_block",
-            () -> new LiquidBlock(ModFluids.SODIUM_CARBONATE_SOLUTION, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SODIUM_CARBONATE_SOLUTION.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final RegistryObject<LiquidBlock> CUPRIC_CHLORIDE_SOLUTION_BLOCK = registerBlockWithoutItem("cupric_chloride_solution_block",
-            () -> new LiquidBlock(ModFluids.CUPRIC_CHLORIDE_SOLUTION, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.CUPRIC_CHLORIDE_SOLUTION.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final RegistryObject<LiquidBlock> SODIUM_HYDROXIDE_SOLUTION_BLOCK = registerBlockWithoutItem("sodium_hydroxide_solution_block",
-            () -> new LiquidBlock(ModFluids.SODIUM_HYDROXIDE_SOLUTION, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SODIUM_HYDROXIDE_SOLUTION.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+    public static final RegistryObject<LiquidBlock> NAPHTHA_BLOCK = registerBlockWithoutItem("naphtha_block",
+            () -> new LiquidBlock(ModFluids.NAPHTHA.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+    public static final RegistryObject<LiquidBlock> ETHYLENE_BLOCK = registerBlockWithoutItem("ethylene_block",
+            () -> new LiquidBlock(ModFluids.ETHYLENE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+    public static final RegistryObject<LiquidBlock> CHLORINE_BLOCK = registerBlockWithoutItem("chlorine_block",
+            () -> new LiquidBlock(ModFluids.CHLORINE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+    public static final RegistryObject<LiquidBlock> VINYL_CHLORIDE_BLOCK = registerBlockWithoutItem("vinyl_chloride_block",
+            () -> new LiquidBlock(ModFluids.VINYL_CHLORIDE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

@@ -8,13 +8,19 @@
     "GRG"
   ],
   "key": {
-    "G": { "item": "minecraft:gold_nugget" },
-    "R": { "item": "minecraft:redstone" },
-    "Q": { "item": "minecraft:quartz" }
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "Q": {
+      "item": "minecraft:quartz"
+    }
   },
   "result": {
-    "item": "tech_revised:dram_package",
-    "count": 4
+    "count": 4,
+    "id": "tech_revised:dram_package"
   },
   "show_notification": true
 }

@@ -10,7 +10,7 @@
     "item": "tech_revised:steel_ingot"
   },
   "secondary_input": {
-    "item": "minecraft:coal_block"
+    "item": "tech_revised:coal_coke"
   },
   "water_amount": 250
 }

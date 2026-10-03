@@ -1,8 +1,12 @@
 {
   "variants": {
-    "facing=north": { "model": "tech_revised:block/electric_arc_furnace_input_bus" },
-    "facing=east":  { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 90 },
-    "facing=south": { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 180 },
-    "facing=west":  { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 270 }
+    "facing=north,formed=false": { "model": "tech_revised:block/electric_arc_furnace_input_bus" },
+    "facing=east,formed=false": { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 90 },
+    "facing=south,formed=false": { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 180 },
+    "facing=west,formed=false": { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 270 },
+    "facing=north,formed=true": { "model": "tech_revised:block/electric_arc_furnace_input_bus" },
+    "facing=east,formed=true": { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 90 },
+    "facing=south,formed=true": { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 180 },
+    "facing=west,formed=true": { "model": "tech_revised:block/electric_arc_furnace_input_bus", "y": 270 }
   }
 }

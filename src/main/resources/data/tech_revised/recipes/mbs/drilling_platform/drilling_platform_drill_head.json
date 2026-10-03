@@ -22,7 +22,7 @@
     "RDR"
   ],
   "result": {
-    "item": "tech_revised:drilling_platform_drill_head"
+    "id": "tech_revised:drilling_platform_drill_head"
   },
   "show_notification": true
 }

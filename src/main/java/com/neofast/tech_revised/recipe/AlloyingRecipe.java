@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public class AlloyingRecipe implements Recipe<Container> {
+public class AlloyingRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final NonNullList<Ingredient> inputs;
     private final ItemStack output;
@@ -23,12 +23,12 @@ public class AlloyingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
+    public boolean matches(ContainerInput pContainer, Level pLevel) {
         if (pLevel.isClientSide()) return false;
         
         // Match inputs in any order
         java.util.List<ItemStack> containerItems = new java.util.ArrayList<>();
-        for (int i = 0; i < pContainer.getContainerSize(); i++) {
+        for (int i = 0; i < pContainer.size(); i++) {
             ItemStack stack = pContainer.getItem(i);
             if (!stack.isEmpty()) {
                 containerItems.add(stack);
@@ -54,7 +54,7 @@ public class AlloyingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(ContainerInput pContainer, net.minecraft.core.HolderLookup.Provider pRegistryAccess) {
         return output.copy();
     }
 
@@ -64,12 +64,11 @@ public class AlloyingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider pRegistryAccess) {
         return output.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -102,40 +101,37 @@ public class AlloyingRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<AlloyingRecipe> {
-        @Override
-        public AlloyingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
-            ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "result"));
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<AlloyingRecipe> {
+                public AlloyingRecipe fromJson(JsonObject pSerializedRecipe) {
+            ItemStack output = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "result"));
 
             NonNullList<Ingredient> inputs = NonNullList.create();
             if (pSerializedRecipe.has("ingredients")) {
                 var jsonArray = GsonHelper.getAsJsonArray(pSerializedRecipe, "ingredients");
                 for (int i = 0; i < jsonArray.size(); i++) {
-                    inputs.add(Ingredient.fromJson(jsonArray.get(i)));
+                    inputs.add(com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(jsonArray.get(i)));
                 }
             }
 
-            return new AlloyingRecipe(pRecipeId, inputs, output);
+            return new AlloyingRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputs, output);
         }
 
-        @Override
-        public AlloyingRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
+                public AlloyingRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf pBuffer) {
             int size = pBuffer.readVarInt();
             NonNullList<Ingredient> inputs = NonNullList.withSize(size, Ingredient.EMPTY);
             for (int i = 0; i < size; i++) {
-                inputs.set(i, Ingredient.fromNetwork(pBuffer));
+                inputs.set(i, com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(pBuffer));
             }
-            ItemStack output = pBuffer.readItem();
-            return new AlloyingRecipe(pRecipeId, inputs, output);
+            ItemStack output = RecipeHelper.readItem(pBuffer);
+            return new AlloyingRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputs, output);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf pBuffer, AlloyingRecipe pRecipe) {
             pBuffer.writeVarInt(pRecipe.inputs.size());
             for (Ingredient ingredient : pRecipe.inputs) {
-                ingredient.toNetwork(pBuffer);
+                RecipeHelper.ingredientToNetwork(ingredient, pBuffer);
             }
-            pBuffer.writeItem(pRecipe.output);
+            RecipeHelper.writeItem(pBuffer, pRecipe.output);
         }
     }
 }

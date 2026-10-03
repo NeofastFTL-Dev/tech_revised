@@ -8,13 +8,19 @@
     "GRG"
   ],
   "key": {
-    "G": { "item": "minecraft:gold_nugget" },
-    "R": { "item": "minecraft:redstone" },
-    "E": { "item": "minecraft:emerald" }
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    }
   },
   "result": {
-    "item": "tech_revised:spd_eeprom",
-    "count": 2
+    "count": 2,
+    "id": "tech_revised:spd_eeprom"
   },
   "show_notification": true
 }

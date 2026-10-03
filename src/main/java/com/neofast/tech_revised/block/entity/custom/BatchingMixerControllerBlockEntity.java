@@ -1,6 +1,7 @@
 package com.neofast.tech_revised.block.entity.custom;
 
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
+import com.neofast.tech_revised.multiblock.MultiblockRender;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +13,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -29,34 +31,32 @@ public class BatchingMixerControllerBlockEntity extends BlockEntity implements M
         super(ModBlockEntities.BATCHING_MIXER_CONTROLLER.get(), pos, state);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ENERGY) return lazyEnergy.cast();
-        return super.getCapability(cap, side);
+        public AABB getRenderBoundingBox() {
+        return MultiblockRender.bounds(this);
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
+        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ENERGY) return lazyEnergy.cast();
+        return net.minecraftforge.common.util.LazyOptional.empty();
+    }
+
+        public void onLoad() {
         lazyEnergy = LazyOptional.of(() -> energyStorage);
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
+        public void invalidateCaps() {
         lazyEnergy.invalidate();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.put("energy", energyStorage.serializeNBT());
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (tag.contains("energy")) energyStorage.deserializeNBT(tag.get("energy"));
     }
 

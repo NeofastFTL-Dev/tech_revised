@@ -1,22 +1,18 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
+  "group": "items",
   "ingredients": [
     {
-      "item": "minecraft:iron_ingot"
+      "item": "tech_revised:raw_nickel"
     },
     {
       "item": "minecraft:iron_nugget"
-    },
-    {
-      "item": "minecraft:iron_nugget"
-    },
-    {
-      "item": "minecraft:green_dye"
     }
   ],
   "result": {
-    "item": "tech_revised:nickel_dust",
-    "count": 2
-  }
+    "count": 2,
+    "id": "tech_revised:nickel_dust"
+  },
+  "show_notification": true
 }

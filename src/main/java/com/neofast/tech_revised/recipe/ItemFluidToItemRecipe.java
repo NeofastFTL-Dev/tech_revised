@@ -16,7 +16,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ItemFluidToItemRecipe implements Recipe<Container> {
+public class ItemFluidToItemRecipe implements Recipe<com.neofast.tech_revised.recipe.ContainerInput> {
     private final ResourceLocation id;
     private final Ingredient inputItem;
     private final FluidStack inputFluid;
@@ -34,13 +34,13 @@ public class ItemFluidToItemRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(com.neofast.tech_revised.recipe.ContainerInput container, Level level) {
         if (container.getContainerSize() < 1) return false;
         return inputItem.test(container.getItem(0));
     }
 
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(com.neofast.tech_revised.recipe.ContainerInput container, net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
@@ -50,12 +50,11 @@ public class ItemFluidToItemRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider registryAccess) {
         return result.copy();
     }
 
-    @Override
-    public ResourceLocation getId() {
+        public ResourceLocation getId() {
         return id;
     }
 
@@ -95,41 +94,38 @@ public class ItemFluidToItemRecipe implements Recipe<Container> {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<ItemFluidToItemRecipe> {
-        @Override
-        public ItemFluidToItemRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+    public static class Serializer extends com.neofast.tech_revised.recipe.LegacyRecipeSerializer<ItemFluidToItemRecipe> {
+                public ItemFluidToItemRecipe fromJson(JsonObject json) {
             Ingredient inputItem;
             if (json.has("input_item")) {
-                inputItem = Ingredient.fromJson(json.get("input_item"));
+                inputItem = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(json.get("input_item"));
             } else if (json.has("ingredient")) {
-                inputItem = Ingredient.fromJson(json.get("ingredient"));
+                inputItem = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(json.get("ingredient"));
             } else if (json.has("ingredients")) {
-                inputItem = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "ingredients").get(0));
+                inputItem = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromJson(GsonHelper.getAsJsonArray(json, "ingredients").get(0));
             } else {
-                throw new JsonSyntaxException("Missing input_item/ingredient for sizing recipe " + recipeId);
+                throw new JsonSyntaxException("Missing input_item/ingredient for sizing recipe " + "unknown");
             }
             FluidStack inputFluid = fluidStackFromJson(GsonHelper.getAsJsonObject(json, "input_fluid"));
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             int processTicks = GsonHelper.getAsInt(json, "process_ticks", 100);
             int energyPerTick = GsonHelper.getAsInt(json, "energy_per_tick", 20);
-            return new ItemFluidToItemRecipe(recipeId, inputItem, inputFluid, result, processTicks, energyPerTick);
+            return new ItemFluidToItemRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputItem, inputFluid, result, processTicks, energyPerTick);
         }
 
-        @Override
-        public ItemFluidToItemRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            Ingredient inputItem = Ingredient.fromNetwork(buffer);
-            FluidStack inputFluid = buffer.readFluidStack();
-            ItemStack result = buffer.readItem();
+                public ItemFluidToItemRecipe fromNetwork(net.minecraft.network.RegistryFriendlyByteBuf buffer) {
+            Ingredient inputItem = com.neofast.tech_revised.recipe.RecipeHelper.ingredientFromNetwork(buffer);
+            FluidStack inputFluid = com.neofast.tech_revised.recipe.RecipeHelper.readFluidStack(buffer);
+            ItemStack result = com.neofast.tech_revised.recipe.RecipeHelper.readItem(buffer);
             int processTicks = buffer.readVarInt();
             int energyPerTick = buffer.readVarInt();
-            return new ItemFluidToItemRecipe(recipeId, inputItem, inputFluid, result, processTicks, energyPerTick);
+            return new ItemFluidToItemRecipe(net.minecraft.resources.ResourceLocation.parse("tech_revised:recipe"), inputItem, inputFluid, result, processTicks, energyPerTick);
         }
 
-        @Override
         public void toNetwork(FriendlyByteBuf buffer, ItemFluidToItemRecipe recipe) {
-            recipe.inputItem.toNetwork(buffer);
-            buffer.writeFluidStack(recipe.inputFluid);
-            buffer.writeItem(recipe.result);
+            com.neofast.tech_revised.recipe.RecipeHelper.ingredientToNetwork(recipe.inputItem, buffer);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeFluidStack(buffer, recipe.inputFluid);
+            com.neofast.tech_revised.recipe.RecipeHelper.writeItem(buffer, recipe.result);
             buffer.writeVarInt(recipe.processTicks);
             buffer.writeVarInt(recipe.energyPerTick);
         }
@@ -137,7 +133,7 @@ public class ItemFluidToItemRecipe implements Recipe<Container> {
         private static FluidStack fluidStackFromJson(JsonObject json) {
             String fluidId = GsonHelper.getAsString(json, "fluid");
             int amount = GsonHelper.getAsInt(json, "amount");
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidId));
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(fluidId));
             if (fluid == null || fluid == Fluids.EMPTY) {
                 throw new JsonSyntaxException("Unknown fluid '" + fluidId + "'");
             }

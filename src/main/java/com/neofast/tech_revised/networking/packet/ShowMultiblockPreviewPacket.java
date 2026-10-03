@@ -1,7 +1,9 @@
 package com.neofast.tech_revised.networking.packet;
 
 import com.neofast.tech_revised.client.MultiblockPreviewRenderer;
-import com.neofast.tech_revised.integration.jei.MultiblockStructureBlueprint;
+import com.neofast.tech_revised.multiblock.MultiblockStructureBlueprint;
+import com.neofast.tech_revised.multiblock.MachineLayout;
+import com.neofast.tech_revised.multiblock.MachineLayouts;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -46,13 +48,7 @@ public class ShowMultiblockPreviewPacket {
     }
 
     private static MultiblockStructureBlueprint resolveBlueprint(String id) {
-        return switch (id) {
-            case "eaf" -> MultiblockStructureBlueprint.electricArcFurnace();
-            case "coke_oven" -> MultiblockStructureBlueprint.cokeOven();
-            case "drilling_platform" -> MultiblockStructureBlueprint.drillingPlatform();
-            case "oxygen_converter" -> MultiblockStructureBlueprint.oxygenConverter();
-            case "aod_converter" -> MultiblockStructureBlueprint.aodConverter();
-            default -> null;
-        };
+        MachineLayout layout = MachineLayouts.get(id);
+        return layout == null ? null : layout.toBlueprint();
     }
 }

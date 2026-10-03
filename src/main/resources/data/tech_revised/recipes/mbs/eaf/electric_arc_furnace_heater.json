@@ -19,7 +19,7 @@
     "CRC"
   ],
   "result": {
-    "item": "tech_revised:electric_arc_furnace_heater"
+    "id": "tech_revised:electric_arc_furnace_heater"
   },
   "show_notification": true
 }

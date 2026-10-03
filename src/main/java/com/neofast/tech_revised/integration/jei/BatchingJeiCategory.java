@@ -74,7 +74,7 @@ public class BatchingJeiCategory implements IRecipeCategory<BatchingRecipe> {
         arrow.draw(guiGraphics, 96, 16);
         int totalEnergy = recipe.getProcessTicks() * recipe.getEnergyPerTick();
         guiGraphics.drawString(Minecraft.getInstance().font,
-                Component.literal(recipe.getProcessTicks() + "t / " + totalEnergy + " FE"),
+                Component.translatable("jei.tech_revised.ticks_energy", recipe.getProcessTicks(), totalEnergy),
                 8, 48, 0x8B8B8B, false);
     }
 }

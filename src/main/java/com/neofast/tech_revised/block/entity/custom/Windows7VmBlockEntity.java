@@ -1,15 +1,19 @@
 package com.neofast.tech_revised.block.entity.custom;
 
+import com.neofast.tech_revised.block.custom.WorkstationMonitorBlock;
 import com.neofast.tech_revised.block.entity.ModBlockEntities;
 import com.neofast.tech_revised.integration.vm.VmCommandIntegration;
+import com.neofast.tech_revised.multiblock.WorkstationStructure;
 import com.neofast.tech_revised.screen.Windows7VmMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +33,15 @@ public class Windows7VmBlockEntity extends BlockEntity implements MenuProvider {
 
     public Windows7VmBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.WINDOWS_7_VM_BLOCK.get(), pos, state);
+    }
+
+    public static void serverTick(Level level, BlockPos pos, BlockState state, Windows7VmBlockEntity blockEntity) {
+        if (!(state.getBlock() instanceof WorkstationMonitorBlock)) {
+            return;
+        }
+        Direction front = state.getValue(WorkstationMonitorBlock.FACING);
+        boolean formed = WorkstationStructure.isValid(level, pos, front);
+        WorkstationStructure.updateFormedStates(level, pos, front, formed);
     }
 
     public String getVmName() {
@@ -51,16 +64,16 @@ public class Windows7VmBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
         tag.putString(VM_NAME_TAG, vmName);
         tag.putString(START_COMMAND_TAG, startCommand);
         tag.putString(STOP_COMMAND_TAG, stopCommand);
-        super.saveAdditional(tag);
+        super.saveAdditional(tag, registries);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         vmName = sanitizeVmName(tag.getString(VM_NAME_TAG));
         startCommand = sanitizeCommand(tag.getString(START_COMMAND_TAG), VmCommandIntegration.getConfiguredStartTemplate());
         stopCommand = sanitizeCommand(tag.getString(STOP_COMMAND_TAG), VmCommandIntegration.getConfiguredStopTemplate());
