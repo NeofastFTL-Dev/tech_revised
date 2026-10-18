@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:ssd_validator",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_ssd"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_ssd"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

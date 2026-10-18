@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:wafer_dicing_saw",
+  "ingredients": [
+    {
+      "item": "tech_revised:silicon_wafer"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:silicon_die"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 50
+}

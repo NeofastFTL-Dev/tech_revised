@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:desktop_power_on_test",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_desktop"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_desktop_tower"
+  },
+  "process_ticks": 300,
+  "energy_per_tick": 40
+}

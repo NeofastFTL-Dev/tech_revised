@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:naphtha_steam_cracker",
+  "ingredients": [
+    {
+      "item": "tech_revised:naphtha_bucket"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:ethylene_bucket"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 60
+}

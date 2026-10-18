@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:magnetic_sputter",
+  "ingredients": [
+    {
+      "item": "tech_revised:hdd_platter"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:coated_platter"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 50
+}

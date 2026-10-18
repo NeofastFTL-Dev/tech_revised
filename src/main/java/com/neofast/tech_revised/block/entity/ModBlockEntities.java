@@ -53,11 +53,6 @@ public class ModBlockEntities {
                     BlockEntityType.Builder.of(CrusherBlockEntity::new,
                             ModBlocks.CRUSHER.get()).build(null));
 
-    public static final RegistryObject<BlockEntityType<Windows7VmBlockEntity>> WINDOWS_7_VM_BLOCK =
-            BLOCK_ENTITIES.register("windows_7_vm_block_entity", () ->
-                    BlockEntityType.Builder.of(Windows7VmBlockEntity::new,
-                            ModBlocks.WINDOWS_7_VM_BLOCK.get()).build(null));
-
     public static final RegistryObject<BlockEntityType<DrillingPlatformControllerBlockEntity>> DRILLING_PLATFORM_CONTROLLER =
             BLOCK_ENTITIES.register("drilling_platform_controller_entity", () ->
                     BlockEntityType.Builder.of(DrillingPlatformControllerBlockEntity::new,

@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "magnetic_sputter",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/magnetic_sputter_side",
+    "front": "tech_revised:block/multiblock/magnetic_sputter_front",
+    "side": "tech_revised:block/multiblock/magnetic_sputter_side",
+    "top": "tech_revised:block/multiblock/magnetic_sputter_top",
+    "controller_front": "tech_revised:block/magnetic_sputter_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

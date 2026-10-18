@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:dimm_install_press",
+  "ingredients": [
+    {
+      "item": "tech_revised:board_with_cpu"
+    },
+    {
+      "item": "tech_revised:ram_stick"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:board_with_memory"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 20
+}

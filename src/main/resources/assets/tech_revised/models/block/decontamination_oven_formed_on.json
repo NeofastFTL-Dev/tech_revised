@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "decontamination_oven",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/decontamination_oven_side",
+    "front": "tech_revised:block/multiblock/decontamination_oven_front_on",
+    "side": "tech_revised:block/multiblock/decontamination_oven_side",
+    "top": "tech_revised:block/multiblock/decontamination_oven_top",
+    "controller_front": "tech_revised:block/decontamination_oven_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

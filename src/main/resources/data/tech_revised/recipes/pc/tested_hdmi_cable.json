@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdmi_continuity_tester",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_hdmi"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_hdmi_cable"
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:ssd_firmware_programmer",
+  "ingredients": [
+    {
+      "item": "tech_revised:ssd_board"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:programmed_ssd"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

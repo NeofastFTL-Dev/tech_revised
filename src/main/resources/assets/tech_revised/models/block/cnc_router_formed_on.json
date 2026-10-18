@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "cnc_router",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/cnc_router_side",
+    "front": "tech_revised:block/multiblock/cnc_router_front_on",
+    "side": "tech_revised:block/multiblock/cnc_router_side",
+    "top": "tech_revised:block/multiblock/cnc_router_top",
+    "controller_front": "tech_revised:block/cnc_router_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

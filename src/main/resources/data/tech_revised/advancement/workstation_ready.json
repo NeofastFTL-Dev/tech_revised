@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "tech_revised:tested_chair_seat"
+    },
+    "title": {
+      "translate": "advancements.tech_revised.workstation_ready.title"
+    },
+    "description": {
+      "translate": "advancements.tech_revised.workstation_ready.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:tested_chair_seat"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got"
+    ]
+  ],
+  "parent": "tech_revised:tested_tower"
+}

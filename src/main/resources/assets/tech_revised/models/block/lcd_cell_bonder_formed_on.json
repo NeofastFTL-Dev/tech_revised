@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "lcd_cell_bonder",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/lcd_cell_bonder_side",
+    "front": "tech_revised:block/multiblock/lcd_cell_bonder_front_on",
+    "side": "tech_revised:block/multiblock/lcd_cell_bonder_side",
+    "top": "tech_revised:block/multiblock/lcd_cell_bonder_top",
+    "controller_front": "tech_revised:block/lcd_cell_bonder_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

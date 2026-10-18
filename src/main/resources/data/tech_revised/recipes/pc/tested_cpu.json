@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:cpu_burn_in_chamber",
+  "ingredients": [
+    {
+      "item": "tech_revised:lidded_cpu"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_cpu"
+  },
+  "process_ticks": 300,
+  "energy_per_tick": 80
+}

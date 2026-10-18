@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:scroll_wheel_molder",
+  "ingredients": [
+    {
+      "item": "tech_revised:rubber_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:scroll_wheel"
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

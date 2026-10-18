@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:ssd_case_welder",
+  "ingredients": [
+    {
+      "item": "tech_revised:programmed_ssd"
+    },
+    {
+      "item": "tech_revised:abs_pellets"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_ssd"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

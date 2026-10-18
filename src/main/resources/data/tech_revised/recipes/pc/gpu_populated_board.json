@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:vram_populator",
+  "ingredients": [
+    {
+      "item": "tech_revised:gpu_core_board"
+    },
+    {
+      "item": "tech_revised:dram_package"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:gpu_populated_board"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

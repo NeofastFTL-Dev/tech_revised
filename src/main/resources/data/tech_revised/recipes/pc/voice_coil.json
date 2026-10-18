@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:voice_coil_winder",
+  "ingredients": [
+    {
+      "item": "tech_revised:tinned_copper_wire"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:voice_coil"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

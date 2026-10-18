@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:psu_load_tester",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_psu"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_psu"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 60
+}

@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:psu_install_bench",
+  "ingredients": [
+    {
+      "item": "tech_revised:board_with_storage"
+    },
+    {
+      "item": "tech_revised:tested_psu"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:wired_internals"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

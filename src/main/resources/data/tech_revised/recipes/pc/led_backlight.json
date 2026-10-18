@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:backlight_assembler",
+  "ingredients": [
+    {
+      "item": "tech_revised:abs_pellets"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:led_backlight"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

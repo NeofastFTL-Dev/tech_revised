@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:keyboard_plate_stamper",
+  "ingredients": [
+    {
+      "item": "tech_revised:steel_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:keyboard_plate"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

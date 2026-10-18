@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdmi_termination_press",
+  "ingredients": [
+    {
+      "item": "tech_revised:jacketed_hdmi"
+    },
+    {
+      "item": "tech_revised:hdmi_connector"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_hdmi"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

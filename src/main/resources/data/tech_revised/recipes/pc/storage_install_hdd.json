@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:storage_install_bay",
+  "ingredients": [
+    {
+      "item": "tech_revised:board_with_gpu"
+    },
+    {
+      "item": "tech_revised:tested_hdd"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:board_with_storage"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 20
+}

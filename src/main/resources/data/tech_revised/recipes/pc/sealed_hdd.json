@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdd_hepa_sealer",
+  "ingredients": [
+    {
+      "item": "tech_revised:coated_platter"
+    },
+    {
+      "item": "tech_revised:spindle_motor"
+    },
+    {
+      "item": "tech_revised:head_stack"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:sealed_hdd"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 40
+}

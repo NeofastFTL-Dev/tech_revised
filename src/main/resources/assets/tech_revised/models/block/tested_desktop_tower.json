@@ -1,0 +1,42 @@
+{
+  "gui_light": "front",
+  "textures": {
+    "front": "tech_revised:block/tested_desktop_tower_front",
+    "shell": "tech_revised:block/tested_device_shell",
+    "particle": "tech_revised:block/tested_device_shell"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front"
+        },
+        "south": {
+          "texture": "#shell"
+        },
+        "east": {
+          "texture": "#shell"
+        },
+        "west": {
+          "texture": "#shell"
+        },
+        "up": {
+          "texture": "#shell"
+        },
+        "down": {
+          "texture": "#shell"
+        }
+      }
+    }
+  ]
+}

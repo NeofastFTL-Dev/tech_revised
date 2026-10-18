@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdmi_connector_molder",
+  "ingredients": [
+    {
+      "item": "tech_revised:abs_pellets"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:hdmi_connector"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

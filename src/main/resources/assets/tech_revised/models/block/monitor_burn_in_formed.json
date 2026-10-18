@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "monitor_burn_in",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/monitor_burn_in_side",
+    "front": "tech_revised:block/multiblock/monitor_burn_in_front",
+    "side": "tech_revised:block/multiblock/monitor_burn_in_side",
+    "top": "tech_revised:block/multiblock/monitor_burn_in_top",
+    "controller_front": "tech_revised:block/monitor_burn_in_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

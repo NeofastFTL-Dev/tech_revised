@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:optical_sensor_smt",
+  "ingredients": [
+    {
+      "item": "tech_revised:final_pcba"
+    },
+    {
+      "item": "tech_revised:mcu_package"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:mouse_sensor_board"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

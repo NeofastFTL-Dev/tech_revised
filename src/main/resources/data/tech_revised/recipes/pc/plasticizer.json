@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:plasticizer_unit",
+  "ingredients": [
+    {
+      "item": "tech_revised:naphtha_bucket"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:plasticizer"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

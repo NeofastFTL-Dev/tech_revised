@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:transformer_winder",
+  "ingredients": [
+    {
+      "item": "tech_revised:tinned_copper_wire"
+    },
+    {
+      "item": "tech_revised:steel_ingot"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:psu_transformer"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

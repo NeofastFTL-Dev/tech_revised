@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "tech_revised:block/solid_fuel_generator"
+    },
+    "lit=true": {
+      "model": "tech_revised:block/solid_fuel_generator_lit"
+    }
+  }
+}

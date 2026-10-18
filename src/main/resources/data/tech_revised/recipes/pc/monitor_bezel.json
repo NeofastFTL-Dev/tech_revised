@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:monitor_bezel_molder",
+  "ingredients": [
+    {
+      "item": "tech_revised:abs_pellets"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:monitor_bezel"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

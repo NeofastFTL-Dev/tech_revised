@@ -1,0 +1,15 @@
+{
+  "type": "industrialsteel:alloying",
+  "ingredients": [
+    {
+      "item": "tech_revised:ferrochromium_ingot"
+    },
+    {
+      "item": "tech_revised:nickel_dust"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:stainless_steel_blend",
+    "count": 1
+  }
+}

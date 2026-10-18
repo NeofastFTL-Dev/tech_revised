@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:die_attach_bonder",
+  "ingredients": [
+    {
+      "item": "tech_revised:silicon_die"
+    },
+    {
+      "item": "tech_revised:copper_foil"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:attached_die"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 40
+}

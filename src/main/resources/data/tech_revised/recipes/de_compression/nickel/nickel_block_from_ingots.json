@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "tech_revised:nickel_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "tech_revised:nickel_block"
+  },
+  "show_notification": true
+}

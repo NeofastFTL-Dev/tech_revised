@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "ssd_smt",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/ssd_smt_side",
+    "front": "tech_revised:block/multiblock/ssd_smt_front",
+    "side": "tech_revised:block/multiblock/ssd_smt_side",
+    "top": "tech_revised:block/multiblock/ssd_smt_top",
+    "controller_front": "tech_revised:block/ssd_smt_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

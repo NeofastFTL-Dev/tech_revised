@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:expansion_slot_inserter",
+  "ingredients": [
+    {
+      "item": "tech_revised:socketed_motherboard"
+    },
+    {
+      "item": "tech_revised:copper_foil"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:slotted_motherboard"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

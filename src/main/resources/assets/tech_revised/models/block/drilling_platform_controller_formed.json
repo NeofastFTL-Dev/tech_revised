@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "drilling_platform",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/drilling_platform_side",
+    "front": "tech_revised:block/multiblock/drilling_platform_front",
+    "side": "tech_revised:block/multiblock/drilling_platform_side",
+    "top": "tech_revised:block/multiblock/drilling_platform_top",
+    "controller_front": "tech_revised:block/drilling_platform_controller_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

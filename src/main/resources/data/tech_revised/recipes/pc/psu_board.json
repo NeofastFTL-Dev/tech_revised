@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:psu_smt",
+  "ingredients": [
+    {
+      "item": "tech_revised:final_pcba"
+    },
+    {
+      "item": "tech_revised:psu_transformer"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:psu_board"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 50
+}

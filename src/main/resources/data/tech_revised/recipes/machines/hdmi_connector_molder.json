@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "pc_production_machines",
+  "pattern": [
+    "SLS",
+    "SRS",
+    "SIS"
+  ],
+  "key": {
+    "S": {
+      "item": "tech_revised:steel_ingot"
+    },
+    "L": {
+      "item": "minecraft:brewing_stand"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "I": {
+      "item": "minecraft:grindstone"
+    }
+  },
+  "result": {
+    "id": "tech_revised:hdmi_connector_molder"
+  }
+}

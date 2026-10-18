@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:color_filter_printer",
+  "ingredients": [
+    {
+      "item": "tech_revised:cleaned_lcd_glass"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:color_filter_glass"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

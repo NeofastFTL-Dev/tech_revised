@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:chlor_alkali_cell",
+  "ingredients": [
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "tech_revised:soda_ash"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:chlorine_bucket"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 80
+}

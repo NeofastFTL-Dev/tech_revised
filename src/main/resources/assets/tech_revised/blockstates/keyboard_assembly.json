@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "active=false,facing=north,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly"
+    },
+    "active=true,facing=north,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly_on"
+    },
+    "active=false,facing=north,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed"
+    },
+    "active=true,facing=north,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed_on"
+    },
+    "active=false,facing=east,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly",
+      "y": 90
+    },
+    "active=true,facing=east,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly_on",
+      "y": 90
+    },
+    "active=false,facing=east,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed",
+      "y": 90
+    },
+    "active=true,facing=east,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed_on",
+      "y": 90
+    },
+    "active=false,facing=south,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly",
+      "y": 180
+    },
+    "active=true,facing=south,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly_on",
+      "y": 180
+    },
+    "active=false,facing=south,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed",
+      "y": 180
+    },
+    "active=true,facing=south,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed_on",
+      "y": 180
+    },
+    "active=false,facing=west,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly",
+      "y": 270
+    },
+    "active=true,facing=west,formed=false": {
+      "model": "tech_revised:block/keyboard_assembly_on",
+      "y": 270
+    },
+    "active=false,facing=west,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed",
+      "y": 270
+    },
+    "active=true,facing=west,formed=true": {
+      "model": "tech_revised:block/keyboard_assembly_formed_on",
+      "y": 270
+    }
+  }
+}

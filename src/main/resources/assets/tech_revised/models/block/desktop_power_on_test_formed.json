@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "desktop_power_on_test",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/desktop_power_on_test_side",
+    "front": "tech_revised:block/multiblock/desktop_power_on_test_front",
+    "side": "tech_revised:block/multiblock/desktop_power_on_test_side",
+    "top": "tech_revised:block/multiblock/desktop_power_on_test_top",
+    "controller_front": "tech_revised:block/desktop_power_on_test_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

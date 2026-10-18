@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_materials",
+  "ingredients": [
+    {
+      "item": "tech_revised:raw_tin"
+    },
+    {
+      "item": "tech_revised:raw_tin"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "tech_revised:tin_plating_dust"
+  },
+  "show_notification": true
+}

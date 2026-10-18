@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:motherboard_ict",
+  "ingredients": [
+    {
+      "item": "tech_revised:motherboard_pcba"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_motherboard"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

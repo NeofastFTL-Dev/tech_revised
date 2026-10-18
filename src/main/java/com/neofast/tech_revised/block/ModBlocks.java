@@ -56,12 +56,6 @@ public class ModBlocks {
     public static final RegistryObject<Block> CRUSHER = registerBlock("crusher",
             () -> new CrusherBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(6f).requiresCorrectToolForDrops()));
 
-    public static final RegistryObject<Block> WINDOWS_7_VM_BLOCK = registerBlock("windows_7_vm_block",
-            () -> new Windows7VmBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
-                    .strength(8f)
-                    .requiresCorrectToolForDrops()
-                    .lightLevel(state -> state.getValue(Windows7VmBlock.ACTIVE) ? 12 : 0)));
-
     public static final RegistryObject<Block> ELECTRIC_ARC_FURNACE_CONTROLLER = registerBlock("electric_arc_furnace_controller",
             () -> new ElectricArcFurnaceControllerBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
 

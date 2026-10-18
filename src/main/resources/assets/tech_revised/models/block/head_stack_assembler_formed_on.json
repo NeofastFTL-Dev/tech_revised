@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "head_stack_assembler",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/head_stack_assembler_side",
+    "front": "tech_revised:block/multiblock/head_stack_assembler_front_on",
+    "side": "tech_revised:block/multiblock/head_stack_assembler_side",
+    "top": "tech_revised:block/multiblock/head_stack_assembler_top",
+    "controller_front": "tech_revised:block/head_stack_assembler_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "hi_pot_tester",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/hi_pot_tester_side",
+    "front": "tech_revised:block/multiblock/hi_pot_tester_front",
+    "side": "tech_revised:block/multiblock/hi_pot_tester_side",
+    "top": "tech_revised:block/multiblock/hi_pot_tester_top",
+    "controller_front": "tech_revised:block/hi_pot_tester_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

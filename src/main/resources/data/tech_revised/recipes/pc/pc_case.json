@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:case_assembly_jig",
+  "ingredients": [
+    {
+      "item": "tech_revised:coated_chassis"
+    },
+    {
+      "item": "tech_revised:case_front_panel"
+    },
+    {
+      "item": "tech_revised:rubber_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:pc_case"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

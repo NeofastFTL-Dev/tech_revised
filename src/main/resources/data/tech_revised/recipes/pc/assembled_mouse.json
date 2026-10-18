@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:mouse_assembly",
+  "ingredients": [
+    {
+      "item": "tech_revised:mouse_shell"
+    },
+    {
+      "item": "tech_revised:mouse_sensor_board"
+    },
+    {
+      "item": "tech_revised:scroll_wheel"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_mouse"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:liquid_crystal_filler",
+  "ingredients": [
+    {
+      "item": "tech_revised:color_filter_glass"
+    },
+    {
+      "item": "tech_revised:chemical_lubricant"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:filled_lcd_cell"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "workstation_furniture",
+  "pattern": [
+    "WW",
+    "SS"
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "S": {
+      "item": "tech_revised:steel_ingot"
+    }
+  },
+  "result": {
+    "id": "tech_revised:tested_chair_seat"
+  }
+}

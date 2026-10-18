@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:psu_case_stamper",
+  "ingredients": [
+    {
+      "item": "tech_revised:steel_ingot"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:psu_shell"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:gpu_install_bench",
+  "ingredients": [
+    {
+      "item": "tech_revised:board_with_memory"
+    },
+    {
+      "item": "tech_revised:tested_gpu"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:board_with_gpu"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

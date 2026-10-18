@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:thermal_paste_dispenser",
+  "ingredients": [
+    {
+      "item": "tech_revised:tested_motherboard"
+    },
+    {
+      "item": "tech_revised:tested_cpu"
+    },
+    {
+      "item": "tech_revised:chemical_lubricant"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:board_with_cpu"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:gpu_assembly_jig",
+  "ingredients": [
+    {
+      "item": "tech_revised:gpu_populated_board"
+    },
+    {
+      "item": "tech_revised:gpu_cooler"
+    },
+    {
+      "item": "tech_revised:gpu_shroud"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_gpu"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 40
+}

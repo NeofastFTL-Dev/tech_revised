@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "cpu_burn_in_chamber",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/cpu_burn_in_chamber_side",
+    "front": "tech_revised:block/multiblock/cpu_burn_in_chamber_front",
+    "side": "tech_revised:block/multiblock/cpu_burn_in_chamber_side",
+    "top": "tech_revised:block/multiblock/cpu_burn_in_chamber_top",
+    "controller_front": "tech_revised:block/cpu_burn_in_chamber_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "platter_polisher",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/platter_polisher_side",
+    "front": "tech_revised:block/multiblock/platter_polisher_front_on",
+    "side": "tech_revised:block/multiblock/platter_polisher_side",
+    "top": "tech_revised:block/multiblock/platter_polisher_top",
+    "controller_front": "tech_revised:block/platter_polisher_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

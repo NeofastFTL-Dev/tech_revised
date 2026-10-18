@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:ic_transfer_mold",
+  "ingredients": [
+    {
+      "item": "tech_revised:bonded_die"
+    },
+    {
+      "item": "tech_revised:abs_pellets"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:molded_ic"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:platter_polisher",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:hdd_platter"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:gpu_cooler_press",
+  "ingredients": [
+    {
+      "item": "tech_revised:steel_ingot"
+    },
+    {
+      "item": "tech_revised:rubber_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:gpu_cooler"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

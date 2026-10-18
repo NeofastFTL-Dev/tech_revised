@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "pick_and_place_robot",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/pick_and_place_robot_side",
+    "front": "tech_revised:block/multiblock/pick_and_place_robot_front",
+    "side": "tech_revised:block/multiblock/pick_and_place_robot_side",
+    "top": "tech_revised:block/multiblock/pick_and_place_robot_top",
+    "controller_front": "tech_revised:block/pick_and_place_robot_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

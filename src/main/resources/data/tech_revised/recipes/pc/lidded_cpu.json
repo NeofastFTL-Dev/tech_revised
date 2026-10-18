@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:ihs_bonder",
+  "ingredients": [
+    {
+      "item": "tech_revised:cpu_package"
+    },
+    {
+      "item": "tech_revised:stainless_steel_nugget"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:lidded_cpu"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

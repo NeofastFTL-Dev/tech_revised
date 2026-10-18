@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "chemical_developing_wash",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/chemical_developing_wash_side",
+    "front": "tech_revised:block/multiblock/chemical_developing_wash_front_on",
+    "side": "tech_revised:block/multiblock/chemical_developing_wash_side",
+    "top": "tech_revised:block/multiblock/chemical_developing_wash_top",
+    "controller_front": "tech_revised:block/chemical_developing_wash_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

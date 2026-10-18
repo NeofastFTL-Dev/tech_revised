@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "gpu_assembly_jig",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/gpu_assembly_jig_side",
+    "front": "tech_revised:block/multiblock/gpu_assembly_jig_front_on",
+    "side": "tech_revised:block/multiblock/gpu_assembly_jig_side",
+    "top": "tech_revised:block/multiblock/gpu_assembly_jig_top",
+    "controller_front": "tech_revised:block/gpu_assembly_jig_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

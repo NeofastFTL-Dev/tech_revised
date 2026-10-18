@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "speaker_anechoic_test",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/speaker_anechoic_test_side",
+    "front": "tech_revised:block/multiblock/speaker_anechoic_test_front",
+    "side": "tech_revised:block/multiblock/speaker_anechoic_test_side",
+    "top": "tech_revised:block/multiblock/speaker_anechoic_test_top",
+    "controller_front": "tech_revised:block/speaker_anechoic_test_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

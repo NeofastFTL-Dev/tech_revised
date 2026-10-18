@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:monitor_final_assembly",
+  "ingredients": [
+    {
+      "item": "tech_revised:lcd_module"
+    },
+    {
+      "item": "tech_revised:monitor_logic_board"
+    },
+    {
+      "item": "tech_revised:monitor_bezel"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_monitor"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 40
+}

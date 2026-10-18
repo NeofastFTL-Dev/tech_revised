@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "tech_revised:solid_fuel_generator"
+    },
+    "title": {
+      "translate": "advancements.tech_revised.power_it.title"
+    },
+    "description": {
+      "translate": "advancements.tech_revised.power_it.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:solid_fuel_generator"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got"
+    ]
+  ],
+  "parent": "tech_revised:first_crusher"
+}

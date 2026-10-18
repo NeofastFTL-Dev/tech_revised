@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:rubber_compounder",
+  "ingredients": [
+    {
+      "item": "tech_revised:naphtha_bucket"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:rubber_sheet"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

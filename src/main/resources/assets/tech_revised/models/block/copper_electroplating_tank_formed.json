@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "copper_electroplating_tank",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/copper_electroplating_tank_side",
+    "front": "tech_revised:block/multiblock/copper_electroplating_tank_front",
+    "side": "tech_revised:block/multiblock/copper_electroplating_tank_side",
+    "top": "tech_revised:block/multiblock/copper_electroplating_tank_top",
+    "controller_front": "tech_revised:block/copper_electroplating_tank_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

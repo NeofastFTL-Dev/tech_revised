@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:powder_coater",
+  "ingredients": [
+    {
+      "item": "tech_revised:case_chassis"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:coated_chassis"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "vcm_reactor",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/vcm_reactor_side",
+    "front": "tech_revised:block/multiblock/vcm_reactor_front",
+    "side": "tech_revised:block/multiblock/vcm_reactor_side",
+    "top": "tech_revised:block/multiblock/vcm_reactor_top",
+    "controller_front": "tech_revised:block/vcm_reactor_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

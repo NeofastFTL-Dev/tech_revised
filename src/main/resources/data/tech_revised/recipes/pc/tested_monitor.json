@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:monitor_burn_in",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_monitor"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_monitor"
+  },
+  "process_ticks": 300,
+  "energy_per_tick": 40
+}

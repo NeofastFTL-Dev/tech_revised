@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:cone_former",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "tech_revised:chemical_lubricant"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:speaker_cone"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 20
+}

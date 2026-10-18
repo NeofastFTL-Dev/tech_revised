@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "tech_revised:tested_monitor"
+    },
+    "title": {
+      "translate": "advancements.tech_revised.vm_booted.title"
+    },
+    "description": {
+      "translate": "advancements.tech_revised.vm_booted.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "booted": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "booted"
+    ]
+  ],
+  "parent": "tech_revised:workstation_ready"
+}

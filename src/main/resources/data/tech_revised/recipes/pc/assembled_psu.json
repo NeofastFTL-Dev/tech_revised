@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:psu_final_assembly",
+  "ingredients": [
+    {
+      "item": "tech_revised:psu_board"
+    },
+    {
+      "item": "tech_revised:psu_shell"
+    },
+    {
+      "item": "tech_revised:pvc_pellets"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_psu"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 40
+}

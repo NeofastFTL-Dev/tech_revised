@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdd_servo_writer",
+  "ingredients": [
+    {
+      "item": "tech_revised:sealed_hdd"
+    },
+    {
+      "item": "tech_revised:hdd_controller_package"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:programmed_hdd"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 50
+}

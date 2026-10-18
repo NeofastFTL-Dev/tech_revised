@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:speaker_final_assembly",
+  "ingredients": [
+    {
+      "item": "tech_revised:speaker_driver"
+    },
+    {
+      "item": "tech_revised:speaker_cabinet"
+    },
+    {
+      "item": "tech_revised:rubber_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_speaker"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

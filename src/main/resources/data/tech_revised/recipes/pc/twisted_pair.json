@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:pair_twinner",
+  "ingredients": [
+    {
+      "item": "tech_revised:tinned_copper_wire"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:twisted_pair"
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

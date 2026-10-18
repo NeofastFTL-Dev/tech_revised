@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:polarizer_laminator",
+  "ingredients": [
+    {
+      "item": "tech_revised:filled_lcd_cell"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:polarized_panel"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

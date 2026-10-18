@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:power_conductor_strander",
+  "ingredients": [
+    {
+      "item": "tech_revised:tinned_copper_wire"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:power_conductor"
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

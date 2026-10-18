@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:iec_connector_molder",
+  "ingredients": [
+    {
+      "item": "tech_revised:abs_pellets"
+    },
+    {
+      "item": "tech_revised:steel_nugget"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:iec_connector"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

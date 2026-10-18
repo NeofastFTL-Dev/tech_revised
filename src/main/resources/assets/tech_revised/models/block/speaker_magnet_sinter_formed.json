@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "speaker_magnet_sinter",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/speaker_magnet_sinter_side",
+    "front": "tech_revised:block/multiblock/speaker_magnet_sinter_front",
+    "side": "tech_revised:block/multiblock/speaker_magnet_sinter_side",
+    "top": "tech_revised:block/multiblock/speaker_magnet_sinter_top",
+    "controller_front": "tech_revised:block/speaker_magnet_sinter_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

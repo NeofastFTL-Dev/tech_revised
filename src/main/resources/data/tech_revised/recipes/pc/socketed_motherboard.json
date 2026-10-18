@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:cpu_socket_press",
+  "ingredients": [
+    {
+      "item": "tech_revised:final_pcba"
+    },
+    {
+      "item": "tech_revised:steel_nugget"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:socketed_motherboard"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

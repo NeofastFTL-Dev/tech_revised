@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "dimm_install_press",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/dimm_install_press_side",
+    "front": "tech_revised:block/multiblock/dimm_install_press_front_on",
+    "side": "tech_revised:block/multiblock/dimm_install_press_side",
+    "top": "tech_revised:block/multiblock/dimm_install_press_top",
+    "controller_front": "tech_revised:block/dimm_install_press_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

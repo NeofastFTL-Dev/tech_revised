@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:head_stack_assembler",
+  "ingredients": [
+    {
+      "item": "tech_revised:steel_nugget"
+    },
+    {
+      "item": "tech_revised:silicon_die"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:head_stack"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:wire_bonding_machine",
+  "ingredients": [
+    {
+      "item": "tech_revised:attached_die"
+    },
+    {
+      "item": "tech_revised:tinned_copper_wire"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:bonded_die"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 40
+}

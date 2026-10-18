@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:keyboard_assembly",
+  "ingredients": [
+    {
+      "item": "tech_revised:keyboard_pcb"
+    },
+    {
+      "item": "tech_revised:key_membrane"
+    },
+    {
+      "item": "tech_revised:keycaps"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_keyboard"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

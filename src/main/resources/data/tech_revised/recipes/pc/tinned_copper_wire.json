@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:wire_tinning_bath",
+  "ingredients": [
+    {
+      "item": "tech_revised:copper_wire"
+    },
+    {
+      "item": "tech_revised:tin_plating_dust"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tinned_copper_wire"
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 30
+}

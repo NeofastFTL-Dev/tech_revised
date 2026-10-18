@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:membrane_sheet_printer",
+  "ingredients": [
+    {
+      "item": "tech_revised:rubber_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:key_membrane"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

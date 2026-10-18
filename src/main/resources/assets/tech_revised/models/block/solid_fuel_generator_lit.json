@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "tech_revised:block/solid_fuel_generator_lit"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "tech_revised",
+  "version": "${version}",
+  "name": "Tech Revised",
+  "description": "Tech Revised core content focused on the Electric Arc Furnace.",
+  "authors": ["NeofastFTL"],
+  "license": "All Rights Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.neofast.tech_revised.TechRevised"
+    ],
+    "client": [
+      "com.neofast.tech_revised.TechRevisedClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

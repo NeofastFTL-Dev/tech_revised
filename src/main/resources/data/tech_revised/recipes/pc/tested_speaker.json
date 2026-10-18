@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:speaker_anechoic_test",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_speaker"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_speaker"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 20
+}

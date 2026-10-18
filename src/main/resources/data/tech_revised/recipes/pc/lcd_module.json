@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:lcd_cell_bonder",
+  "ingredients": [
+    {
+      "item": "tech_revised:polarized_panel"
+    },
+    {
+      "item": "tech_revised:led_backlight"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:lcd_module"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

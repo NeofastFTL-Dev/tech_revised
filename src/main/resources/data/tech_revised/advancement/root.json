@@ -1,0 +1,82 @@
+{
+  "display": {
+    "icon": {
+      "item": "tech_revised:graphite_ore"
+    },
+    "title": {
+      "translate": "advancements.tech_revised.root.title"
+    },
+    "description": {
+      "translate": "advancements.tech_revised.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/block/deepslate.png"
+  },
+  "criteria": {
+    "graphite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:graphite_ore"
+            ]
+          }
+        ]
+      }
+    },
+    "chromite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:chromite_ore"
+            ]
+          }
+        ]
+      }
+    },
+    "tin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:tin_ore"
+            ]
+          }
+        ]
+      }
+    },
+    "nickel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:nickel_ore"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "graphite"
+    ],
+    [
+      "chromite"
+    ],
+    [
+      "tin"
+    ],
+    [
+      "nickel"
+    ]
+  ]
+}

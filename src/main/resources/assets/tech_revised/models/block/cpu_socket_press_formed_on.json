@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "cpu_socket_press",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/cpu_socket_press_side",
+    "front": "tech_revised:block/multiblock/cpu_socket_press_front_on",
+    "side": "tech_revised:block/multiblock/cpu_socket_press_side",
+    "top": "tech_revised:block/multiblock/cpu_socket_press_top",
+    "controller_front": "tech_revised:block/cpu_socket_press_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

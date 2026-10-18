@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "pcb_materials",
+  "ingredients": [
+    {
+      "item": "tech_revised:chopped_strand_mat"
+    },
+    {
+      "item": "tech_revised:chopped_strand_mat"
+    },
+    {
+      "item": "tech_revised:chopped_strand_mat"
+    },
+    {
+      "item": "tech_revised:chopped_strand_mat"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "tech_revised:raw_fr4_laminate"
+  }
+}

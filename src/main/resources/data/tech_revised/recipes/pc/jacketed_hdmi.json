@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdmi_jacket_extruder",
+  "ingredients": [
+    {
+      "item": "tech_revised:shielded_hdmi_core"
+    },
+    {
+      "item": "tech_revised:pvc_pellets"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:jacketed_hdmi"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "tech_revised:graphite_ore",
+    "tech_revised:tin_ore",
+    "tech_revised:nickel_ore",
+    "tech_revised:deepslate_graphite_ore",
+    "tech_revised:deepslate_chromite_ore",
+    "tech_revised:deepslate_tin_ore",
+    "tech_revised:deepslate_nickel_ore"
+  ]
+}

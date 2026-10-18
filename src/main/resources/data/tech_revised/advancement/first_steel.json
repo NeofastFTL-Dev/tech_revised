@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "tech_revised:steel_ingot"
+    },
+    "title": {
+      "translate": "advancements.tech_revised.first_steel.title"
+    },
+    "description": {
+      "translate": "advancements.tech_revised.first_steel.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:steel_ingot"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got"
+    ]
+  ],
+  "parent": "tech_revised:coke_fire"
+}

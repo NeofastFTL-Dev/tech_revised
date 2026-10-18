@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:nand_stacker",
+  "ingredients": [
+    {
+      "item": "tech_revised:nand_package"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:nand_stack"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

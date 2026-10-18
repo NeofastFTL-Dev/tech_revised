@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "acidic_etching_sprayer",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/acidic_etching_sprayer_side",
+    "front": "tech_revised:block/multiblock/acidic_etching_sprayer_front_on",
+    "side": "tech_revised:block/multiblock/acidic_etching_sprayer_side",
+    "top": "tech_revised:block/multiblock/acidic_etching_sprayer_top",
+    "controller_front": "tech_revised:block/acidic_etching_sprayer_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:abs_polymerizer",
+  "ingredients": [
+    {
+      "item": "tech_revised:naphtha_bucket"
+    },
+    {
+      "item": "tech_revised:rubber_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:abs_pellets"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 40
+}

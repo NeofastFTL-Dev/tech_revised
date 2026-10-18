@@ -1,0 +1,15 @@
+{
+  "type": "industrialsteel:alloying",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "tech_revised:chromite_dust"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:ferrochromium_ingot",
+    "count": 1
+  }
+}

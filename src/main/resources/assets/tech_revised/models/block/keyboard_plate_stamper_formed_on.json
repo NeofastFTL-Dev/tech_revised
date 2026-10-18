@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "keyboard_plate_stamper",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/keyboard_plate_stamper_side",
+    "front": "tech_revised:block/multiblock/keyboard_plate_stamper_front_on",
+    "side": "tech_revised:block/multiblock/keyboard_plate_stamper_side",
+    "top": "tech_revised:block/multiblock/keyboard_plate_stamper_top",
+    "controller_front": "tech_revised:block/keyboard_plate_stamper_front_on",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

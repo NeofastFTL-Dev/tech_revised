@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "tech_revised:tin_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "tech_revised:tin_ingot"
+  },
+  "show_notification": true
+}

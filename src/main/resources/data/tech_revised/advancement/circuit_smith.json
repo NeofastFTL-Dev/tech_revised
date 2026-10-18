@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "tech_revised:raw_fr4_laminate"
+    },
+    "title": {
+      "translate": "advancements.tech_revised.circuit_smith.title"
+    },
+    "description": {
+      "translate": "advancements.tech_revised.circuit_smith.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "tech_revised:raw_fr4_laminate"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got"
+    ]
+  ],
+  "parent": "tech_revised:stainless_age"
+}

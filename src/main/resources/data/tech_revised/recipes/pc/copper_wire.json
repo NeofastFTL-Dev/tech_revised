@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:copper_wire_drawer",
+  "ingredients": [
+    {
+      "item": "minecraft:copper_ingot"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:copper_wire"
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 30
+}

@@ -1,0 +1,15 @@
+{
+  "type": "industrialsteel:alloying",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "tech_revised:coal_coke"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:steel_ingot",
+    "count": 2
+  }
+}

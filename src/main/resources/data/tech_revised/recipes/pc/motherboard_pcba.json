@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:chipset_placer",
+  "ingredients": [
+    {
+      "item": "tech_revised:slotted_motherboard"
+    },
+    {
+      "item": "tech_revised:chipset_package"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:motherboard_pcba"
+  },
+  "process_ticks": 250,
+  "energy_per_tick": 50
+}

@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:keyboard_tester",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_keyboard"
+    },
+    {
+      "item": "tech_revised:keyboard_plate"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_keyboard"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 20
+}

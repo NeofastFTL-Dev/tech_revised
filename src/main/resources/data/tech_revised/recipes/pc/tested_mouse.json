@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:mouse_tester",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_mouse"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_mouse"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 20
+}

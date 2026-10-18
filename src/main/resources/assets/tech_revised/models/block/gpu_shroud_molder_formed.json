@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "gpu_shroud_molder",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/gpu_shroud_molder_side",
+    "front": "tech_revised:block/multiblock/gpu_shroud_molder_front",
+    "side": "tech_revised:block/multiblock/gpu_shroud_molder_side",
+    "top": "tech_revised:block/multiblock/gpu_shroud_molder_top",
+    "controller_front": "tech_revised:block/gpu_shroud_molder_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

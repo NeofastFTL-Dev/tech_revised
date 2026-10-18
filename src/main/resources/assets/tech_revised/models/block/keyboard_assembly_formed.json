@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "keyboard_assembly",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/keyboard_assembly_side",
+    "front": "tech_revised:block/multiblock/keyboard_assembly_front",
+    "side": "tech_revised:block/multiblock/keyboard_assembly_side",
+    "top": "tech_revised:block/multiblock/keyboard_assembly_top",
+    "controller_front": "tech_revised:block/keyboard_assembly_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}

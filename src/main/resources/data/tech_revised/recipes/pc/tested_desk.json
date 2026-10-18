@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "workstation_furniture",
+  "pattern": [
+    "PPP",
+    "S S",
+    "S S"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "tech_revised:steel_sheet"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "tech_revised:tested_desk"
+  }
+}

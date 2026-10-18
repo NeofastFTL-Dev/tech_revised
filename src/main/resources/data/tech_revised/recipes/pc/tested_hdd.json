@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdd_burn_in",
+  "ingredients": [
+    {
+      "item": "tech_revised:programmed_hdd"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_hdd"
+  },
+  "process_ticks": 300,
+  "energy_per_tick": 40
+}

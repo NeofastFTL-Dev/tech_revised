@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:power_jacket_extruder",
+  "ingredients": [
+    {
+      "item": "tech_revised:power_conductor"
+    },
+    {
+      "item": "tech_revised:pvc_pellets"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:jacketed_power_cord"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

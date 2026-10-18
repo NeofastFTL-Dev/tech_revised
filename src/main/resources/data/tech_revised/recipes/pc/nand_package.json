@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:ic_binning_station",
+  "ingredients": [
+    {
+      "item": "tech_revised:tested_ic"
+    },
+    {
+      "item": "tech_revised:carbon_chunk"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:nand_package"
+  },
+  "process_ticks": 100,
+  "energy_per_tick": 20
+}

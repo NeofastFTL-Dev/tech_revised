@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:crude_fractionator",
+  "ingredients": [
+    {
+      "item": "tech_revised:heavy_crude_oil_bucket"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:naphtha_bucket"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

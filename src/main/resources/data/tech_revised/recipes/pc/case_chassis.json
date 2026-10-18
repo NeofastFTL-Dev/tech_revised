@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:case_stamping_press",
+  "ingredients": [
+    {
+      "item": "tech_revised:steel_sheet"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:case_chassis"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 40
+}

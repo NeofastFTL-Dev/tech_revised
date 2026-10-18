@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:vcm_reactor",
+  "ingredients": [
+    {
+      "item": "tech_revised:ethylene_bucket"
+    },
+    {
+      "item": "tech_revised:chlorine_bucket"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:vinyl_chloride_bucket"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 50
+}

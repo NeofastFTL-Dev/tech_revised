@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:speaker_magnet_sinter",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:speaker_magnet"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

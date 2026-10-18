@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:hdmi_shield_braider",
+  "ingredients": [
+    {
+      "item": "tech_revised:twisted_pair"
+    },
+    {
+      "item": "tech_revised:copper_wire"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:shielded_hdmi_core"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

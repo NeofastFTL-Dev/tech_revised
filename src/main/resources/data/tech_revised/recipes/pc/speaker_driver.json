@@ -1,0 +1,20 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:driver_assembler",
+  "ingredients": [
+    {
+      "item": "tech_revised:speaker_magnet"
+    },
+    {
+      "item": "tech_revised:voice_coil"
+    },
+    {
+      "item": "tech_revised:speaker_cone"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:speaker_driver"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 30
+}

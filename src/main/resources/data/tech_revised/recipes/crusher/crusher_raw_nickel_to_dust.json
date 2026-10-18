@@ -1,0 +1,12 @@
+{
+  "type": "tech_revised:crusher",
+  "energy_per_tick": 20,
+  "process_ticks": 80,
+  "ingredient": {
+    "item": "tech_revised:raw_nickel"
+  },
+  "result": {
+    "count": 1,
+    "item": "tech_revised:nickel_dust"
+  }
+}

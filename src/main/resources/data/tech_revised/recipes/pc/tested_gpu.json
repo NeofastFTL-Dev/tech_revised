@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:gpu_tester",
+  "ingredients": [
+    {
+      "item": "tech_revised:assembled_gpu"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:tested_gpu"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

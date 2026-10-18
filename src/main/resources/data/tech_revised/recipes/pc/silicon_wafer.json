@@ -1,0 +1,14 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:wafer_blank_press",
+  "ingredients": [
+    {
+      "item": "tech_revised:silica_sand"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:silicon_wafer"
+  },
+  "process_ticks": 200,
+  "energy_per_tick": 40
+}

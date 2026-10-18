@@ -1,0 +1,17 @@
+{
+  "type": "tech_revised:pcb",
+  "machine": "tech_revised:power_cable_overmolder",
+  "ingredients": [
+    {
+      "item": "tech_revised:jacketed_power_cord"
+    },
+    {
+      "item": "tech_revised:iec_connector"
+    }
+  ],
+  "result": {
+    "item": "tech_revised:assembled_power_cable"
+  },
+  "process_ticks": 150,
+  "energy_per_tick": 30
+}

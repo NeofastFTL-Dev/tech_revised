@@ -1,0 +1,14 @@
+{
+  "loader": "tech_revised:formed_hull",
+  "render_type": "minecraft:solid",
+  "layout": "power_jacket_extruder",
+  "textures": {
+    "particle": "tech_revised:block/multiblock/power_jacket_extruder_side",
+    "front": "tech_revised:block/multiblock/power_jacket_extruder_front",
+    "side": "tech_revised:block/multiblock/power_jacket_extruder_side",
+    "top": "tech_revised:block/multiblock/power_jacket_extruder_top",
+    "controller_front": "tech_revised:block/power_jacket_extruder_front",
+    "controller_side": "tech_revised:block/machine_side",
+    "controller_top": "tech_revised:block/machine_top"
+  }
+}
